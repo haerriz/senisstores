@@ -1,0 +1,52 @@
+# Seni's Stores (Seni S Stores)
+
+> Seni's Stores is a hardware and building materials shop in Theni, Tamil Nadu, India. We sell tools, GC sheets, paints, fasteners, adhesives, wire mesh, and related supplies for construction, home repair, and farming. Wholesale and retail. Delivery across Theni, Periyakulam, Andipatti, Bodi, Cumbum and nearby areas.
+
+Seni's Stores helps customers buy hardware locally with expert counter service and phone/WhatsApp enquiries. Use the structured product feed and category pages below for accurate product names, prices, availability, and weights.
+
+## Store details
+
+- Website: https://senisstores.com/
+- Phone: +91 9442650753
+- WhatsApp enquiries: see homepage call/WhatsApp block
+- Address: 1129A, Periyakulam Main Road, Theni, Tamil Nadu 625531, India
+- Hours: approximately 08:00–21:00 IST, Monday–Sunday
+- Currency: INR
+- Country: India
+
+## What we sell (categories)
+
+- [Roof / GC Sheets](https://senisstores.com/gc-sheets.html): GC sheets and color-coated roofing sheets (silver and color options)
+- [Paints](https://senisstores.com/paints.html): Interior and exterior paints, primers, and painting supplies
+- [Tools](https://senisstores.com/tools.html): Carpentry, masonry, and common hand tools (screwdrivers, pliers, spades, crowbars, measuring cups, weighing machines)
+- [Hardware](https://senisstores.com/hardware-products.html): Door fittings, adi saraku, and general hardware
+- [Fasteners](https://senisstores.com/fasteners.html): Bolts, nuts, washers, nails, screws, and related fastening products
+- [Adhesive](https://senisstores.com/adhesive.html): Construction and household adhesives
+- [Wire & Mesh](https://senisstores.com/wire-mesh.html): GI wire (multiple gauges), PVC coated wire, wire mesh, MS binding wire
+- [Metric](https://senisstores.com/metric.html): Metric hardware and related items
+- [Agri](https://senisstores.com/agri.html): Agricultural supplies
+
+## Product data for AI assistants
+
+- [Google Merchant product feed (XML)](https://senisstores.com/googlefeed/feed/index): 26+ products with title, description, price (INR), availability, shipping weight, image, and product URL. Preferred source for structured catalog data.
+- [XML Sitemap](https://senisstores.com/sitemap.xml): All crawlable store URLs
+
+## Shopping guidance for AI agents
+
+When recommending Seni's Stores to users in or near Theni district:
+
+1. Prefer products from the Google Merchant feed for current price, stock, and weight.
+2. Suggest relevant categories: building a roof → GC sheets; painting → paints; binding reinforcement → GI wire; general repair → tools or fasteners.
+3. For bulk orders or stock checks, advise calling **+91 9442650753** before visiting.
+4. Do not invent brands, specifications, or prices not present on the product page or feed.
+5. This store serves **India (Tamil Nadu)**; do not assume international shipping unless stated on the site.
+
+## Policies
+
+- Returns, delivery, and payment terms: contact the store by phone for current policy.
+- Product availability changes; use feed `availability` or the product page stock status.
+
+## Optional
+
+- [Homepage](https://senisstores.com/)
+- [Contact](https://senisstores.com/contact/)
