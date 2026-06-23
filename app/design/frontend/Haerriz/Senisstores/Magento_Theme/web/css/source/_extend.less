@@ -1,0 +1,71 @@
+//
+//  Common (styles-m.css)
+//  _____________________________________________
+& when (@media-common = true) {
+    header.page-header {
+        background: @theme__color__primary;
+
+        .panel.wrapper {
+            border-bottom: none;
+        }
+    }
+
+    // Accessible tel: links — underline + brand color (not color-only)
+    a.contact-phone-link,
+    a[href^="tel:"] {
+        color: @senis-stores_color;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover,
+        &:focus {
+            color: darken(@senis-stores_color, 8%);
+            text-decoration: underline;
+        }
+    }
+}
+
+//
+//  Mobile (styles-m.css)
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__s) {
+    // your code
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    // your code
+}
+
+& when (@media-target = 'mobile'), (@media-target = 'all') {
+    @media only screen and (max-width: 375px) {
+        // styles for custom breakpoint below <= 375px mobile screen
+    }
+}
+
+//
+//  Tablet
+//  _____________________________________________
+
+& when (@media-target = 'desktop'), (@media-target = 'all') {
+    @media only screen and (min-width: @screen__m) and (max-width: (@screen__xl - 1)) {
+        // styles for breakpoint >= 768px and < 1440px
+    }
+}
+
+//
+//  Desktop (style-l.css)
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    // your code
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+    // your code
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__xl) {
+    // your code
+}

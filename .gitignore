@@ -1,0 +1,10 @@
+/.idea/
+/.vscode/
+/vendor/
+/var/
+/pub/media/
+/pub/static/
+/app/etc/env.php
+/node_modules/
+*.log
+.DS_Store

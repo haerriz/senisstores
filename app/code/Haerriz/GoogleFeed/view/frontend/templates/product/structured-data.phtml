@@ -1,0 +1,14 @@
+<?php
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+/** @var \Haerriz\GoogleFeed\Block\Product\StructuredData $block */
+$jsonLd = $block->getJsonLd();
+
+if ($jsonLd === '') {
+    return;
+}
+?>
+<script type="application/ld+json"><?= /* @noEscape */ $jsonLd ?></script>

@@ -1,0 +1,28 @@
+<?php
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+
+/** @var \Magento\Theme\Block\Html\Header\Logo $block */
+$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+$logoSrc = $block->getLogoSrc();
+$logoWebp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $logoSrc);
+?>
+<span data-action="toggle-nav" class="action nav-toggle"><span><?= $block->escapeHtml(__('Toggle Nav')) ?></span></span>
+<a
+    class="logo"
+    href="<?= $block->escapeUrl($block->getUrl('')) ?>"
+    title="<?= $block->escapeHtmlAttr($storeName) ?>"
+    aria-label="store logo">
+    <picture>
+        <source srcset="<?= $block->escapeUrl($logoWebp) ?>" type="image/webp">
+        <img src="<?= $block->escapeUrl($logoSrc) ?>"
+             title="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+             alt="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+            <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtmlAttr($block->getLogoWidth()) . '"' : '' ?>
+            <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtmlAttr($block->getLogoHeight()) . '"' : '' ?>
+        />
+    </picture>
+</a>

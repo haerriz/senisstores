@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Haerriz_GoogleFeed">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_CatalogInventory"/>
+            <module name="Magento_Store"/>
+        </sequence>
+    </module>
+</config>
