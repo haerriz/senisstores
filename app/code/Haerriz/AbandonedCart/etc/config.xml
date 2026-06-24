@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <haerriz_abandonedcart>
+            <general>
+                <enabled>1</enabled>
+                <abandon_after_hours>2</abandon_after_hours>
+                <max_cart_age_days>7</max_cart_age_days>
+                <batch_size>3</batch_size>
+                <delay_min_seconds>8</delay_min_seconds>
+                <delay_max_seconds>18</delay_max_seconds>
+                <max_products_in_email>4</max_products_in_email>
+            </general>
+        </haerriz_abandonedcart>
+    </default>
+</config>

@@ -23,3 +23,18 @@ php bin/magento cache:flush
 ## Google Merchant Feed
 
 Feed URL: `https://senisstores.com/googlefeed/feed/index`
+
+## Haerriz Abandoned Cart
+
+- `app/code/Haerriz/AbandonedCart` — WooCommerce-style abandoned cart recovery for Magento 2
+- Cron: every 15 minutes, rate-limited (3 emails/run, 8–18s delay)
+- Admin: Stores → Configuration → Haerriz → Abandoned Cart
+
+Enable with:
+
+```bash
+php bin/magento module:enable Haerriz_AbandonedCart
+php bin/magento setup:upgrade
+php bin/magento setup:di:compile
+php bin/magento cache:flush
+```

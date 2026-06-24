@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="haerriz" translate="label" sortOrder="400">
+            <label>Haerriz</label>
+        </tab>
+        <section id="haerriz_abandonedcart" translate="label" sortOrder="20"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Abandoned Cart</label>
+            <tab>haerriz</tab>
+            <resource>Haerriz_AbandonedCart::config</resource>
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="abandon_after_hours" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Send After (hours idle)</label>
+                    <comment>Hours after last cart update before sending reminder.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="max_cart_age_days" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Max Cart Age (days)</label>
+                    <comment>Do not email carts older than this.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="batch_size" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Emails Per Cron Run</label>
+                    <comment>Keep low (3–5) to avoid Hostinger mail suspension.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="delay_min_seconds" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Min Delay Between Emails (seconds)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="delay_max_seconds" translate="label" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Max Delay Between Emails (seconds)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="max_products_in_email" translate="label" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Max Products Shown in Email</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
