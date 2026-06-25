@@ -9,6 +9,7 @@ namespace Haerriz\GoogleFeed\Block\Product;
 
 use Haerriz\GoogleFeed\Model\AvailabilityResolver;
 use Haerriz\GoogleFeed\Model\ShippingWeightFormatter;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
@@ -61,13 +62,51 @@ class StructuredData extends Template
     }
 
     /**
+     * @return Product|null
+     */
+    public function getProduct()
+    {
+        $product = $this->registry->registry('current_product');
+
+        return $product instanceof Product ? $product : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductImageUrl()
+    {
+        $product = $this->getProduct();
+
+        if (!$product) {
+            return '';
+        }
+
+        $image = (string) $product->getImage();
+
+        if ($image === '' || $image === 'no_selection') {
+            return '';
+        }
+
+        $store = $this->_storeManager->getStore();
+
+        return $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $image;
+    }
+
+    /**
      * @return string
      */
     public function getJsonLd()
     {
-        $product = $this->registry->registry('current_product');
+        $product = $this->getProduct();
 
         if (!$product) {
+            return '';
+        }
+
+        $imageUrl = $this->getProductImageUrl();
+
+        if ($imageUrl === '') {
             return '';
         }
 
@@ -83,13 +122,6 @@ class StructuredData extends Template
             (int) $store->getId()
         );
 
-        $image = (string) $product->getImage();
-        $imageUrl = '';
-
-        if ($image !== '' && $image !== 'no_selection') {
-            $imageUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $image;
-        }
-
         $description = strip_tags((string) ($product->getShortDescription() ?: $product->getDescription()));
         $description = trim(preg_replace('/\s+/', ' ', $description));
 
@@ -97,16 +129,24 @@ class StructuredData extends Template
             $description = (string) $product->getName();
         }
 
+        $productUrl = (string) $product->getProductUrl();
+
         $data = [
-            '@context' => 'https://schema.org',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
+            '@id' => $productUrl . '#product',
+            'url' => $productUrl,
             'name' => (string) $product->getName(),
             'sku' => (string) $product->getSku(),
             'description' => $description,
             'image' => $imageUrl,
+            'brand' => [
+                '@type' => 'Brand',
+                'name' => (string) $store->getFrontendName(),
+            ],
             'offers' => [
                 '@type' => 'Offer',
-                'url' => $product->getProductUrl(),
+                'url' => $productUrl,
                 'priceCurrency' => $store->getCurrentCurrencyCode(),
                 'price' => number_format((float) $product->getFinalPrice(), 2, '.', ''),
                 'availability' => $availabilitySchema,

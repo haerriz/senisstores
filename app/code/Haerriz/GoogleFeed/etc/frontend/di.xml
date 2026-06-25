@@ -13,4 +13,9 @@
                 type="Haerriz\GoogleFeed\Plugin\View\Page\Config\RendererPlugin"
                 sortOrder="10"/>
     </type>
+    <type name="Magento\Framework\App\Response\Http">
+        <plugin name="haerriz_googlefeed_strip_product_microdata"
+                type="Haerriz\GoogleFeed\Plugin\Framework\App\Response\StripProductBodyMicrodataPlugin"
+                sortOrder="10"/>
+    </type>
 </config>
