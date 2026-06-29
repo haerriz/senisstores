@@ -8,6 +8,7 @@
 namespace Haerriz\GoogleFeed\Block\Product;
 
 use Haerriz\GoogleFeed\Model\AvailabilityResolver;
+use Haerriz\GoogleFeed\Model\ProductReviewSchemaProvider;
 use Haerriz\GoogleFeed\Model\ShippingWeightFormatter;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
@@ -19,52 +20,30 @@ use Magento\Framework\View\Element\Template\Context;
 class StructuredData extends Template
 {
     /**
-     * @var Registry
-     */
-    private $registry;
-
-    /**
-     * @var AvailabilityResolver
-     */
-    private $availabilityResolver;
-
-    /**
-     * @var ShippingWeightFormatter
-     */
-    private $shippingWeightFormatter;
-
-    /**
-     * @var Json
-     */
-    private $jsonSerializer;
-
-    /**
      * @param Context $context
      * @param Registry $registry
      * @param AvailabilityResolver $availabilityResolver
      * @param ShippingWeightFormatter $shippingWeightFormatter
+     * @param ProductReviewSchemaProvider $productReviewSchemaProvider
      * @param Json $jsonSerializer
      * @param array<mixed> $data
      */
     public function __construct(
         Context $context,
-        Registry $registry,
-        AvailabilityResolver $availabilityResolver,
-        ShippingWeightFormatter $shippingWeightFormatter,
-        Json $jsonSerializer,
+        private readonly Registry $registry,
+        private readonly AvailabilityResolver $availabilityResolver,
+        private readonly ShippingWeightFormatter $shippingWeightFormatter,
+        private readonly ProductReviewSchemaProvider $productReviewSchemaProvider,
+        private readonly Json $jsonSerializer,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->registry = $registry;
-        $this->availabilityResolver = $availabilityResolver;
-        $this->shippingWeightFormatter = $shippingWeightFormatter;
-        $this->jsonSerializer = $jsonSerializer;
     }
 
     /**
      * @return Product|null
      */
-    public function getProduct()
+    public function getProduct(): ?Product
     {
         $product = $this->registry->registry('current_product');
 
@@ -74,7 +53,7 @@ class StructuredData extends Template
     /**
      * @return string
      */
-    public function getProductImageUrl()
+    public function getProductImageUrl(): string
     {
         $product = $this->getProduct();
 
@@ -96,7 +75,7 @@ class StructuredData extends Template
     /**
      * @return string
      */
-    public function getJsonLd()
+    public function getJsonLd(): string
     {
         $product = $this->getProduct();
 
@@ -159,8 +138,13 @@ class StructuredData extends Template
             $data['weight'] = [
                 '@type' => 'QuantitativeValue',
                 'value' => $parts[0],
-                'unitText' => isset($parts[1]) ? $parts[1] : 'kg',
+                'unitText' => $parts[1] ?? 'kg',
             ];
+        }
+
+        $reviewSchema = $this->productReviewSchemaProvider->getSchema($product);
+        if ($reviewSchema !== []) {
+            $data = array_merge($data, $reviewSchema);
         }
 
         return $this->jsonSerializer->serialize($data);

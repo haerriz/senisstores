@@ -1,6 +1,6 @@
 <?php
 /**
- * Product media data template (theme override: adds Product microdata image).
+ * Product media data template.
  *
  * @var $block \Magento\Catalog\Block\Product\View\Gallery
  */
@@ -28,7 +28,6 @@ $mainImageData = $mainImage ?
         alt="main product photo"
         class="gallery-placeholder__image"
         src="<?= $block->escapeUrl($mainImageData) ?>"
-        itemprop="image"
     />
 </div>
 

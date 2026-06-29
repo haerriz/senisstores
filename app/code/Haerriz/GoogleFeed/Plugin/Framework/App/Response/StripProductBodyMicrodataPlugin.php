@@ -12,12 +12,12 @@ use Magento\Framework\App\Response\Http;
 class StripProductBodyMicrodataPlugin
 {
     /**
-     * Remove legacy Product microdata from <body> so Google uses JSON-LD only.
+     * Remove legacy microdata from product pages so Google uses JSON-LD only.
      *
      * @param Http $subject
      * @return void
      */
-    public function beforeSendResponse(Http $subject)
+    public function beforeSendResponse(Http $subject): void
     {
         $body = $subject->getBody();
 
@@ -25,13 +25,25 @@ class StripProductBodyMicrodataPlugin
             return;
         }
 
-        $body = (string) preg_replace(
-            '/\sitemtype="http:\/\/schema\.org\/Product"\sitemscope="itemscope"/i',
-            '',
-            $body,
-            1
-        );
+        $subject->setBody($this->stripMicrodata($body));
+    }
 
-        $subject->setBody($body);
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function stripMicrodata(string $html): string
+    {
+        $patterns = [
+            '/\sitemprop=(["'])[^"']*\1/i',
+            '/\sitemscope(?:=(["'])[^"']*\1)?/i',
+            '/\sitemtype=(["'])[^"']*\1/i',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $html = (string) preg_replace($pattern, '', $html);
+        }
+
+        return $html;
     }
 }
