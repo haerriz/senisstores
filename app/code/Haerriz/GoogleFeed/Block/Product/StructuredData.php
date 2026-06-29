@@ -20,6 +20,31 @@ use Magento\Framework\View\Element\Template\Context;
 class StructuredData extends Template
 {
     /**
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var AvailabilityResolver
+     */
+    private $availabilityResolver;
+
+    /**
+     * @var ShippingWeightFormatter
+     */
+    private $shippingWeightFormatter;
+
+    /**
+     * @var ProductReviewSchemaProvider
+     */
+    private $productReviewSchemaProvider;
+
+    /**
+     * @var Json
+     */
+    private $jsonSerializer;
+
+    /**
      * @param Context $context
      * @param Registry $registry
      * @param AvailabilityResolver $availabilityResolver
@@ -30,20 +55,25 @@ class StructuredData extends Template
      */
     public function __construct(
         Context $context,
-        private readonly Registry $registry,
-        private readonly AvailabilityResolver $availabilityResolver,
-        private readonly ShippingWeightFormatter $shippingWeightFormatter,
-        private readonly ProductReviewSchemaProvider $productReviewSchemaProvider,
-        private readonly Json $jsonSerializer,
+        Registry $registry,
+        AvailabilityResolver $availabilityResolver,
+        ShippingWeightFormatter $shippingWeightFormatter,
+        ProductReviewSchemaProvider $productReviewSchemaProvider,
+        Json $jsonSerializer,
         array $data = []
     ) {
         parent::__construct($context, $data);
+        $this->registry = $registry;
+        $this->availabilityResolver = $availabilityResolver;
+        $this->shippingWeightFormatter = $shippingWeightFormatter;
+        $this->productReviewSchemaProvider = $productReviewSchemaProvider;
+        $this->jsonSerializer = $jsonSerializer;
     }
 
     /**
      * @return Product|null
      */
-    public function getProduct(): ?Product
+    public function getProduct()
     {
         $product = $this->registry->registry('current_product');
 
@@ -53,7 +83,7 @@ class StructuredData extends Template
     /**
      * @return string
      */
-    public function getProductImageUrl(): string
+    public function getProductImageUrl()
     {
         $product = $this->getProduct();
 
@@ -75,7 +105,7 @@ class StructuredData extends Template
     /**
      * @return string
      */
-    public function getJsonLd(): string
+    public function getJsonLd()
     {
         $product = $this->getProduct();
 
@@ -138,7 +168,7 @@ class StructuredData extends Template
             $data['weight'] = [
                 '@type' => 'QuantitativeValue',
                 'value' => $parts[0],
-                'unitText' => $parts[1] ?? 'kg',
+                'unitText' => isset($parts[1]) ? $parts[1] : 'kg',
             ];
         }
 

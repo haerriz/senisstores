@@ -16,22 +16,40 @@ use Magento\Store\Model\StoreManagerInterface;
 class ProductReviewSchemaProvider
 {
     /**
+     * @var ReviewSummaryFactory
+     */
+    private $reviewSummaryFactory;
+
+    /**
+     * @var ReviewCollectionFactory
+     */
+    private $reviewCollectionFactory;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * @param ReviewSummaryFactory $reviewSummaryFactory
      * @param ReviewCollectionFactory $reviewCollectionFactory
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        private readonly ReviewSummaryFactory $reviewSummaryFactory,
-        private readonly ReviewCollectionFactory $reviewCollectionFactory,
-        private readonly StoreManagerInterface $storeManager
+        ReviewSummaryFactory $reviewSummaryFactory,
+        ReviewCollectionFactory $reviewCollectionFactory,
+        StoreManagerInterface $storeManager
     ) {
+        $this->reviewSummaryFactory = $reviewSummaryFactory;
+        $this->reviewCollectionFactory = $reviewCollectionFactory;
+        $this->storeManager = $storeManager;
     }
 
     /**
      * @param Product $product
      * @return array<string, mixed>
      */
-    public function getSchema(Product $product): array
+    public function getSchema(Product $product)
     {
         $storeId = (int) $this->storeManager->getStore()->getId();
         $this->reviewSummaryFactory->create()->appendSummaryDataToObject($product, $storeId);
@@ -73,7 +91,7 @@ class ProductReviewSchemaProvider
      * @param int $storeId
      * @return array<int, array<string, mixed>>
      */
-    private function getReviewItems(Product $product, int $storeId): array
+    private function getReviewItems(Product $product, $storeId)
     {
         $collection = $this->reviewCollectionFactory->create();
         $collection->addStoreFilter($storeId)
@@ -115,7 +133,7 @@ class ProductReviewSchemaProvider
      * @param Review $review
      * @return float|null
      */
-    private function resolveReviewRating(Review $review): ?float
+    private function resolveReviewRating(Review $review)
     {
         foreach ($review->getRatingVotes() as $vote) {
             $percent = (float) $vote->getPercent();

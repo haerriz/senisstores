@@ -17,7 +17,7 @@ class StripProductBodyMicrodataPlugin
      * @param Http $subject
      * @return void
      */
-    public function beforeSendResponse(Http $subject): void
+    public function beforeSendResponse(Http $subject)
     {
         $body = $subject->getBody();
 
@@ -32,12 +32,12 @@ class StripProductBodyMicrodataPlugin
      * @param string $html
      * @return string
      */
-    private function stripMicrodata(string $html): string
+    private function stripMicrodata($html)
     {
         $patterns = [
-            '/\sitemprop=(["'])[^"']*\1/i',
-            '/\sitemscope(?:=(["'])[^"']*\1)?/i',
-            '/\sitemtype=(["'])[^"']*\1/i',
+            '/\sitemprop="[^"]*"/i',
+            '/\sitemscope(?:="[^"]*")?/i',
+            '/\sitemtype="[^"]*"/i',
         ];
 
         foreach ($patterns as $pattern) {
