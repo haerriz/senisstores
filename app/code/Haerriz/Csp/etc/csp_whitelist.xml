@@ -23,8 +23,10 @@
                 <value id="google_static_gstatic" type="host">https://maps.gstatic.com</value>
             </values>
         </policy>
-        <policy id="script-src">
+                <policy id="script-src">
             <values>
+                <value id="gstatic" type="host">https://www.gstatic.com</value>
+                <value id="google_merchant" type="host">*.google.com</value>
                 <value id="google_tag_manager" type="host">https://www.googletagmanager.com</value>
                 <value id="google_analytics" type="host">https://www.google-analytics.com</value>
             </values>
