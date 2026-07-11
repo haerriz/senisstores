@@ -1,1 +1,1 @@
-# senisstores-2.3.3
+# Senisstores Magento Repository\n\nCurrently running **Magento 2.3.7-p4**.\n\nThis repository tracks the core scaffolding, custom modules (`app/code`), and configurations. Dependencies (`vendor/`) and temporary files (`var/`, `generated/`, `pub/static/`) are ignored via `.gitignore`.
