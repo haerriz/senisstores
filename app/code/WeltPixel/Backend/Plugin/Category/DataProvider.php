@@ -39,6 +39,7 @@ class DataProvider
         $fullActionName = $this->request->getFullActionName();
         if ($fullActionName == 'catalog_category_edit') {
             $result = array_merge_recursive($result, $this->_prepareFieldsMeta(
+                $result,
                 $this->_getFieldsMap(),
                 $subject->getAttributesMeta($this->eavConfig->getEntityType('catalog_category'))
             ));
@@ -50,16 +51,17 @@ class DataProvider
     /**
      * Prepare fields meta based on xml declaration of form and fields metadata
      *
+     * @param array $originalResult
      * @param array $fieldsMap
      * @param array $fieldsMeta
      * @return array
      */
-    protected function _prepareFieldsMeta($fieldsMap, $fieldsMeta)
+    protected function _prepareFieldsMeta($originalResult, $fieldsMap, $fieldsMeta)
     {
         $result = [];
         foreach ($fieldsMap as $fieldSet => $fields) {
             foreach ($fields as $field) {
-                if (isset($fieldsMeta[$field])) {
+                if (isset($fieldsMeta[$field]) && (!isset($originalResult[$fieldSet]['children'][$field])))  {
                     $result[$fieldSet]['children'][$field]['arguments']['data']['config'] = $fieldsMeta[$field];
                 }
             }

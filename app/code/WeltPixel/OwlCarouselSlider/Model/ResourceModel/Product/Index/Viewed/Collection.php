@@ -69,7 +69,7 @@ class Collection extends \Magento\Reports\Model\ResourceModel\Product\Index\View
         \Magento\Customer\Model\Visitor $customerVisitor,
         \Magento\Framework\App\Http\Context $httpContext,
         \Magento\Framework\Session\SessionManagerInterface $session,
-        \Magento\Framework\DB\Adapter\AdapterInterface $connection = null
+        ?\Magento\Framework\DB\Adapter\AdapterInterface $connection = null
     )
     {
 

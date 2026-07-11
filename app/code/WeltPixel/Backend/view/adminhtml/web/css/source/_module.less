@@ -303,3 +303,62 @@ iframe#launcher {
         display: none;
     }
 }
+
+.section-config.weltpixel-module-information-header {
+    .admin__collapsible-block {
+        display: block !important;
+        a {
+            font-weight: normal;
+            text-transform: initial;
+            &:before {
+                content: '' !important;
+            }
+        }
+        table {
+            td.label {
+                display: none;
+            }
+            td.value {
+                padding-top: 0;
+                width: 100%;
+            }
+        }
+
+        .wp-module-version {
+            color: #1c8ecb;
+            font-weight: 600;
+        }
+
+        .message {
+            width: fit-content;
+            p {
+                margin: 0;
+            }
+        }
+
+        strong {
+            &.old-version {
+                color: red;
+            }
+            &.current-version {
+                color: green;
+            }
+        }
+
+        .request-feature-button {
+            padding: 20px 0 0 0;
+            #request_feature {
+                background-color: #073756;
+                border: #fff;
+                padding: 10px 15px;
+                color: #FFF;
+                font-weight: 600;
+                &:hover {
+                    background-color: #2f5e7d;
+                    box-shadow: 0 0 10px #073756;
+                }
+            }
+        }
+    }
+
+}

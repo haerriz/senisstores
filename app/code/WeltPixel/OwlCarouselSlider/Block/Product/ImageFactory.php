@@ -76,16 +76,17 @@ class ImageFactory extends \Magento\Catalog\Block\Product\ImageFactory
      * Retrieve image custom attributes for HTML element
      *
      * @param array $attributes
-     * @return string
+     * @return array
      */
-    private function getStringCustomAttributes(array $attributes): string
+    private function filterCustomAttributes(array $attributes): array
     {
-        $result = [];
-        foreach ($attributes as $name => $value) {
-            if (in_array($name, ['weltpixel_lazyLoad'])) continue;
-            $result[] = $name . '="' . $value . '"';
+        if (isset($attributes['class'])) {
+            unset($attributes['class']);
         }
-        return !empty($result) ? implode(' ', $result) : '';
+        if (isset($attributes['weltpixel_lazyLoad'])) {
+            unset($attributes['weltpixel_lazyLoad']);
+        }
+        return $attributes;
     }
 
     /**
@@ -153,7 +154,7 @@ class ImageFactory extends \Magento\Catalog\Block\Product\ImageFactory
      * @param array|null $attributes
      * @return ImageBlock
      */
-    public function create(Product $product, string $imageId, array $attributes = null): ImageBlock
+    public function create(Product $product, string $imageId, ?array $attributes = null): ImageBlock
     {
         $viewImageConfig = $this->presentationConfig->getViewConfig()->getMediaAttributes(
             'Magento_Catalog',
@@ -179,6 +180,8 @@ class ImageFactory extends \Magento\Catalog\Block\Product\ImageFactory
             );
         }
 
+        $attributes = $attributes === null ? [] : $attributes;
+
         $ratioWidth = $imageMiscParams['image_width'] ? intval($imageMiscParams['image_width']) : 0;
         $ratioHeight = $imageMiscParams['image_height'] ? intval($imageMiscParams['image_height']) : 0;
 
@@ -190,7 +193,7 @@ class ImageFactory extends \Magento\Catalog\Block\Product\ImageFactory
                 'height' => $imageMiscParams['image_height'],
                 'label' => $this->getLabel($product, $imageMiscParams['image_type']),
                 'ratio' => $this->getRatio($ratioWidth, $ratioHeight),
-                'custom_attributes' => $this->getStringCustomAttributes($attributes),
+                'custom_attributes' => $this->filterCustomAttributes($attributes),
                 'class' => $this->getClass($attributes),
                 'product_id' => $product->getId()
             ],

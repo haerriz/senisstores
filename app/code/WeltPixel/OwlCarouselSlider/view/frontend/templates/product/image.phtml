@@ -7,15 +7,15 @@
 <?php /** @var $block \Magento\Catalog\Block\Product\Image */ ?>
 
 <img class="photo image <?php if ($block->getLazyLoad()): echo 'owl-lazy'; endif; ?>"
-    <?php /* @escapeNotVerified */ echo $block->getCustomAttributes(); ?>
+    <?php /* @noEscape */ echo $block->getCustomAttributes(); ?>
     <?php if (!$block->getLazyLoad()): ?>
-        src="<?php /* @escapeNotVerified */ echo $block->getImageUrl(); ?>"
+        src="<?php /* @noEscape */ echo $block->getImageUrl(); ?>"
     <?php endif; ?>
-     width="<?php /* @escapeNotVerified */ echo $block->getWidth(); ?>"
-     height="<?php /* @escapeNotVerified */ echo $block->getHeight(); ?>"
-     alt="<?php /* @escapeNotVerified */ echo $block->stripTags($block->getLabel(), null, true); ?>"
+     width="<?php /* @noEscape */ echo $block->getWidth(); ?>"
+     height="<?php /* @noEscape */ echo $block->getHeight(); ?>"
+     alt="<?php /* @noEscape */ echo $block->stripTags($block->getLabel(), null, true); ?>"
     <?php if ($block->getLazyLoad()): ?>
-        data-src="<?php /* @escapeNotVerified */ echo $block->getImageUrl(); ?>"
-        data-src-retina="<?php /* @escapeNotVerified */ echo $block->getImageUrl(); ?>"
+        data-src="<?php /* @noEscape */ echo $block->getImageUrl(); ?>"
+        data-src-retina="<?php /* @noEscape */ echo $block->getImageUrl(); ?>"
     <?php endif; ?>
 />

@@ -12,7 +12,16 @@
     <span class="product-image-wrapper"
           style="padding-bottom: <?= ($block->getRatio() * 100) ?>%;">
         <img class="<?= $block->escapeHtmlAttr($block->getClass()) ?>"
-            <?= $block->escapeHtmlAttr($block->getCustomAttributes()) ?>
+            <?php 
+                $customAttributes = $block->getCustomAttributes();
+                if (is_array($customAttributes)) {
+                    foreach ($customAttributes as $name => $value) {
+                        echo $block->escapeHtmlAttr($name) . '="' . $block->escapeHtml($value) . '" ';
+                    }
+                } else {
+                    echo $block->escapeHtmlAttr($customAttributes);
+                }
+            ?>
             src="<?= $block->escapeUrl($block->getImageUrl()) ?>"
             max-width="<?= $block->escapeHtmlAttr($block->getWidth()) ?>"
             max-height="<?= $block->escapeHtmlAttr($block->getHeight()) ?>"

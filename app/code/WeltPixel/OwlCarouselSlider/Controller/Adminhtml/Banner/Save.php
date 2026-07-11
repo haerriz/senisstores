@@ -40,7 +40,7 @@ class Save extends \WeltPixel\OwlCarouselSlider\Controller\Adminhtml\Banner
 
             if ($bannerImage && $fileName) {
                 try {
-                    /** @var \Magento\Framework\ObjectManagerInterface $uploader */
+                    /** @var \Magento\MediaStorage\Model\File\Uploader $uploader */
                     $uploader = $this->_objectManager->create(
                         'Magento\MediaStorage\Model\File\Uploader',
                         ['fileId' => 'image']

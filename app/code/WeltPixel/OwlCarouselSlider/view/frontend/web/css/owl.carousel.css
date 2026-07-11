@@ -1,3 +1,7 @@
+.owl-preloading-items{
+    max-height: 200px;
+    visibility: hidden;
+}
 .cms-page-view .product-item-info ,
 .cms-index-index .product-item-info{
 	width: auto;
@@ -235,61 +239,11 @@
 [class*=owl-carousel-products-].owl-theme .owl-controls .owl-nav [class*=owl-].owl-prev {
 	left: -55px;
 }
-.owl-theme .owl-controls .owl-nav [class*=owl-].owl-prev:before {
-	position: absolute;
-	top: 26px;
-	left: 8px;
-	z-index: 1;
-	width: 20px;
-	height: 1px;
-	content: "";
-	border-top: 2px solid #000;
-	transform: rotate(40deg);
-	border-radius: 20px;
-	text-indent: 0;
-}
-.owl-theme .owl-controls .owl-nav [class*=owl-].owl-prev:after {
-	position: absolute;
-	top: 14px;
-	left: 8px;
-	z-index: 1;
-	width: 20px;
-	height: 1px;
-	content: "";
-	border-top: 2px solid #000;
-	transform: rotate(-40deg);
-	border-radius: 20px;
-	text-indent: 0;
-}
 .owl-theme .owl-controls .owl-nav [class*=owl-].owl-next {
 	right: 15px;
 }
 [class*=owl-carousel-products-].owl-theme .owl-controls .owl-nav [class*=owl-].owl-next {
 	right: -55px;
-}
-.owl-theme .owl-controls .owl-nav [class*=owl-].owl-next:before {
-	position: absolute;
-	top: 14px;
-	right: 8px;
-	z-index: 1;
-	width: 20px;
-	height: 1px;
-	content: "";
-	border-top: 2px solid #000;
-	transform: rotate(40deg);
-	border-radius: 20px;
-}
-.owl-theme .owl-controls .owl-nav [class*=owl-].owl-next:after {
-	position: absolute;
-	top: 26px;
-	right: 8px;
-	z-index: 1;
-	width: 20px;
-	height: 1px;
-	content: "";
-	border-top: 2px solid #000;
-	transform: rotate(-40deg);
-	border-radius: 20px;
 }
 .owl-theme .owl-controls .owl-nav [class*=owl-]:hover {
 	background: #000000;

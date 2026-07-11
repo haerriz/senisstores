@@ -14,16 +14,17 @@
     $sliderConfig = json_encode($sliderGeneral);
     $mediaUrl     = $this->getMediaUrl();
     $isGatEnabled = $this->isGatEnabled();
+    $sliderTitle = $sliderGeneral['title'] ?? '';
     ?>
 
-    <?php if ($sliderGeneral['show_title'] && trim($sliderGeneral['title'])) : ?>
+    <?php if ($sliderGeneral['show_title'] && trim($sliderTitle)) : ?>
         <div class="content-heading">
-            <h2 class="title"><?php echo $sliderGeneral['title']; ?></h2>
+            <h2 class="title"><?php echo $block->escapeHtml($sliderTitle); ?></h2>
         </div>
     <?php endif; ?>
 
     <div class="custom-slider">
-        <div class="owl-carousel-custom-<?php echo $sliderId;?>">
+        <div class="owl-carousel-custom-<?php /* @noEscape */  echo $sliderId;?>">
             <?php foreach($bannerConfig as $banner) : ?>
                 <?php
                     $title = (array_key_exists('title', $banner) && $banner['title'] !='') ? $banner['title'] : false;
@@ -37,6 +38,9 @@
                     $bannerType = array_key_exists('banner_type', $banner) ? $banner['banner_type'] : '';
                     $image = array_key_exists('image', $banner) ? $banner['image'] : '';
                     $altText = array_key_exists('alt_text', $banner) ? $banner['alt_text'] : '';
+                    if (empty($altText)) {
+                        $altText = $title ?? __("Banner Image");
+                    }
                     $video = array_key_exists('video', $banner) ? $banner['video'] : '';
                     $custom = array_key_exists('custom', $banner) ? $banner['custom'] : '';
                     $buttonText = array_key_exists('button_text', $banner) ? $banner['button_text'] : null;
@@ -49,18 +53,18 @@
                     $gaPromoPosition = array_key_exists('ga_promo_position', $banner) ? $banner['ga_promo_position'] : '';
                 ?>
 
-                    <div class="banner-item banner-<?php echo $banner['id']; ?>">
+                    <div class="banner-item banner-<?php /* @noEscape */  echo $banner['id']; ?>">
                         <?php if ($bannerType == 1) : ?>
                             <?php if (!$buttonText): ?>
                                 <?php if (isset($url)): ?>
-                                    <a
-                                        href="<?php echo $url; ?>"
-                                        target="<?php echo $target; ?>"
+                                    <a aria-label="<?= $block->escapeHtml(__('Banner Item')) ?>"
+                                        href="<?php echo $block->escapeUrl($url); ?>"
+                                        target="<?php /* @noEscape */  echo $target; ?>"
                                         <?php if($isGatEnabled):?>
-                                            data-track-promo-id="<?php echo $gaPromoId; ?>"
-                                            data-track-promo-name="<?php echo $gaPromoName; ?>"
-                                            data-track-promo-creative="<?php echo $gaPromoCreative; ?>"
-                                            data-track-promo-position="<?php echo $gaPromoPosition; ?>"
+                                            data-track-promo-id="<?php /* @noEscape */  echo $gaPromoId; ?>"
+                                            data-track-promo-name="<?php /* @noEscape */  echo $gaPromoName; ?>"
+                                            data-track-promo-creative="<?php /* @noEscape */  echo $gaPromoCreative; ?>"
+                                            data-track-promo-position="<?php /* @noEscape */  echo $gaPromoPosition; ?>"
                                         <?php endif;?>
                                     >
                                 <?php endif; ?>
@@ -68,10 +72,10 @@
                             <span class="banner-image">
                                 <img
                                     <?php if (!$sliderGeneral['lazyLoad']) : ?>
-                                    src="<?php echo $mediaUrl . $image; ?>"
+                                    src="<?php echo $block->escapeUrl($mediaUrl . $image); ?>"
                                     <?php endif; ?>
-                                     alt="<?php echo $altText; ?>" title="<?php echo $altText; ?>"
-                                    <?php echo $sliderGeneral['lazyLoad'] ? 'data-src="' . $mediaUrl
+                                     alt="<?php echo $block->escapeHtmlAttr($altText); ?>" title="<?php echo $block->escapeHtmlAttr($title); ?>"
+                                    <?php /* @noEscape */  echo $sliderGeneral['lazyLoad'] ? 'data-src="' . $mediaUrl
                                         . $image . '" data-src-retina="' . $mediaUrl . $image
                                         . '" class="owl-lazy"' : '' ?>
                                 />
@@ -85,11 +89,11 @@
                         <?php elseif ($bannerType == 3) : ?>
                             <?php if (!$buttonText): ?>
                                 <?php if ($url): ?>
-                                    <a href="<?php echo $url; ?>" target="<?php echo $target; ?>" >
+                                    <a aria-label="<?= $block->escapeHtmlAttr(__('Banner Custom')) ?>" href="<?php echo $block->escapeUrl($url); ?>" target="<?php /* @noEscape */  echo $target; ?>" >
                                 <?php endif; ?>
                             <?php endif; ?>
                                 <span class="banner-custom">
-                                    <?php echo $custom; ?>
+                                    <?php /* @noEscape */  echo $custom; ?>
                                 </span>
                             <?php if (!$buttonText): ?>
                                 <?php if ($url): ?>
@@ -98,41 +102,41 @@
                             <?php endif; ?>
                         <?php elseif ($bannerType == 2) : ?>
                             <span class="banner-video">
-                                <?php echo $this->getVideoHtml($video);  ?>
+                                <?php /* @noEscape */  echo $this->getVideoHtml($video);  ?>
                             </span>
                         <?php endif; ?>
-                        <div class="content_slider banner-type-<?= $bannerType ?>">
+                        <div class="content_slider banner-type-<?= /* @noEscape */  $bannerType ?>">
 
                             <?php if ($showTitle && $title) : ?>
-                                <span class="banner-title"><?php echo $title; ?></span>
+                                <span class="banner-title"><?php /* @noEscape */  echo $title; ?></span>
                             <?php endif; ?>
 
                             <?php if ($showDescription && $description) : ?>
-                                <span class="banner-description"><?php echo $description; ?></span>
+                                <span class="banner-description"><?php /* @noEscape */  echo $description; ?></span>
                             <?php endif; ?>
 
                             <div class="buttons">
                                 <?php if ($customCss): ?>
                                     <style>
-                                        <?php echo $customCss; ?>
+                                        <?php /* @noEscape */  echo $customCss; ?>
                                     </style>
                                 <?php endif; ?>
                                 <?php if ($buttonText && $url): ?>
-                                    <a class="action primary" href="<?php echo $url; ?>" target="<?php echo $target; ?>"
+                                    <a  aria-label="<?= $block->escapeHtmlAttr(__('Button Text')) ?>" class="action primary" href="<?php echo $block->escapeUrl($url); ?>" target="<?php /* @noEscape */  echo $target; ?>"
                                         <?php if($isGatEnabled):?>
-                                            data-track-promo-id="<?php echo $gaPromoId; ?>"
-                                            data-track-promo-name="<?php echo $gaPromoName; ?>"
-                                            data-track-promo-creative="<?php echo $gaPromoCreative; ?>"
-                                            data-track-promo-position="<?php echo $gaPromoPosition; ?>"
+                                            data-track-promo-id="<?php /* @noEscape */  echo $gaPromoId; ?>"
+                                            data-track-promo-name="<?php /* @noEscape */  echo $gaPromoName; ?>"
+                                            data-track-promo-creative="<?php /* @noEscape */  echo $gaPromoCreative; ?>"
+                                            data-track-promo-position="<?php /* @noEscape */  echo $gaPromoPosition; ?>"
                                         <?php endif;?>
                                     >
-                                        <?php echo $buttonText; ?>
+                                        <?php /* @noEscape */  echo $buttonText; ?>
                                     </a>
                                 <?php endif; ?>
                                 <?php if ($customContent): ?>
                                     <div class="clearfix"></div>
                                     <div class="custom_content">
-                                        <?php echo $customContent; ?>
+                                        <?php /* @noEscape */  echo $customContent; ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -155,8 +159,8 @@
             function ($, _) {
                 $(document).ready(function() {
 
-                    var slider_id = <?php echo $sliderId; ?>;
-                    var slider_config = <?php echo $sliderConfig; ?>;
+                    var slider_id = <?php /* @noEscape */  echo $sliderId; ?>;
+                    var slider_config = <?php /* @noEscape */  echo $sliderConfig; ?>;
 
                     var items = ((slider_config.items >= 0 && slider_config.items != null) ? slider_config.items : 1);
                     if(slider_config.transition != 'slide') {
@@ -172,7 +176,7 @@
                         var $this = $(this);
                         var carouselItems = $this.children();
                         var nrOfElements = carouselItems.length;
-                        var requestUrl = '<?php echo $this->getUrl("ajaxowl/banner/validity/slider_id/" . $sliderId); ?>';
+                        var requestUrl = '<?php /* @noEscape */  echo $this->getUrl("ajaxowl/banner/validity/slider_id/" . $sliderId); ?>';
                         $.get({
                             url: requestUrl,
                             cache: false,
@@ -218,19 +222,19 @@
 
 
                         responsive:{
-                            <?php echo $breakpoint['breakpoint_1']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_1']; ?>:{
                                 nav     :parseInt(slider_config.nav_brk1) == 1 ? true : false,
                                 items   :parseInt(slider_config.items_brk1  >= 0 ? slider_config.items_brk1 : 0),
                             },
-                            <?php echo $breakpoint['breakpoint_2']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_2']; ?>:{
                                 nav     :parseInt(slider_config.nav_brk2) == 1 ? true : false,
                                 items   :parseInt(slider_config.items_brk2  >= 0 ? slider_config.items_brk2 : 0),
                             },
-                            <?php echo $breakpoint['breakpoint_3']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_3']; ?>:{
                                 nav     :parseInt(slider_config.nav_brk3) == 1 ? true : false,
                                 items   :parseInt(slider_config.items_brk3  >= 0 ? slider_config.items_brk3 : 0),
                             },
-                            <?php echo $breakpoint['breakpoint_4']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_4']; ?>:{
                                 nav     :parseInt(slider_config.nav_brk4) == 1 ? true : false,
                                 items   :parseInt(slider_config.items_brk4  >= 0 ? slider_config.items_brk4 : 0),
                             }

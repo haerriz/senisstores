@@ -27,6 +27,15 @@ class Developer extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $dateTime;
 
+    /**
+     * @var \Magento\Framework\Component\ComponentRegistrarInterface
+     */
+    protected $componentRegistrar;
+
+    /**
+     * @var \Magento\Framework\Filesystem\Directory\ReadFactory
+     */
+    protected $readFactory;
 
     /**
      * Constructor
@@ -35,18 +44,24 @@ class Developer extends \Magento\Framework\App\Helper\AbstractHelper
      * @param ProductMetadataInterface $productMetadata
      * @param ScheduleFactory $scheduleFactory
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $datetime
+     * @param \Magento\Framework\Component\ComponentRegistrarInterface $componentRegistrar
+     * @param \Magento\Framework\Filesystem\Directory\ReadFactory $readFactory
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         ProductMetadataInterface $productMetadata,
         ScheduleFactory $scheduleFactory,
-        \Magento\Framework\Stdlib\DateTime\DateTime $datetime
+        \Magento\Framework\Stdlib\DateTime\DateTime $datetime,
+        \Magento\Framework\Component\ComponentRegistrarInterface $componentRegistrar,
+        \Magento\Framework\Filesystem\Directory\ReadFactory $readFactory
     )
     {
         parent::__construct($context);
         $this->productMetaData = $productMetadata;
         $this->scheduleFactory = $scheduleFactory;
         $this->dateTime = $datetime;
+        $this->componentRegistrar = $componentRegistrar;
+        $this->readFactory = $readFactory;
     }
 
     /**
@@ -54,7 +69,23 @@ class Developer extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getCurrentServerUser()
     {
-        return get_current_user();
+        if (function_exists('get_current_user')) {
+            return get_current_user();
+        }
+        // Try POSIX (Linux/Unix)
+        if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+            $userInfo = posix_getpwuid(posix_geteuid());
+            if (!empty($userInfo['name'])) {
+                return $userInfo['name'];
+            }
+        }
+        // Try environment variables
+        $user = getenv('USER') ?: getenv('USERNAME');
+        if (!empty($user)) {
+            return $user;
+        }
+        // Fallback: unknown
+        return 'unknown';
     }
 
     /**
@@ -66,7 +97,9 @@ class Developer extends \Magento\Framework\App\Helper\AbstractHelper
             $groupid   = posix_getegid();
             $groupinfo = posix_getgrgid($groupid);
 
-            return $groupinfo['name'];
+            if (is_array($groupinfo)) {
+                return $groupinfo['name'];
+            }
         }
 
         return '-';

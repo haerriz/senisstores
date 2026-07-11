@@ -28,6 +28,7 @@ define(
             $.ajax({
                 url: optionConfig.ajaxUrl,
                 method: 'POST',
+                global: false,
                 cache: false,
                 data: {
                     is_ajax: 1,

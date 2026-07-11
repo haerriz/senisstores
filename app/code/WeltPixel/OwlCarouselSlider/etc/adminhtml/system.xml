@@ -5,6 +5,14 @@
             <label>OWL Product Carousels</label>
             <tab>weltpixel</tab>
             <resource>WeltPixel_OwlCarouselSlider::owlcarouselslider_settings</resource>
+            <group id="module_information" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Important Note</label>
+                <attribute type="expanded">1</attribute>
+                <fieldset_css>weltpixel-gtm-header active</fieldset_css>
+                <field id="important_note" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\ImportantNote</frontend_model>
+                </field>
+            </group>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration for OWL Product Carousels and Banner Sliders</label>
                 <field id="breakpoint_1" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2043,6 +2051,14 @@
             <label>Owl Slider</label>
             <tab>weltpixel</tab>
             <resource>WeltPixel_OwlCarouselSlider::owlcarouselslider_settings</resource>
+            <group id="module_information" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Important Note</label>
+                <attribute type="expanded">1</attribute>
+                <fieldset_css>weltpixel-header active</fieldset_css>
+                <field id="important_note" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\ImportantNote</frontend_model>
+                </field>
+            </group>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Settings</label>
                 <field id="separatorGeneralSlider" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

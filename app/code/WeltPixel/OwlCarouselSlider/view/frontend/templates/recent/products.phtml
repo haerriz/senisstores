@@ -22,10 +22,10 @@ $breakpoint   = $this->getBreakpointConfiguration();
 <div class="custom-slider">
     <?php if (trim($sliderTitle)) : ?>
         <div class="content-heading">
-            <h2 class="title"><?php echo $sliderTitle; ?></h2>
+            <h2 class="title"><?php echo $block->escapeHtml($sliderTitle); ?></h2>
         </div>
     <?php endif; ?>
-    <div class="owl-carousel-products-<?php echo $productsType;?> <?php echo count($products)== 1? 'owl-carousel-products-single-item': '';?>">
+    <div class="owl-carousel-products-<?php /* @noEscape */  echo $productsType;?> <?php /* @noEscape */  echo count($products)== 1? 'owl-carousel-products-single-item': '';?>">
         <?php foreach($products as $product) : ?>
 
             <?php
@@ -36,28 +36,28 @@ $breakpoint   = $this->getBreakpointConfiguration();
 
             <div class="item product product-item">
                 <div data-container="product-grid" class="product-item-info">
-                    <a tabindex="-1" class="product photo product-item-photo" href="<?php echo $productUrl; ?>">
+                    <a aria-label="<?= $block->escapeHtmlAttr(__('Product Page Link')) ?>"  tabindex="-1" class="product photo product-item-photo" href="<?php echo $block->escapeUrl($productUrl); ?>">
                         <span style="width:240px;" class="product-image-container">
                             <span style="padding-bottom: 125%;" class="product-image-wrapper">
                                 <img width="240" height="300"
-                                     alt="<?php echo $product->getName(); ?>"
+                                     alt="<?php echo $block->escapeHtmlAttr($product->getName()); ?>"
                                     <?php if (!$sliderData['lazyLoad']) : ?>
-                                        src="<?php echo $productImage; ?>"
+                                        src="<?php echo $block->escapeUrl($productImage); ?>"
                                     <?php endif; ?>
-                                     class="product-image-photo <?php echo $sliderData['lazyLoad'] ? 'owl-lazy' : '' ?>"
-                                    <?php echo $sliderData['lazyLoad'] ? 'data-src="' . $productImage . '" data-src-retina="' . $productImage . '"' : '' ?>
+                                     class="product-image-photo <?php /* @noEscape */  echo $sliderData['lazyLoad'] ? 'owl-lazy' : '' ?>"
+                                    <?php /* @noEscape */  echo $sliderData['lazyLoad'] ? 'data-src="' . $productImage . '" data-src-retina="' . $productImage . '"' : '' ?>
                                 />
                             </span>
                         </span>
                     </a>
                     <div class="product details product-item-details">
                         <strong class="product name product-item-name">
-                            <a href="<?php echo $productUrl; ?>" class="product-item-link">
-                                <?php echo $product->getName(); ?>
+                            <a href="<?php echo $block->escapeUrl($productUrl); ?>" class="product-item-link">
+                                <?php echo $block->escapeHtml($product->getName()); ?>
                             </a>
                         </strong>
                         <?php if($showPrice) : ?>
-                            <?php /* @escapeNotVerified */ echo $this->getProductPrice($product); ?>
+                            <?php /* @noEscape */ echo $this->getProductPrice($product); ?>
                         <?php endif; ?>
                         <div class="product-item-inner">
                             <div class="product actions product-item-actions">
@@ -70,7 +70,7 @@ $breakpoint   = $this->getBreakpointConfiguration();
                                                       action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
                                                       method="post">
                                                     <?= $block->getBlockHtml('formkey') ?>
-                                                    <button type="submit" class="action tocart primary" title="<?php /* @escapeNotVerified */ echo __('View More') ?>">
+                                                    <button type="submit" class="action tocart primary" title="<?php /* @noEscape */ echo __('View More') ?>">
                                                         <span><?= $block->escapeHtml(__('View More')) ?></span>
                                                     </button>
                                                 </form>
@@ -79,16 +79,16 @@ $breakpoint   = $this->getBreakpointConfiguration();
                                                 $postData = $postDataHelper->getPostData($this->getCustomAddToCartUrl($product), ['product' => $product->getEntityId()])
                                                 ?>
                                                 <button class="action tocart primary"
-                                                        data-post='<?php /* @escapeNotVerified */ echo $postData; ?>'
-                                                        type="button" title="<?php /* @escapeNotVerified */ echo __('Add to Cart') ?>">
-                                                    <span><?php /* @escapeNotVerified */ echo __('Addd to Cart') ?></span>
+                                                        data-post='<?php /* @noEscape */ echo $postData; ?>'
+                                                        type="button" title="<?php /* @noEscape */ echo __('Add to Cart') ?>">
+                                                    <span><?php /* @noEscape */ echo __('Addd to Cart') ?></span>
                                                 </button>
                                             <?php endif; ?>
                                         <?php else: ?>
                                             <?php if ($product->getIsSalable()): ?>
-                                                <div class="stock available"><span><?php /* @escapeNotVerified */ echo __('In stock') ?></span></div>
+                                                <div class="stock available"><span><?php /* @noEscape */ echo __('In stock') ?></span></div>
                                             <?php else: ?>
-                                                <div class="stock unavailable"><span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span></div>
+                                                <div class="stock unavailable"><span><?php /* @noEscape */ echo __('Out of stock') ?></span></div>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
@@ -99,8 +99,8 @@ $breakpoint   = $this->getBreakpointConfiguration();
                                         <div class="secondary-addto-links actions-secondary" data-role="add-to-links">
 
                                             <?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow() && $showWishlist): ?>
-                                                <a href="#" data-post='<?php /* @escapeNotVerified */ echo $block->getAddToWishlistParams($product); ?>'  class="action towishlist" data-action="add-to-wishlist" title="<?php /* @escapeNotVerified */ echo __('Add to Wish List') ?>">
-                                                    <span><?php /* @escapeNotVerified */ echo __('Add to Wish List') ?></span>
+                                                <a href="#" data-post='<?php /* @noEscape */ echo $block->getAddToWishlistParams($product); ?>'  class="action towishlist" data-action="add-to-wishlist" title="<?php /* @noEscape */ echo __('Add to Wish List') ?>">
+                                                    <span><?php /* @noEscape */ echo __('Add to Wish List') ?></span>
                                                 </a>
                                             <?php endif; ?>
 
@@ -109,10 +109,10 @@ $breakpoint   = $this->getBreakpointConfiguration();
                                                 $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');
                                                 ?>
                                                 <a href="#" class="action tocompare"
-                                                   data-post='<?php /* @escapeNotVerified */ echo $compareHelper->getPostDataParams($product);?>'
+                                                   data-post='<?php /* @noEscape */ echo $compareHelper->getPostDataParams($product);?>'
                                                    data-role="add-to-links"
-                                                   title="<?php /* @escapeNotVerified */ echo __('Add to Compare'); ?>">
-                                                    <span><?php /* @escapeNotVerified */ echo __('Add to Compare') ?></span>
+                                                   title="<?php /* @noEscape */ echo __('Add to Compare'); ?>">
+                                                    <span><?php /* @noEscape */ echo __('Add to Compare') ?></span>
                                                 </a>
                                             <?php endif; ?>
                                         </div>
@@ -132,9 +132,9 @@ $breakpoint   = $this->getBreakpointConfiguration();
     require(['jquery', 'owl_carousel', 'owl_config' ],
         function ($) {
             $(document).ready(function(){
-                var products_type = '<?php echo $productsType;?>',
-                    slider_config = <?php echo $sliderConfig; ?>,
-                    productsCount = '<?php echo count($products); ?>',
+                var products_type = '<?php /* @noEscape */  echo $productsType;?>',
+                    slider_config = <?php /* @noEscape */  echo $sliderConfig; ?>,
+                    productsCount = '<?php /* @noEscape */  echo count($products); ?>',
                     carouselElement = $('.owl-carousel-products-' + products_type),
                     items = ((slider_config.items >= 0 && slider_config.items != null) ? productsCount > slider_config.items ? slider_config.items : productsCount : 2),
 
@@ -163,28 +163,28 @@ $breakpoint   = $this->getBreakpointConfiguration();
                         autoplayHoverPause  :parseInt(slider_config.autoplayHoverPause) == 1 ? true : false,
                         autoHeight          :false,
                         responsive:{
-                            <?php echo $breakpoint['breakpoint_1']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_1']; ?>:{
                                 nav             :parseInt(slider_config.nav_brk1) == 1 ? true : false,
                                 dots            :parseInt(slider_config.dots_brk1) == 1 ? true : false,
                                 items           :(productsCount > itemsBrk1) ? itemsBrk1 : productsCount,
                                 center          :parseInt(slider_config.center_brk1) == 1 ? true : false,
                                 stagePadding    :parseInt(slider_config.center) == 1 ? 0 : sPBrk_1
                             },
-                            <?php echo $breakpoint['breakpoint_2']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_2']; ?>:{
                                 nav             :parseInt(slider_config.nav_brk2) == 1 ? true : false,
                                 dots            :parseInt(slider_config.dots_brk2) == 1 ? true : false,
                                 items           :(productsCount > itemsBrk2) ? itemsBrk2 : productsCount,
                                 center          :parseInt(slider_config.center_brk2) == 1 ? true : false,
                                 stagePadding    :parseInt(slider_config.center) == 1 ? 0 : sPBrk_2
                             },
-                            <?php echo $breakpoint['breakpoint_3']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_3']; ?>:{
                                 nav             :parseInt(slider_config.nav_brk3) == 1 ? true : false,
                                 dots            :parseInt(slider_config.dots_brk3) == 1 ? true : false,
                                 items           :(productsCount > itemsBrk3) ? itemsBrk3 : productsCount,
                                 center          :parseInt(slider_config.center_brk3) == 1 ? true : false,
                                 stagePadding    :parseInt(slider_config.center) == 1 ? 0 : sPBrk_3
                             },
-                            <?php echo $breakpoint['breakpoint_4']; ?>:{
+                            <?php /* @noEscape */  echo $breakpoint['breakpoint_4']; ?>:{
                                 nav             :parseInt(slider_config.nav_brk4) == 1 ? true : false,
                                 dots            :parseInt(slider_config.dots_brk4) == 1 ? true : false,
                                 items           :(productsCount > itemsBrk4) ? itemsBrk4 : productsCount,

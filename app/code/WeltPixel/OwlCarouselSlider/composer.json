@@ -1,22 +1,9 @@
 {
-    "name": "weltpixel/m2-weltpixel-owl-carousel-slider",
+    "name": "weltpixel/magento2-weltpixel-owl-carousel-slider-lite",
     "description": "WeltPixel Owl Carousel And Slider Module",
-    "require": {
-        "weltpixel/m2-weltpixel-backend": "*"
-    },
     "type": "magento2-module",
-    "version": "1.11.1",
-    "license": [
-        "OSL-3.0",
-        "AFL-3.0"
-    ],
-    "authors": [
-        {
-            "name": "WeltPixel",
-            "email": "support@weltpixel.com",
-            "homepage": "http://www.weltpixel.com/"
-        }
-    ],
+    "version": "1.16.0",
+    "license": "MIT",
     "autoload": {
         "files": [
             "registration.php"

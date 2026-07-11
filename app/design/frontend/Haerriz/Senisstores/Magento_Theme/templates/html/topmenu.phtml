@@ -1,0 +1,27 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * Theme override: Haerriz/Senisstores
+ * ARIA / WCAG 2.1 compliance fix for navigation landmark.
+ *
+ * The <ul> is given role="menubar" and aria-label statically.
+ * The navigation-aria-fix.js dep then enforces correct roles
+ * after jQuery UI's menu widget initialises.
+ *
+ * @var $block \Magento\Theme\Block\Html\Topmenu
+ */
+
+$columnsLimit = $block->getColumnsLimit() ?: 0;
+$_menuHtml = $block->getHtml('level-top', 'submenu', $columnsLimit);
+?>
+
+<nav class="navigation" data-action="navigation" aria-label="<?= $block->escapeHtmlAttr(__('Main navigation')) ?>">
+    <ul
+        data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'
+    >
+        <?= /* @noEscape */ $_menuHtml ?>
+        <?= $block->getChildHtml() ?>
+    </ul>
+</nav>

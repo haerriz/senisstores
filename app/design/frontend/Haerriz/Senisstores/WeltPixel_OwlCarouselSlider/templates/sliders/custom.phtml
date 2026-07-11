@@ -66,8 +66,25 @@
                                     >
                                 <?php endif; ?>
                             <?php endif; ?>
+                            
+                            <?php 
+                                $imgWidth = '';
+                                $imgHeight = '';
+                                if ($image) {
+                                    $om = \Magento\Framework\App\ObjectManager::getInstance();
+                                    $dirList = $om->get('\Magento\Framework\Filesystem\DirectoryList');
+                                    $absPath = $dirList->getPath('media') . '/' . ltrim($image, '/');
+                                    if (file_exists($absPath)) {
+                                        $imgSize = getimagesize($absPath);
+                                        if ($imgSize) {
+                                            $imgWidth = 'width="' . $imgSize[0] . '"';
+                                            $imgHeight = 'height="' . $imgSize[1] . '"';
+                                        }
+                                    }
+                                }
+                            ?>
                             <span class="banner-image">
-                                <img
+                                <img <?php echo $imgWidth; ?> <?php echo $imgHeight; ?>
                                     <?php if (!$sliderGeneral['lazyLoad'] || $bannerIndex === 0) : ?>
                                     src="<?php echo $mediaUrl . $image; ?>"
                                     <?php if ($bannerIndex === 0) : ?>
@@ -183,7 +200,7 @@
                         $.get({
                             url: requestUrl,
                             cache: false,
-                            async: false
+                            async: true
                         }, function(responseData) {
                             var invalidBanners = responseData.invalidBanners;
                             if (invalidBanners) {

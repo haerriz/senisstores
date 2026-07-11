@@ -1,38 +1,44 @@
 <?php
+/** @var $block \WeltPixel\Backend\Block\Adminhtml\System\Config\SystemInformation */
+
 /** @var \WeltPixel\Backend\Helper\Developer  $developerHelper */
 $developerHelper = $this->helper('WeltPixel\Backend\Helper\Developer');
 $cronjoblimit = 100;
 $scheduleCollection =  $developerHelper->getLatestCronJobs($cronjoblimit);
 
+/** @var \WeltPixel\Backend\Helper\Utility $wpHelper */
+$wpHelper = $this->helper('WeltPixel\Backend\Helper\Utility');
+$cspNonceProvider = $wpHelper->getCspNonceProvider();
+
 ?>
 <div class="col-xs-12 system-infromation-container">
     <div class="col-xs-6 information-label">Magento Mode</div>
-    <div class="col-xs-6"><?php echo ucfirst($this->getMagentoMode()); ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml(ucfirst($this->getMagentoMode())); ?></div>
     <div class="col-xs-6 information-label">Magento Installation Path</div>
-    <div class="col-xs-6"><?php echo $this->getMagentoPath(); ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml($this->getMagentoPath()); ?></div>
     <div class="col-xs-6 information-label">Magento Edition</div>
-    <div class="col-xs-6"><?php echo $developerHelper->getMagentoEdition(); ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml($developerHelper->getMagentoEdition()); ?></div>
     <div class="col-xs-6 information-label">PHP Version</div>
-    <div class="col-xs-6"><?php echo phpversion() ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml(phpversion()) ?></div>
     <div class="col-xs-6 information-label">Server User</div>
-    <div class="col-xs-6"><?php echo $developerHelper->getCurrentServerUser(); ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml($developerHelper->getCurrentServerUser()); ?></div>
     <div class="col-xs-6 information-label">Server User Group</div>
-    <div class="col-xs-6"><?php echo $developerHelper->getCurrentServerUserGroup(); ?></div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml($developerHelper->getCurrentServerUserGroup()); ?></div>
     <div class="col-xs-6 information-label">Current Time</div>
-    <div class="col-xs-6"><?php echo $developerHelper->getServerTime(); ?></div>
-    <div class="col-xs-6 information-label">Latest Cron Jobs (<?php echo $cronjoblimit ?>)</div>
+    <div class="col-xs-6"><?php echo $block->escapeHtml($developerHelper->getServerTime()); ?></div>
+    <div class="col-xs-6 information-label">Latest Cron Jobs (<?php echo $block->escapeHtml($cronjoblimit) ?>)</div>
     <div class="col-xs-6"></div>
 
     <div class="col-xs-12 cronjob-header">
         <table>
             <thead>
-                <tr>
-                    <th class="job-code">Job Code</th>
-                    <th class="status">Status</th>
-                    <th class="created-at">Created At</th>
-                    <th class="scheduled-at">Scheduled At</th>
-                    <th class="executed-at">Executed At</th>
-                </tr>
+            <tr>
+                <th class="job-code">Job Code</th>
+                <th class="status">Status</th>
+                <th class="created-at">Created At</th>
+                <th class="scheduled-at">Scheduled At</th>
+                <th class="executed-at">Executed At</th>
+            </tr>
             </thead>
             <tbody>
             </tbody>
@@ -43,18 +49,18 @@ $scheduleCollection =  $developerHelper->getLatestCronJobs($cronjoblimit);
             <tbody>
             <?php  foreach ($scheduleCollection->getItems() as $item ) : ?>
                 <tr>
-                    <td class="job-code"><?php echo $item->getJobCode(); ?> </td>
-                    <td class="status"><?php echo $item->getStatus(); ?> </td>
-                    <td class="created-at"><?php echo $item->getCreatedAt(); ?> </td>
-                    <td class="scheduled-at"><?php echo $item->getScheduledAt(); ?> </td>
-                    <td class="executed-at"><?php echo ($item->getExecutedAt()) ? $item->getExecutedAt() : '-' ?> </td>
+                    <td class="job-code"><?php /* @noEscape */ echo $item->getJobCode(); ?> </td>
+                    <td class="status"><?php /* @noEscape */ echo $item->getStatus(); ?> </td>
+                    <td class="created-at"><?php /* @noEscape */ echo $item->getCreatedAt(); ?> </td>
+                    <td class="scheduled-at"><?php /* @noEscape */ echo $item->getScheduledAt(); ?> </td>
+                    <td class="executed-at"><?php /* @noEscape */ echo ($item->getExecutedAt()) ? $item->getExecutedAt() : '-' ?> </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-<script>
+<script<?php if ($cspNonceProvider): ?> nonce="<?= $block->escapeHtmlAttr($cspNonceProvider->generateNonce()) ?>"<?php endif; ?>>
     requirejs(['jquery'],function($) {
         $(document).ready(function() {
             $('#row_weltpixel_backend_developer_system_information_infromation_details .label').hide();

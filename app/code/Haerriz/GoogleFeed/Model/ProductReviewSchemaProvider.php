@@ -54,14 +54,17 @@ class ProductReviewSchemaProvider
         $storeId = (int) $this->storeManager->getStore()->getId();
         $this->reviewSummaryFactory->create()->appendSummaryDataToObject($product, $storeId);
 
-        $summary = $product->getRatingSummary();
-        $reviewCount = $summary ? (int) $summary->getReviewsCount() : 0;
+        
+        
+        $ratingPercent = (float) $product->getRatingSummary();
+        $reviewCount = (int) $product->getReviewsCount();
+
 
         if ($reviewCount === 0) {
             return [];
         }
 
-        $ratingPercent = $summary ? (float) $summary->getRatingSummary() : 0.0;
+        
         $ratingValue = round($ratingPercent / 20, 1);
 
         if ($ratingValue <= 0) {

@@ -9,6 +9,7 @@ namespace Haerriz\GoogleFeed\Block\Product;
 
 use Haerriz\GoogleFeed\Model\AvailabilityResolver;
 use Haerriz\GoogleFeed\Model\ProductReviewSchemaProvider;
+use Haerriz\GoogleFeed\Model\ProductIdResolver;
 use Haerriz\GoogleFeed\Model\ShippingWeightFormatter;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
@@ -45,6 +46,11 @@ class StructuredData extends Template
     private $jsonSerializer;
 
     /**
+     * @var ProductIdResolver
+     */
+    private $productIdResolver;
+
+    /**
      * @param Context $context
      * @param Registry $registry
      * @param AvailabilityResolver $availabilityResolver
@@ -60,6 +66,7 @@ class StructuredData extends Template
         ShippingWeightFormatter $shippingWeightFormatter,
         ProductReviewSchemaProvider $productReviewSchemaProvider,
         Json $jsonSerializer,
+        ProductIdResolver $productIdResolver,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -68,6 +75,7 @@ class StructuredData extends Template
         $this->shippingWeightFormatter = $shippingWeightFormatter;
         $this->productReviewSchemaProvider = $productReviewSchemaProvider;
         $this->jsonSerializer = $jsonSerializer;
+        $this->productIdResolver = $productIdResolver;
     }
 
     /**
@@ -140,26 +148,63 @@ class StructuredData extends Template
 
         $productUrl = (string) $product->getProductUrl();
 
+        
+
         $data = [
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             '@id' => $productUrl . '#product',
             'url' => $productUrl,
             'name' => (string) $product->getName(),
-            'sku' => (string) $product->getSku(),
+'sku' => $this->productIdResolver->resolveId($product),
             'description' => $description,
             'image' => $imageUrl,
             'brand' => [
                 '@type' => 'Brand',
                 'name' => (string) $store->getFrontendName(),
             ],
-            'offers' => [
+                        'offers' => [
                 '@type' => 'Offer',
                 'url' => $productUrl,
                 'priceCurrency' => $store->getCurrentCurrencyCode(),
                 'price' => number_format((float) $product->getFinalPrice(), 2, '.', ''),
                 'availability' => $availabilitySchema,
                 'itemCondition' => 'https://schema.org/NewCondition',
+                'hasMerchantReturnPolicy' => [
+                    '@type' => 'MerchantReturnPolicy',
+                    'applicableCountry' => 'IN',
+                    'returnPolicyCategory' => 'https://schema.org/MerchantReturnNotPermitted',
+                    'merchantReturnDays' => 0,
+                    'returnMethod' => 'https://schema.org/ReturnNotPermitted',
+                    'returnFees' => 'https://schema.org/ReturnFeesNotApplicable'
+                ],
+                'shippingDetails' => [
+                    '@type' => 'OfferShippingDetails',
+                    'shippingRate' => [
+                        '@type' => 'MonetaryAmount',
+                        'value' => '75.00',
+                        'currency' => $store->getCurrentCurrencyCode()
+                    ],
+                    'shippingDestination' => [
+                        '@type' => 'DefinedRegion',
+                        'addressCountry' => 'IN'
+                    ],
+                    'deliveryTime' => [
+                        '@type' => 'ShippingDeliveryTime',
+                        'handlingTime' => [
+                            '@type' => 'QuantitativeValue',
+                            'minValue' => 0,
+                            'maxValue' => 7,
+                            'unitCode' => 'd'
+                        ],
+                        'transitTime' => [
+                            '@type' => 'QuantitativeValue',
+                            'minValue' => 1,
+                            'maxValue' => 10,
+                            'unitCode' => 'd'
+                        ]
+                    ]
+                ],
             ],
         ];
 

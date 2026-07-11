@@ -1,22 +1,26 @@
-# m2-weltpixel-owl-carousel-slider
+# magento2-weltpixel-owl-carousel-slider-lite
 
 ### Installation
 
 Dependencies:
- - m2-weltpixel-backend
+- magento2-weltpixel-backend (see https://github.com/Weltpixel/magento2-weltpixel-backend)
 
 With composer:
 
 ```sh
-$ composer config repositories.welpixel-m2-weltpixel-owl-carousel-slider git git@github.com:rusdragos/m2-weltpixel-owl-carousel-slider.git
-$ composer require weltpixel/m2-weltpixel-owl-carousel-slider:dev-master
+$ composer config repositories.weltpixel-magento2-weltpixel-backend git https://github.com/Weltpixel/magento2-weltpixel-backend.git
+$ composer require weltpixel/magento2-weltpixel-backend:dev-master
+
+$ composer config repositories.weltpixel-magento2-weltpixel-owl-carousel-slider-lite git https://github.com/Weltpixel/magento2-weltpixel-owl-carousel-slider-lite.git
+$ composer require weltpixel/magento2-weltpixel-owl-carousel-slider-lite:dev-master
 ```
-Note: Composer installation only available for WeltPixel internal use for the moment as the repositos are not public. However, there is a work around that will allow you to install the product via composer, described in the article below: https://support.weltpixel.com/hc/en-us/articles/115000216654-How-to-use-composer-and-install-Pearl-Theme-or-other-WeltPixel-extensions
 
 
 Manually:
 
-Copy the zip into app/code/WeltPixel/OwlCarouselSlider directory
+Important: Ensure you also install the shared Backend module. If it's already installed, you can skip this. Details in the repo at https://github.com/Weltpixel/magento2-weltpixel-backend.
+
+Copy the zip into the app/code/WeltPixel/OwlCarouselSlider directory
 
 
 #### After installation by either means, enable the extension by running following commands:
@@ -25,3 +29,7 @@ Copy the zip into app/code/WeltPixel/OwlCarouselSlider directory
 $ php bin/magento module:enable WeltPixel_OwlCarouselSlider --clear-static-content
 $ php bin/magento setup:upgrade
 ```
+
+### Documentation
+
+For detailed documentation, please visit: https://weltpixel.com/resources/ModuleDoc/Magento2/OWLCarouselSlider/User-Guide-WeltPixel-Banner-Slider-OWL-Carousel-Magento2.html

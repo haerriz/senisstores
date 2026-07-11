@@ -37,7 +37,7 @@ $fieldAttributes = $fieldId . ' class="' . $fieldClass . '" '
     <?php if ($element->getType() == 'hidden'): ?>
         <?php echo $element->getElementHtml() ?>
     <?php else: ?>
-    <div<?php echo $fieldAttributes ?> data-attribute-code="<?php echo $element->getHtmlId() ?>"
+    <div<?php /* @noEscape */ echo $fieldAttributes ?> data-attribute-code="<?php /* @noEscape */  echo $element->getHtmlId() ?>"
         data-apply-to="<?php echo $block->escapeHtml($this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
         ))?>"
@@ -45,15 +45,15 @@ $fieldAttributes = $fieldId . ' class="' . $fieldClass . '" '
         <?php if ($elementBeforeLabel): ?>
             <?php echo $block->getElementHtml() ?>
             <?php echo $element->getLabelHtml() ?>
-            <?php echo $note ?>
+            <?php /* @noEscape */  echo $note ?>
         <?php else: ?>
             <?php echo $element->getLabelHtml() ?>
             <div class="control">
-                <?php echo($addOn) ? '<div class="addon">' . $block->getElementHtml() . '</div>' : $block->getElementHtml(); ?>
-                <?php echo $note ?>
+                <?php /* @noEscape */  echo($addOn) ? '<div class="addon">' . $block->getElementHtml() . '</div>' : $block->getElementHtml(); ?>
+                <?php /* @noEscape */  echo $note ?>
             </div>
         <?php endif; ?>
-       
+
     </div>
     <?php endif; ?>
 <?php endif; ?>

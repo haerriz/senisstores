@@ -11,10 +11,18 @@
         "sort-packages": true,
         "audit": {
             "block-insecure": false
+        },
+        "allow-plugins": {
+            "magento/*": true,
+            "laminas/laminas-dependency-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "require": {
-        "magento/product-community-edition": "2.3.7-p4"
+        "magento/product-community-edition": "2.4.7",
+        "mageplaza/module-core": "^1.5",
+        "mageplaza/module-smtp": "^4.7",
+        "razorpay/magento": "^4.2"
     },
     "conflict": {
         "gene/bluefoot": "*"

@@ -20,4 +20,19 @@ class ScopeConfig
         }
         return $result;
     }
+
+    public function afterGetValue(
+        ScopeConfigInterface $subject,
+        $result,
+        $path,
+        $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ) {
+        if (preg_match('/^csp\/mode\/storefront_[^\/]+\/report_only$/', $path)) {
+            if ($subject->getValue('weltpixel_backend_developer/csp/change_system_value')) {
+                $result = (boolean) $subject->getValue('weltpixel_backend_developer/csp/report_only');
+            }
+        }
+        return $result;
+    }
 }

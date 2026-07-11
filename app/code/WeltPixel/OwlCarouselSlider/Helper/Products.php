@@ -61,7 +61,7 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
             'items_brk1',
             'center_brk1',
             'stagePadding_brk1',
-            
+
             'nav_brk2',
             'dots_brk2',
             'items_brk2',
@@ -73,7 +73,7 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
             'items_brk3',
             'center_brk3',
             'stagePadding_brk3',
-            
+
             'nav_brk4',
             'dots_brk4',
             'items_brk4',
@@ -128,7 +128,7 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->_scopeConfig->getValue(
             $configPath,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+            ) ?? '';
     }
 
     /**
@@ -140,7 +140,7 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
     public function getProductLimit($type)
     {
         $configPath = self::SYS_PATH . $type . '/max_items';
-        
+
         return (int)$this->_getConfigValue($configPath);
     }
 

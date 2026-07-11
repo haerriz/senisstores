@@ -20,9 +20,14 @@ class ProductIdResolver
      * @param Product $product
      * @return string
      */
-    public function resolveId(Product $product)
+        public function resolveId(Product $product)
     {
         $sku = (string) $product->getSku();
+        
+        // Sanitize SKU for Google Merchant Center and GSC (no spaces, no brackets)
+        $sku = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $sku);
+        $sku = preg_replace('/-+/', '-', $sku);
+        $sku = trim($sku, '-');
 
         if ($sku !== '' && strlen($sku) <= self::MAX_ID_LENGTH) {
             return $sku;

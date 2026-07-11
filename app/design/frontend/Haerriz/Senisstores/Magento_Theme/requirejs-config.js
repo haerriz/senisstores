@@ -5,7 +5,8 @@
  */
 var config = {
     deps: [
-        'Magento_Theme/js/jquery-evalUrl-patch'
+        'Magento_Theme/js/jquery-evalUrl-patch',
+        'Magento_Theme/js/navigation-aria-fix'
     ],
     config: {
         mixins: {
