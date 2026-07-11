@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <shiprocket>
+                <active>0</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Haerriz\Shiprocket\Model\Carrier\Shiprocket</model>
+                <title>Courier Delivery</title>
+                <name>Shiprocket Live Shipping</name>
+                <api_url>https://apiv2.shiprocket.in/v1/external</api_url>
+                <default_length>10</default_length>
+                <default_width>10</default_width>
+                <default_height>10</default_height>
+                <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+            </shiprocket>
+        </carriers>
+    </default>
+</config>

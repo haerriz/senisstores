@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <haerriz_marketing>
+            <general>
+                <enable>0</enable>
+                <batch_size>20</batch_size>
+                <email_subject>Check out our latest arrivals!</email_subject>
+            </general>
+        </haerriz_marketing>
+    </default>
+</config>

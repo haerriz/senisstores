@@ -1,0 +1,32 @@
+<?php
+/** @var $block \Haerriz\Marketing\Block\Email\Products */
+$products = $block->getLatestProducts();
+?>
+<?php if ($products && $products->getSize()): ?>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
+        <tr>
+            <?php foreach ($products as $product): ?>
+                <?php
+                    $storeManager = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Store\Model\StoreManagerInterface::class);
+                    $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+                    $imageUrl = $mediaUrl . 'catalog/product' . $product->getImage();
+                    
+                    $priceHelper = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Pricing\Helper\Data::class);
+                    $formattedPrice = $priceHelper->currency($product->getFinalPrice(), true, false);
+                ?>
+                <td style="width:50%; padding: 10px; text-align: center; vertical-align: top; border: 1px solid #eee; border-radius: 8px;">
+                    <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>" style="text-decoration: none; color: #333; display: block;">
+                        <?php if ($product->getImage() && $product->getImage() !== 'no_selection'): ?>
+                            <img src="<?= $block->escapeUrl($imageUrl) ?>" alt="<?= $block->escapeHtml($product->getName()) ?>" style="max-width: 100%; max-height: 250px; height: auto; margin-bottom: 15px; border-radius: 4px;" />
+                        <?php endif; ?>
+                        <h3 style="font-size: 16px; margin: 0 0 10px; font-weight: 500; color: #222;"><?= $block->escapeHtml($product->getName()) ?></h3>
+                        <p style="font-weight: bold; color: #e91e63; font-size: 18px; margin: 0;"><?= $formattedPrice ?></p>
+                        <div style="margin-top: 15px;">
+                            <span style="background-color: #222; color: #fff; padding: 10px 20px; text-transform: uppercase; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block;">Shop Now</span>
+                        </div>
+                    </a>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    </table>
+<?php endif; ?>

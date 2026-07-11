@@ -1,0 +1,27 @@
+<?php
+/** @var \Haerriz\CustomerReviews\Block\Checkout\Success\CustomerReviews $block */
+$order = $block->getOrder();
+if ($order && $order->getId()):
+    $merchantId = $block->getMerchantId();
+    $orderId = $order->getIncrementId();
+    $email = $block->escapeJs($order->getCustomerEmail());
+    $countryCode = $block->escapeJs($order->getShippingAddress() ? $order->getShippingAddress()->getCountryId() : 'IN');
+    $deliveryDate = $block->getEstimatedDeliveryDate();
+?>
+    <!-- BEGIN GCR Opt-in Module Code -->
+    <script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+    <script>
+      window.renderOptIn = function() {
+        window.gapi.load('surveyoptin', function() {
+          window.gapi.surveyoptin.render({
+            "merchant_id": "<?= $block->escapeJs($merchantId) ?>",
+            "order_id": "<?= $block->escapeJs($orderId) ?>",
+            "email": "<?= $email ?>",
+            "delivery_country": "<?= $countryCode ?>",
+            "estimated_delivery_date": "<?= $deliveryDate ?>"
+          });
+        });
+      }
+    </script>
+    <!-- END GCR Opt-in Module Code -->
+<?php endif; ?>

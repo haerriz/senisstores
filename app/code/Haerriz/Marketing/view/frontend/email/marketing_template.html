@@ -1,0 +1,25 @@
+<!--@subject {{var subject}} @-->
+<!--@vars {
+"var subject":"Email Subject"
+} @-->
+<div style="background-color: #f8f8f8; text-align: center; padding: 20px 0; border-bottom: 1px solid #e0e0e0;">
+    <a href="https://senisstores.com/" target="_blank">
+        <img src="https://senisstores.com/pub/media/logo/stores/1/senisstores-logo-new.png" alt="Senis Stores" style="max-height: 80px; max-width: 100%; border: none; outline: none;" />
+    </a>
+</div>
+<table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <tr>
+        <td style="padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            <h2 style="color: #333; font-size: 24px; margin-bottom: 15px;">Hi there,</h2>
+            <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 30px;">
+                We thought you might like to check out some of our newest arrivals. Discover what's trending at Senis Stores today!
+            </p>
+            
+            {{block class="Haerriz\Marketing\Block\Email\Products" template="Haerriz_Marketing::email/products.phtml"}}
+            
+            <p style="color: #777; font-size: 14px; line-height: 1.5; margin-top: 30px;">
+                Thank you for being a valued subscriber.
+            </p>
+        </td>
+    </tr>
+</table>

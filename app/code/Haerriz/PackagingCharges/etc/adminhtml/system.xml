@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="packaging_charges" translate="label" type="text" sortOrder="350" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Packaging Charges</label>
+            <tab>sales</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Source\Yesno</source_model>
+                </field>
+                <field id="small_fee" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Small Box Fee (INR)</label>
+                    <comment>Packaging charge applied when billable weight is under the small limit.</comment>
+                </field>
+                <field id="small_limit" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Small Box Weight Limit (kg)</label>
+                </field>
+                <field id="medium_fee" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Medium Box Fee (INR)</label>
+                    <comment>Packaging charge applied when billable weight is between small and medium limits.</comment>
+                </field>
+                <field id="medium_limit" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Medium Box Weight Limit (kg)</label>
+                </field>
+                <field id="large_fee" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Large Box Fee (INR)</label>
+                    <comment>Packaging charge applied when billable weight exceeds the medium limit.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

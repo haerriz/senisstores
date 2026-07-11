@@ -1,0 +1,141 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<script type="text/javascript">
+require(['uiRegistry', 'jquery', 'Magento_Checkout/js/model/quote', 'Magento_Customer/js/customer-data', 'domReady!'], function(registry, $, quote, customerData) {
+    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode';
+    var cityPath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city';
+    var regionPath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region';
+    var regionIdPath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id';
+
+    // Recalculate shipping rates when cart items change (e.g. quantity updated in minicart)
+    customerData.get('cart').subscribe(function(cartData) {
+        if (quote.shippingAddress() && quote.shippingAddress().postcode) {
+            quote.shippingAddress.valueHasMutated();
+        }
+    });
+
+    registry.get(postcodePath, function(postcodeComponent) {
+        var isFetching = false;
+        var lastFetchedPostcode = '';
+
+        function handlePostcodeChange(postcode) {
+            if (!postcode) return;
+            postcode = postcode.toString().replace(/\D/g, '');
+            
+            // Only autofill and query if country is India (IN)
+            var countryId = quote.shippingAddress() ? quote.shippingAddress().countryId : 'IN';
+            if (countryId !== 'IN') {
+                return;
+            }
+
+            if (postcode.length === 6 && postcode !== lastFetchedPostcode && !isFetching) {
+                isFetching = true;
+                lastFetchedPostcode = postcode;
+                
+                var $postcodeEl = $('input[name="postcode"]');
+                if ($postcodeEl.length) {
+                    $postcodeEl.css('border-color', '#3498db');
+                }
+                
+                $.getJSON('https://api.postalpincode.in/pincode/' + postcode, function(response) {
+                    isFetching = false;
+                    if (response && response[0] && response[0].Status === 'Success' && response[0].PostOffice) {
+                        var postOffice = response[0].PostOffice[0];
+                        var city = postOffice.District;
+                        var stateName = postOffice.State;
+                        
+                        // Set city value via UI Component registry
+                        registry.get(cityPath, function(cityComponent) {
+                            cityComponent.value(city);
+                        });
+                        
+                        // Set state/region select value via UI Component registry
+                        registry.get(regionIdPath, function(regionIdComponent) {
+                            var matched = false;
+                            var options = typeof regionIdComponent.options === 'function' ? regionIdComponent.options() : regionIdComponent.options;
+                            var regionIdVal = '';
+                            
+                            if (options && options.length) {
+                                $.each(options, function(index, option) {
+                                    if (option.label && option.label.trim().toLowerCase() === stateName.toLowerCase()) {
+                                        regionIdComponent.value(option.value);
+                                        regionIdVal = option.value;
+                                        matched = true;
+                                        return false; // break
+                                    }
+                                });
+                                
+                                if (!matched) {
+                                    $.each(options, function(index, option) {
+                                        if (option.label && option.label.trim().toLowerCase().substring(0, 4) === stateName.toLowerCase().substring(0, 4)) {
+                                            regionIdComponent.value(option.value);
+                                            regionIdVal = option.value;
+                                            matched = true;
+                                            return false; // break
+                                        }
+                                    });
+                                }
+                            }
+                            
+                            if (!matched) {
+                                registry.get(regionPath, function(regionComponent) {
+                                    regionComponent.value(stateName);
+                                });
+                            }
+                            
+                            // Explicitly update quote shipping address and trigger rate estimation
+                            var address = quote.shippingAddress();
+                            if (address) {
+                                address.postcode = postcode;
+                                address.city = city;
+                                if (regionIdVal) {
+                                    address.regionId = regionIdVal;
+                                    address.region = stateName;
+                                } else {
+                                    address.region = stateName;
+                                }
+                                quote.shippingAddress.valueHasMutated();
+                            }
+                        });
+                        
+                        if ($postcodeEl.length) {
+                            $postcodeEl.css('border-color', '#2ecc71');
+                        }
+                    } else {
+                        if ($postcodeEl.length) {
+                            $postcodeEl.css('border-color', '#e74c3c');
+                        }
+                    }
+                }).fail(function() {
+                    isFetching = false;
+                    if ($postcodeEl.length) {
+                        $postcodeEl.css('border-color', '#e74c3c');
+                    }
+                });
+            } else if (postcode.length !== 6) {
+                var $postcodeEl = $('input[name="postcode"]');
+                if ($postcodeEl.length) {
+                    $postcodeEl.css('border-color', '');
+                }
+            }
+        }
+
+        // Subscribe to changes in the postcode UI Component observable
+        postcodeComponent.value.subscribe(handlePostcodeChange);
+
+        // Listen directly to DOM input events so we detect keystrokes immediately
+        $(document).on('input', 'input[name="postcode"]', function() {
+            var postcode = $(this).val().replace(/\D/g, '');
+            if (postcode.length === 6 && postcodeComponent.value() !== postcode) {
+                postcodeComponent.value(postcode);
+            }
+        });
+
+        // Run immediately if there is already a value on load (e.g. from PDP/quote session)
+        if (postcodeComponent.value()) {
+            handlePostcodeChange(postcodeComponent.value());
+        }
+    });
+});
+</script>

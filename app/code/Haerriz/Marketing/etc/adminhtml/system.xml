@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="haerriz" translate="label" sortOrder="2000">
+            <label>Haerriz</label>
+        </tab>
+        <section id="haerriz_marketing" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Marketing Email</label>
+            <tab>haerriz</tab>
+            <resource>Haerriz_Marketing::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="batch_size" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Batch Size</label>
+                    <comment>Number of emails to send per cron run (every 10 minutes) to avoid Hostinger limits. Default is 20.</comment>
+                </field>
+                <field id="email_subject" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Subject</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

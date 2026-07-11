@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <meta name="robots" content="index, follow">
+      <link rel="canonical" href="https://weltpixel.com/resources/ModuleDoc/Magento2/OWLCarouselSlider/User-Guide-WeltPixel-Banner-Slider-OWL-Carousel-Magento2.html" />
+      <link rel="icon" href="images/favicon.png">
+      <title>Guide for Responsive Banner Slider and OWL Product Carousels for Magento 2.</title>
+      <!-- Google fonts ================================================== -->
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet">
+      <!-- Bootstrap core and css styles ================================================== -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/style.css" rel="stylesheet">
+      <!-- Bootstrap core JavaScript ================================================== -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body style="font-family: 'Open Sans', sans-serif;">
+      <div id="product">
+         <!-- Fixed navbar -->
+         <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+               <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="https://www.weltpixel.com/owl-carousel-and-slider.html" target="_blank">
+                  <img src="https://www.weltpixel.com/pub/media/logo/stores/1/WeltPixel_logo_black.svg" alt="weltpixel">
+                  </a>
+               </div>
+               <div id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </a>
+                           <li>
+                              <a href="#install">How to Install</a>
+                           </li>
+                           <li>
+                              <a href="#configure-banner-slider">How to Create a Banner Slider</a>
+                           </li>
+                           <li>
+                              <a href="#configure-products-carousel">How to Create a Products Carousel</a>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <a href="#change-log">Change Log</a>
+                     </li>
+                       <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other Extensions
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/QuickViewAjaxCart/User-Guide-WeltPixel-Quick-View-Ajax-Cart-Magento2.html" target="_blank">Quick View and Ajax Cart PRO</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/RichSnippets/User-Guide-WeltPixel-Rich-Snippets-Schema.html" target="_blank">Rich Snippets & Cards PRO</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/GoogleXMLSitemap/User-Guide-WeltPixel-Google-XML-Sitemap-Magento2.html" target="_blank">Google XML Sitemap</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/SEOPageTitleOverwrite/User-Guide-WeltPixel-SEO-Page-Title-Overwrite-Magento2.html" target="_blank">SEO Page Title Overwrite</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/SmartProductTabs/User-Guide-WeltPixel-Smart-Product-Tabs-Magento2.html" target="_blank">Smart Product Tabs</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/InstagramWidget/User-Guide-WeltPixel-Instagram-Widget-Advanced-Magento2.html" target="_blank">Instagram Feed Widget</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/FullPageScroll/User-Guide-WeltPixel-Full-Page-Scroll-Magento2.html" target="_blank">Full Page Scroll </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/QuickCart/User-Guide-WeltPixel-Quick-Cart-Magento2.html" target="_blank">Quick Cart</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/CMSProductReviewsWidget/User-Guide-WeltPixel-CMS-Product-Review-Widget-Magento2.html" target="_blank">Product Reviews</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/MegaMenu/User-Guide-WeltPixel-MegaMenu-Magento2.html" target="_blank">Mega Menu</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/ThankYouPage/User-Guide-WeltPixel-Custom-Thank-You-Page-Magento2.html" target="_blank">Custom Thank You Page</a>
+               </li>                           
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/Multistore/User-Guide-Multi-Store-Multi-Brand-for-Magento-2.html" target="_blank">Enhanced Multi-Store Multi-Brand</a>
+               </li>
+               <li>
+                    <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/LazyLoading/User-Guide-WeltPixel-LazyLoading-Magento2.html" target="_blank">Enhanced Lazy Loading</a>
+                  </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/AjaxCatalog/User-Guide-Ajax-Catalog-Infinite-Scroll-Magento-2.html" target="_blank">Ajax Catalog and Infinite Scroll</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/AjaxSearch/User-Guide-Ajax-Search-Autocomplete-Magento-2.html" target="_blank">Ajax Search and Autocomplete</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/AdvanceCategorySorting/User-Guide-WeltPixel-Advance-Category-Sorting-Magento2.html" target="_blank">Advanced Category Sort</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/ProductLabels/User-Guide-WeltPixel-Product-Labels-Magento2.html" target="_blank">Product Labels - New, Sale, Discount Stickers</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/SpeedOptimization/User-Guide-WeltPixel-Speed-Optimization-Magento2.html" target="_blank">Speed Optimization</a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/UserProfile/User-Guide-WeltPixel-User-Profile-Magento2.html" target="_blank">User Profile </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/Newsletter/User-Guide-WeltPixel-Newsletter-Popup-Magento2.html" target="_blank"> Newsletter Popup PRO </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/GoogleAnalytics/User-Guide-WeltPixel-Google-Analytics-Enhanced-Ecommerce-Tag-Manager.html" target="_blank">Google Analytics Enhanced PRO </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/LayeredNavigation/User-Guide-WeltPixel-Layered-Navigation-Magento2.html" target="_blank">Layered Navigation PRO </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/EnhancedEmail/User-Guide-WeltPixel-EnhancedEmail-Magento2.html" target="_blank">Enhanced Email </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/CMSBlockScheduler/User-Guide-WeltPixel-Cms-Block-Scheduler-Targeting-Magento2.html" target="_blank">CMS Block Scheduler </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/RecentlyViewed/User-Guide-WeltPixel-Recently-Viewed-Magento2.html" target="_blank">Recently Viewed Products Bar </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/SocialLogin/User-Guide-WeltPixel-Social-Login-Magento2.html" target="_blank">Social Login PRO </a>
+               </li>
+               <li>
+                  <a href="https://weltpixel.com/resources/ModuleDoc/Magento2/AdvancedWishlist/User-Guide-WeltPixel-AdvancedWishlist.html" target="_blank">Advanced Wishlist PRO </a>
+               </li>
+               <li>
+                  <a href="https://wesupplylabs.com" target="_blank">WeSupply Integration - Magento Order Tracking</a>
+               </li>
+                        </ul>
+                     </li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                     <li>
+                        <a href="https://www.weltpixel.com/owl-carousel-and-slider.html" style="    background: #000; color: #fff;">Download</a>
+                     </li>
+                     <li>
+                            <a href="https://support.weltpixel.com/hc/en-us/" target="_blank">Support Knowledge Base</a>
+                     </li>
+                  </ul>
+               </div>
+               <!--/.nav-collapse -->
+            </div>
+         </nav>
+         <!-- Description starts here -->
+         <div id="product-description">
+            <!--Product image DO NOT PUT THIS PART IN MAGENTO-->
+            <div class="section clearfix grey first-product-image" >
+               <div class="col-sm-6 image">
+                  <img src="images/product-owl/img_0.0.png" class="width-full product-image" alt="weltpixel" >
+               </div>
+               <div class="col-sm-6 text" >
+                  <h1>GUIDE FOR RESPONSIVE BANNER SLIDER AND OWL PRODUCT CAROUSELS FOR MAGENTO2.</h1>
+                  <p> <strong>This extension is also included in the <a href="https://www.weltpixel.com/magento-2-theme-pearl#section-pricing" target="_blank">Pearl Theme.</a></strong> </p>
+               </div>
+            </div>
+            <!--end Product image DO NOT PUT THIS PART IN MAGENTO-->
+            
+            <!--How to install-->
+            <div id="install" class="section clearfix black no-padding">
+               <div class="container">
+                  <!-- Main component for a primary marketing message or call to action -->
+                  <div class="jumbotron black ">
+                     <div>
+                        <h2>1 MINUTE INSTALLATION GUI.</h2>
+              <ul>
+                <li>
+                  <strong>Step 1: </strong><br>
+                  Before installing please check the extension compatibility.
+                  This extension is currently compatible with the following Magento versions 2.0.X. - 2.4.4.
+                  It is recommended to install the extension first on a testing server before you install it on a
+                  live (production) server.
+                </li>
+                <li>
+                  <strong>Step 2: </strong><br>
+                  Copy the extension files to below paths of your magento 2 instance. If ‘app/code/WeltPixel’ folder
+                  is missing, please create it manually:  
+                  <br>
+                  <strong>
+                    app/code/WeltPixel/Backend
+                  </strong>
+                  <br>
+                  <strong>
+                    app/code/WeltPixel/OwlCarouselSlider
+                  </strong>
+                </li>
+                <br>
+                <br>
+                <p>
+                  <strong>Optional</strong><br>
+                  Copy the extension files into the below path of your Magento 2 instance. If the ‘app/code/WeSupply’ folder
+                  is missing, please create it manually:  
+                  <br>
+                  <strong>
+                    app/code/WeSupply/Toolbox
+                  </strong>
+                </p>
+                 <li>
+                  <strong>Step 3: </strong><br>
+                  Copy the installation GUI folder 'weltpixel-extension-installation' in the root of your Magento installation. In some Magento configurations the public root folder may be under 'pub' directory.   
+                  <br>
+                  <strong>
+                    www.yourmagentostore.com/<strong>weltpixel-extension-installation/</strong>
+                  </strong>
+                  <br>
+                </li>
+                 <li>
+                <strong>Step 4: </strong><br>
+                  In your browser go to www.yourmagentostore.com/<strong>weltpixel-extension-installation/</strong> and simply follow the installation steps from the graphical interface, presented in your browser. See the installation video: <a href="https://www.weltpixel.com/owl-carousel-and-slider.html#video-installation" target="blank">1 Minute Module Installation via browser GUI.</a>
+                 </li>
+               <li>
+                <strong>Step 5: </strong><br>
+                  Wooohooo! The extension is now installed on your Magento store! Congrats!
+               <br>
+               <br>
+                 </li>
+              </ul>
+              
+                <strong>Troubleshooting</strong><br>
+                 <p> If you experienced any issues or limitations with this quick GUI installation, see also SSH Installation below. SSH installation does the same thing but you are required to issue the commands step by step via CLI. Some servers may have high security configurations and may limit the functionality of this GUI Installer.</p>
+
+                 <!--Video goes here in Magento-->
+
+                 <h2>How to Install via SSH.</h2>
+                        <ul>
+                           <li>
+                              <strong>Step 1: </strong><br>
+                              Before installing Responsive Banner SLIDER and OWL CAROUSEL Extension on a Magento 2 store please check the extension compatibility. This extension is currently compatible with the following Magento versions 2.0.X. - 2.4.4. It is recommended to install the extension first on a testing server before you install it on a live (production) server.
+                           </li>
+                           <li>
+                              <strong>Step 2: </strong><br>
+                              Copy the extension files to below paths of your magento 2 instance. If ‘app/code/WeltPixel’ folder is missing, please create it manually:
+                              <br>
+                              <strong>
+                              app/code/WeltPixel/Backend
+                              </strong>
+                              
+                              <br>
+                              <strong>
+                              app/code/WeltPixel/OwlCarouselSlider
+                              </strong>
+                           </li>
+                           <br>
+                            <br>
+                            <p>
+                              <strong>Optional</strong><br>
+                              Copy the extension files into the below path of your Magento 2 instance. If the ‘app/code/WeSupply’ folder
+                              is missing, please create it manually:  
+                              <br>
+                              <strong>
+                                app/code/WeSupply/Toolbox
+                              </strong>
+                            </p>
+                           <li>
+                              <strong>Step 3: </strong><br>
+                              Access the root of your magento 2 project from command line and run the following commands:
+                              <br>
+                              <strong>
+                              php bin/magento module:enable WeltPixel_Backend --clear-static-content
+                              </strong>
+                              <br>
+                              <strong>
+                              php bin/magento module:enable WeltPixel_OwlCarouselSlider --clear-static-content
+                              </strong>
+                              <br>
+                              <strong>
+                              php bin/magento setup:upgrade
+                              </strong>
+                              <br>
+                              <strong>
+                                 php bin/magento setup:di:compile
+                              </strong>
+                              <br>
+                              <strong>
+                                 php bin/magento setup:static-content:deploy -f
+                              </strong>
+                              <br>
+                           </li>
+                           <li>
+                              <strong>Step 4: </strong><br>
+                              Flush any cache that you might still have enabled on your server or in Magento.
+                           </li>
+                           <li>
+                              <strong>Step 5: </strong><br>
+                              <strong>Woohoo, the extension is installed!</strong>
+                           </li>
+                        </ul>
+                        <h2>How to Upgrade from FREE to PRO version:</h2>
+                        <ul>
+                           <li>
+                              Below instructions only apply if using FREE version of this extension.
+                           </li>
+                           <li>
+                              Replace the extension code under 'app/code/WeltPixel/' with the Pro version and run installation Step 3 & 4 again. 
+                           </li>
+                           <li>
+                              You will not loose existing banners, sliders and carousels, the upgrade will only activate PRO features of OWL Carousel and Slider.
+                           </li>
+                        </ul>
+                        <h2>How to Upgrade the extension.</h2>
+                        <ul>
+                          <li>
+                            <strong>Step 1. </strong>
+                              Remove extension code under <strong>app/code/WeltPixel/OWLCarouselSlider </strong>before adding the new extension files. The extension may be refactored and old unused files may cause random issues so it's best to only keep the latest version of the files.
+                           </li>
+                           <li>
+                              <strong>Step 2. </strong>
+                              Follow normal installation instructions above.
+                           </li>
+                        </ul>
+                        <h2>Magento Marketplace Installation.</h2>
+                            <ul>
+                                <li>If the extension was purchased from the Magento Marketplace, follow the instructions in this article: <a href="https://support.weltpixel.com/hc/en-us/articles/115004328687-How-to-install-extension-if-purchased-from-Magento-Marketplace" target="_blank">How to install extension if purchased from the Magento Marketplace</a></li>
+                                <li>If asked for a license, follow the steps presented in section 7 of this article: <a href="https://support.weltpixel.com/hc/en-us/articles/360006697594-License-key-for-local-staging-development-environment-Multi-store-licensing-" target="_blank">License key for local / staging / development environment. Multi-store licensing. </a></li></ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!--end How to install-->
+            <!--How to configure-->
+            <div id="configure" >
+               <div id="configure-banner-slider">
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 text">
+                        <h2>How to create a Banner Slider.</h2>
+                        <h4>Step 1: Define breakpoints </h4>
+                        <ul>
+                           <li>
+                              Go to <strong>Admin > WeltPixel > OWL Product Carousels > General Configuration for OWL Product Carousels and Banner Sliders</strong>, and set up to four breakpoints for different screen resolutions.
+                           </li>
+                           <li>
+                              In next steps you will be able to set slider item numbers for each breakpoint .
+                              For example, you can set to display 2 items on mobile screens, 3 items on tablets and 4 items on desktop.
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_1.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_2.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              a. Go to <strong>WeltPixel > Banners for Sliders</strong> settings, click on
+                              <strong>Add New Banner</strong> button to create a new banner.
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <p>b.1 configure the banner using the Banner Settings:</p>
+                              <ul>
+                                 <li>
+                                    <strong>Title</strong>  - set a title for the banner
+                                 </li>
+                                 <li>
+                                    <strong>Show Title [Yes / No]</strong>
+                                    - show the banner title in frontend, it will show on the banner
+                                 </li>
+                                 <li>
+                                    <strong>Description</strong>
+                                    - set a description for current banner
+                                 </li>
+                                 <li>
+                                    <strong>Status [Enabled / Disabled]</strong>
+                                    - enable or disable current banner
+                                 </li>
+                                 <li>
+                                    <strong>Slider </strong>
+                                    - assign current banner to a specific Slider.
+                                    Slider Note: If no slider is created yet, you can ignore this option and assign the banner later from Slider Manager
+                                 </li>
+                                 <li>
+                                    <strong>URL </strong>
+                                    - set the URL where the banner/button should link when clicked on.
+                                    <p>
+                                       URL Note: set the URL without your store baseurl, ex: /women.html;
+                                    </p>
+                                    <p>
+                                       URL Note 2: If ‘Text Button’ option is filled, URL will be linked to the button instead of banner
+                                    </p>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_3.1.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_3.2.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <p>..Banner Settings:</p>
+                              <ul>
+                                 <li>
+                                    <strong>Target [Same Window / New Window Tab]</strong>
+                                    - choose where the banner/button link should open
+                                 </li>
+                                 <li>
+                                    <strong>Button Text </strong>
+                                    - fill any text here and it will be displayed on a button on your banner
+                                    <p>Button Text Note: you must set a URL link in order for the button to be displayed on the banner</p>
+                                 </li>
+                                 <li>
+                                    <strong>Banner Type [Image / Video / Custom]</strong>
+                                    - banners can be <strong>Images</strong> (upload mobile and desktop images), <strong>Videos</strong> (insert embed iframe) or <strong>Custom</strong> (insert custom HTML).
+                                    <p>
+                                       Example of banner type: Video
+                                    </p>
+                                    <br>
+                                 <pre class="prettyprint lang-html linenums">
+&lt;iframe id=&quot;ytplayer&quot; type=&quot;text/html&quot; width=&quot;1400&quot;height=&quot;900&quot; 
+src=&quot;https://www.youtube.com/embed/4KEBnFEOOv0?autoplay=1&quot; 
+frameborder=&quot;0&quot; allow=&quot;autoplay; encripted-media&quot; 
+allowfullscreen&gt; &lt;/iframe&gt;</pre>
+                                 </li>
+                                 <li>
+                                    <strong>Create custom banner here</strong>
+                                    - available and applicable only for Banner type ‘Custom’; Here you can create a custom banner different than Image or Video.
+                                 </li>
+                                 <li>
+                                    <strong>Alt Text</strong>- set alternative text if the Banner if an Image; it will show on image hover as tooltip.
+                                 </li>
+                                 <li>
+                                    <strong>Banner class</strong>
+                                    - here you can view the name of the Wrapper class of the current banner. It can be used in Custom Content field to style each banner from the slider. The name of the class is displayed only after you save the banner.
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <p>..Banner Settings:</p>
+                              <ul>
+                                 <li>
+                                    <strong>Custom HTML Content</strong>
+                                    - insert your custom HTML Content, applicable for current banner, all banner types.
+                                    <p>Example of custom HTML content:</p>
+                                    <pre class="prettyprint lang-html linenums">
+                &lt;p class=&quot;myclass&quot;&gt; Custom HTML content&lt;/p&gt;
+              </pre>
+                                 </li>
+                                 <li>
+                                    <strong>Custom CSS</strong>
+                                    - insert your custom CSS, applicable for current banner, all banner types.
+                                    <p>
+                                       Note: Use above ‘Banner Class’ option to apply the CSS only for this banner.
+                                    </p>
+                                    <p>
+                                       Note 2: ‘Banner Class’ option is generated only after the first banner save, if not present, please
+                                       save the banner and continue to edit.
+                                    </p>
+                                    <p>Example of custom CSS:</p>
+                                    <pre class="prettyprint lang-html linenums">
+                .banner-6 .myclass{ font-size: 38px; }
+              </pre>
+                                 </li>
+                                 <li>
+                                    <strong>Banner Valid From</strong>
+                                    - start date for banner to be displayed in Slider.
+                                 </li>
+                                 <li>
+                                    <strong>Banner Valid To</strong>
+                                    - end date for banner to be displayed in Slider.
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_3.3.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_4.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <p>C. Save the banner and repeat steps 1.a and 1.b until you have created all necessary banners for your slider.</p>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 text">
+                        <h4>
+                           Step 3: Create and configure your slider
+                        </h4>
+                        <p>
+                           a. Go to <strong>WeltPixel >  Sliders Manager</strong> settings, click on <strong>Add New Slider</strong>
+                           button to create a new slider.
+                        </p>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_5.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_6.1.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        b. configure the Slider using the Slider Settings:
+                        <p>Slider General Configuration</p>
+                        <ul>
+                           <li>
+                              <strong>Title </strong>
+                              -  set the slider Title
+                           </li>
+                           <li>
+                              <strong>Show Title [Yes / No]</strong>
+                              - if enabled, the slider title configured above will show in frontend
+                           </li>
+                           <li>
+                              <strong>Slider Status [Enabled / Disabled]</strong>
+                              - enable or disable the current slider
+                           </li>
+                           <li>
+                              <strong>Next/Prev buttons [True /  False] </strong>
+                              - show slider navigation buttons
+                              <p>
+                                 Note: This setting is overwritten by responsive settings
+                              </p>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <strong>Dots [True / False]</strong>
+                              - show navigation dots in bottom area of the slider
+                           </li>
+                                                      <li>
+                              <strong>Show Dots for each banner [True / False]</strong>
+                              - show navigation dots for each banner in the slider
+                           </li>
+                           </li>
+                                                      <li>
+                              <strong>Thumbs [True / False]</strong>
+                              - if True, thumbs navigation are displayed
+                           </li>
+                           <li>
+                              <strong>Banner Transition Effect [Slide / Fade]</strong>
+                              - slider transition effect
+                           </li>
+                           <li>
+                              <strong>
+                              Next/Prev button Transition Speed
+                              </strong>
+                              - Set the speed for the transition animation when clicking the Next/Prev buttons. Insert value in ms. Write “4000” for a 4 second timeout
+                           </li>
+                           <li>
+                              <strong>
+                              Dots Transition Speed
+                              </strong>
+                              - Set the speed for the transition animation when clicking the Dots. Insert value in ms. Write “4000” for a 4 second timeout
+                           </li>
+                           <li>
+                              <strong>Center Item [True / False]</strong>
+                              -  shows banners on center of the slider and shows neighbour banners
+                              <p>Note: Center option only available for Banner Transition Effect: Slide</p>
+                           </li>
+                           <li>
+                              <strong>StagePadding </strong>
+                              - shows banners on center of the slider and neighbour banners with specified  padding on the sides.
+                              <p>
+                                 Note: Only available if Transition: Slide and Center:False
+                              </p>
+                           </li>
+                           <li>
+                              <strong>Margin </strong>
+                              - right margin of banners present in slider (in px), by setting this parameter you define the space between banners present in slider.
+                           </li>
+                           <li>
+                              <strong>Items </strong>
+                              - number of items/banners visible at the same time on the slider
+                              <p>
+                                 Note: This setting is overwritten by responsive settings
+                              </p>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_6.2.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_6.3.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <strong>Loop [True / False] </strong>
+                              - control slider banner loop
+                           </li>
+                           <li>
+                              <strong>LazyLoad [True / False]</strong>
+                              - Lazy Load delays loading of images. Images outside of viewport are not loaded until user scrolls to the items.
+                           </li>
+                           <li>
+                              <strong>Autoplay [True / False]</strong>
+                              - activate autoplay for slider items
+                           </li>
+                           <li>
+                              <strong>Autoplay Timeout</strong>
+                              - set time between changing banners (in miliseconds, for ex: 4000, for 4 seconds)
+                           </li>
+                           <li>
+                              <strong>Autoplay Hover Pause [True / False]</strong>
+                              - set the autoplay to pause on mouse hover
+                           </li>
+                           <li>
+                              <strong>Auto Height [True / False]</strong>
+                              - set auto height of the banners in the slider.
+                           </li>
+                           <li>
+                              <strong>Direction Right To Left [True / False]</strong>
+                              - if True, each banner will slide from right to left
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 text">
+                        <i>Slider Responsive Breakpoints</i>
+                        <p><em>NOTE: Below responsive settings will overwrite  Slider General Configuration</em>
+                        </p>
+                        <p><em>NOTE 2: Breakpoints are already configured in Admin > WeltPixel > OWL Product Carousels > General Configuration for OWL Product Carousels and Banner Sliders.
+                           </em>
+                        </p>
+                        <p>
+                           If necessary you can change default settings with the ones you require in your project.
+                        </p>
+                        <ul>
+                           <li>
+                              <strong>Next/Prev Buttons  [True /  False] </strong>
+                              - show slider navigation buttons for each breakpoint configured.
+                           </li>
+                           <li>
+                              <strong>
+                              Items
+                              </strong>
+                              - number of items/banners visible on the slider for each breakpoint
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_6.4.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_7.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <h4>Step 4. Assign Banners to your Slider</h4>
+                        <ul>
+                           <li>
+                              Go to ‘Slider Banners’ tab under ‘Slider Information’
+                           </li>
+                           <li>
+                              Click on Reset Filter to display all your banners.
+                           </li>
+                           <li>
+                              Choose the banners you want to display in your slider.
+                           </li>
+                           <li>
+                              Fill in the banners order in the slider, starting with position 0. If not filled, banners will have by default sort order ‘0’.
+                           </li>
+                           <li>
+                              Hit ‘Save Slider’.
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 text">
+                        <h4>
+                           Step 5 :  How to add slider in magento homepage?
+                        </h4>
+                        <p>You can insert multiple sliders in your pages. Follow next steps to insert in your pages sliders with images/videos or other custom content, using widgets:</p>
+                        <ul>
+                           <li>
+                              Go to <strong>Admin > Content > Pages</strong> and edit the page where you wish to insert the slider
+                           </li>
+                           <li>
+                              In Content tab Show Editor click <strong>Insert Widget</strong> button
+                           </li>
+                           <li>
+                              Select <strong>WeltPixel - Custom Slider Widget</strong>
+                           </li>
+                           <li>
+                              In <strong>Widget Options</strong> choose the Slider you wish to insert in the page
+                           </li>
+                           <li>
+                              Click button <strong>Insert Widget</strong>
+                           </li>
+                           <li>
+                              Save the page and check results
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_8.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/CHANGELOG-L.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <i>Advanced Settings:
+                        </i>
+                        <p>
+                           Advanced users can insert sliders pages that do not have an admin editor by inserting a custom code in the corresponding phtml file.
+                        </p>
+                        <p> <strong>
+                           Inserting Slider code in phtml file
+                           </strong>
+                        </p>
+                        <ul>
+                           <li>
+                              1. Use the following code to insert the slider in your desired phtml file:
+                              <pre class="prettyprint lang-html linenums">
+&lt;?php echo $this-&gt;getLayout()-&gt;createBlock
+(&quot;\WeltPixel\OwlCarouselSlider\Block\Slider\Custom&quot;)-&gt;setSliderId('3')-&gt;toHtml(); ?&gt;
+              </pre>
+                           </li>
+                           <li>
+                              2. Replace the sample value  ‘3’  with the desired existing slider id from <strong>Weltpixel > Sliders Manager</strong>
+                              admin grid.
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               <div id="configure-products-carousel">
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 text">
+                        <h2>HOW TO CREATE A PRODUCT CAROUSEL.</h2>
+                        <h4>
+                           Step 1: Define breakpoints
+                        </h4>
+                        <p>
+                           Go to <strong>Admin > WeltPixel > OWL Product Carousels > General Configuration for OWL Product Carousels and Banner Sliders</strong>
+                           ,and set up to four breakpoints for different screen resolutions.
+                        </p>
+                        <p>
+                           In next steps you will be able to set item numbers in the carousels for each breakpoint . For example, you can set to display 2 items on mobile screens, 3 items on tablets and 4 items on desktop.
+                        </p>
+                        <p>
+                           <em>!Note:  Options set on breakpoints area will overwrite the general carousel options.</em>
+                        </p>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_10.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_11.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <h4>Step 2: Choose the type of product carousel you want to include in your store</h4>
+                        <p>
+                           You can insert/customize <strong>Products Carousels</strong> with the following product types:
+                        </p>
+                        <ul>
+                           <li>
+                              New Products
+                           </li>
+                           <li>
+                              Sale Products
+                           </li>
+                           <li>
+                              Best Sell Products
+                           </li>
+                           <li>
+                              Recently Viewed Products
+                           </li>
+                           <li>
+                              Related Products
+                           </li>
+                           <li>
+                              Upsell Products
+                           </li>
+                           <li>
+                              Cross-sell Products
+                           </li>
+                           <li>
+                              Custom Category Products (show products from specific category)
+                           </li>
+                           <li>
+                              Condition Based Products (show products using conditions combinations)
+                           </li>
+                           <li>
+                              Product Reviews Carousel (display product reviews in a carousel)
+                           </li>
+                        </ul>
+                        <ul>
+                           <br>
+                           <ul>
+                              <li>
+                                 <strong>New Products Carousel</strong>
+                                 - will be populated with products defined as <strong>'New'</strong> in your magento catalog.
+                              </li>
+                              <li>
+                                 <strong>Sale Products Carousel</strong>
+                                 - will be populated with products defined as <strong>Sale</strong> in your magento catalog.
+                              </li>
+                              <li>
+                                 <strong>Best Sell Products Carousel </strong>
+                                 - will be dynamically populated with best selling products based on your magento admin statistics (make sure magento statistics are activated and products are visible in catalog in order to show up.)
+                              </li>
+                              <li>
+                                 <strong>Recently Viewed Products Carousel</strong>
+                                 - will be dynamically populated with products that users visit in your store while they are logged in
+                              </li>
+                              <li>
+                                 <strong>Related Products Carousel</strong>
+                                 - makes sense only on product page, will be populated with related products defined in magento catalog for each specific product.
+                              </li>
+                              <li>
+                                 <strong>Upsell Products Carousel</strong>
+                                 - makes sense only on product page, will be populated with upsell products defined in magento catalog for each specific product
+                              </li>
+                              <li>
+                                 <strong>Cross-sell Products Carousel </strong>
+                                 - makes sense only on product page, will be populated with cross-sell products defined in magento catalog for each specific product
+                                 <p>
+                                    <strong>Note</strong>
+                                    If no products are available to populate a carousel then the carousel will not be displayed in frontend
+                                 </p>
+                              </li>
+                              <li>
+                                 <strong>Custom Category Carousel</strong>
+                                 - carousel will be populated with products from specified category. 
+                              </li>
+                              <li>
+                                 <strong>Conditions Based Products Carousel</strong>
+                                 - you can use custom conditions to configure which specific products combination you'd like to display in the carousel
+                              </li>
+                              <li>
+                                 <strong>Product Reviews Carousel</strong>
+                                 - display product reviews in a carousel (requires the <a href="https://www.weltpixel.com/magento-2-product-reviews-and-rating-extension.html" target="blank">Magento 2 CMS Product Reviews extension</a>)
+                              </li>
+                           </ul>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 text">
+                        <h4>
+                           Step 3: Enable and configure the product carousel
+                        </h4>
+                        <p>Go to
+                           <strong>Admin > WeltPixel > OWL Product Carousels ></strong>
+                           select desired product carousel tab and select <strong>'Enable'</strong>.
+                        </p>
+                        <p>
+                           You have a wide range of options available to customize behaviour of the carousels:
+                        </p>
+                        <ul>
+                           <li>
+                              <strong>Enable [Yes / No]</strong> - Enable or disable the carousel. If Enabled make sure you have inserted the carousel widget in your page/block.
+                              <p>
+                                 <em>
+                                 Note: Related, Cross-sell and Upsell products carousels make sense only on product page, if Enabled the products will be displayed on product page in a carousel instead of default product grid.
+                                 </em>
+                              </p>
+                           </li>
+                           <li>
+                              <strong>
+                              Title [Custom title]
+                              </strong>
+                              - insert text with the title desired, leave the field empty if you do not want the title displayed
+                           </li>
+                           <li>
+                              <strong>
+                              Show Price [Yes / No]
+                              </strong>
+                              - show / hide the product price for products in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Show Add To Cart [Yes / No]
+                              </strong>
+                              - show / hide ‘Add to cart’ button for products in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Show Wishlist [Yes / No]
+                              </strong>
+                              - show / hide wishlist icon for products in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Show Compare [Yes / No]
+                              </strong>
+                              - show / hide Compare icon for products in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Sort Order [ Default / Random / Product ID Ascending / Product ID Descending / Price Ascending / Price Descending / Alphabetically Ascenting / Alphabetically Descending ]
+                              </strong>
+                              - choose the sorting mode for the items in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Max Items
+                              </strong>
+                              - the total number of products to be loaded in the carousel.
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_12.1.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_12.2.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <p>
+                           Beside this general options, there are additional options for customizing each type of carousel:
+                        </p>
+                        <ul>
+                           <li>
+                              <strong>
+                              Next/Prev Button [True / False]
+                              </strong>
+                              - If True, Next / Prev buttons are displayed.
+                              <p>
+                                 <em>
+                                 Note: This setting is overwritten by responsive settings
+                                 </em>
+                              </p>
+                           </li>
+                           <li>
+                              <strong>Dots [True / False] </strong>
+                              - Show / Hide navigation bullets on the bottom of the carousel
+                           </li>
+                           <li>
+                              <strong>Show Dots for each item [True / False] </strong>
+                              - if set to True, a dot will be displayed for each visible item in the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              Center - [True / False]
+                              </strong>
+                              -  shows products on center of the carousel and shows neighbour products on the sides.
+                              <p><em>Note: This setting is overwritten by responsive settings
+                                 </em>
+                              </p>
+                           </li>
+                           <li>
+                              <strong>
+                              StagePadding
+                              </strong>
+                              -  shows products on center of the carousel and neighbour products with specified padding on the sides
+                              <p>
+                                 <em>
+                                 Note: Only available if Center:False
+                                 </em>
+                              </p>
+                              <p>
+                                 <em>
+                                 Note 2: This setting is overwritten by responsive settings
+                                 </em>
+                              </p>
+                           </li>
+                           <li>
+                              <strong>
+                              Items
+                              </strong>
+                              - number of items/banners visible at the same time on the slider. This value should be smaller than Max Items.
+                              <p>
+                                 <em>
+                                 Note: This setting is overwritten by responsive settings
+                                 </em>
+                              </p>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 text">
+                        <ul>
+                           <li>
+                              <strong>Loop [True / False] </strong>
+                              - activate/deactivate loop through items.
+                           </li>
+                           <li>
+                              <strong>Margin </strong>
+                              - Set right side margin for each item in carousel. Example: for a margin of 30px enter 30 in the field.
+                           </li>
+                           <li>
+                              <strong>
+                              LazyLoad [True / False]
+                              </strong>
+                              - Lazy Load delays loading of images. Images outside of viewport are not loaded until user scrolls to them.
+                           </li>
+                           <li>
+                              <strong>
+                              Autoplay [True / False]
+                              </strong>
+                              - autoplay the carousel
+                           </li>
+                           <li>
+                              <strong>
+                              AutoplayTimeout
+                              </strong>
+                              -  set time between changing products (in miliseconds, for ex: 4000, for 4 seconds))
+                           </li>
+                           <li>
+                              <strong>
+                              AutoplayHoverPause [True / False]
+                              </strong>
+                              - set the the autoplay to pause on mouse hover
+                           </li>
+                           <li>
+                              <strong>
+                              Next/Prev button Transition Speed
+                              </strong>
+                              - Set the speed for the transition animation when clicking the Next/Prev buttons. Insert value in ms. Write “4000” for a 4 second timeout
+                           </li>
+                           <li>
+                              <strong>
+                              Dots Transition Speed
+                              </strong>
+                              - Set the speed for the transition animation when clicking the Dots. Insert value in ms. Write “4000” for a 4 second timeout
+                           </li>
+                           <li>
+                              <strong>
+                              Direction Right To Left [ True / False ]
+                              </strong>
+                              - If True, each item will slide from right to left
+                           </li>
+                           <li>
+                              <strong>
+                              Prev/Next buttons design [ Carousel Sides / Under Carousel ]
+                              </strong>
+                              - choose the display area for the Prev/Next buttons
+                           </li>
+                           <li>
+                              <strong>
+                              Prev/Next button label
+                              </strong>
+                              - choose a label for the Prev/Next buttons
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_12.3.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix white">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_13.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <h4>
+                           Step 4: How to add magento featured products slider on homepage?
+                        </h4>
+                        <p>
+                           For <strong>New, Sale, Best Sell, Recently Visited Product Carousels:</strong>
+                        </p>
+                        <ul>
+                           <li>
+                              Go to <strong>Admin > Content > Pages</strong> and edit the page where you wish to insert the carousel
+                           </li>
+                           <li>
+                              In Content tab Show Editor click <strong>'Insert Widget'</strong> button
+                           </li>
+                           <li>
+                              Select <strong>'WeltPixel - Product Carousels Widget'</strong>
+                           </li>
+                           <li>
+                              In <strong>Widget Options</strong> choose the carousel you wish to insert
+                           </li>
+                           <li>
+                              Hit <strong>'Insert Widget'</strong>
+                           </li>
+                           <li>
+                              Save the page and check results
+                           </li>
+                        </ul>
+                        <p>
+                           For <strong>Custom Category Product Carousels:</strong>
+                        </p>
+                        <ul>
+                           <li>
+                              Go to <strong>Admin > Content > Pages</strong> and edit the page where you wish to insert the carousel
+                           </li>
+                           <li>
+                              In Content tab Show Editor click <strong>'Insert Widget'</strong> button
+                           </li>
+                           <li>
+                              Select <strong>'WeltPixel - Custom Category Product Carousel'</strong>
+                           </li>
+                           <li>
+                              In <strong>Widget Options</strong> select the category. The products from selected category will be added in this carousel.
+                           </li>
+                           <li>
+                              Hit <strong>'Insert Widget'</strong>
+                           </li>
+                           <li>
+                              Save the page and check results.
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="section clearfix black">
+                     <div class="col-sm-6 text">
+                        <h4>
+                           For Related, Upsell and Cross-sell Product Carousels
+                        </h4>
+                        <ul>
+                           <li>
+                              <p>
+                                 1. All you have to do is to Enable this types of carousels and the products will be displayed in a carousel instead of default product grid. You can do this here:
+                                 <strong>WeltPixel > OWL Products Carousel -> Related, Up-sell, Cross-sell Products Carousel -> Enable </strong>
+                              </p>
+                           </li>
+                           <li>
+                              <p>
+                                 2. For <strong>Related Products</strong> to be displayed, make sure you have defined Related products in your catalog and check the bottom of product detail page.
+                              </p>
+                           </li>
+                           <li>
+                              <p>
+                                 3. For <strong>Up-sell Products</strong> to be displayed, make sure you have defined Up-sell products in your catalog and check the bottom of product detail page the section “You may also be interested in the following product(s)”.
+                              </p>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_14.png" class="width-full" alt="weltpixel">
+                     </div>
+                  </div>
+                  <div class="section clearfix grey">
+                     <div class="col-sm-6 image no-padding">
+                        <img src="images/product-owl/img_15.png" class="width-full" alt="weltpixel">
+                     </div>
+                     <div class="col-sm-6 text">
+                        <h4>
+                           My carousel is not showing up, help !?
+                        </h4>
+                        <p>
+                           In order for <strong>New</strong> and <strong>Sale</strong> Product Carousel to be displayed, make sure you inserted the carousel in your page/block and there are some products defined as "New" respectively “Sale” in your catalog..
+                        </p>
+                        <p>
+                           In order for <strong>Best Sell Product Carousel</strong> to be displayed make sure you inserted the carousel in your page/block and there are some orders in your store, best selling products are determined based on magento statistics. Make sure Magento statistics are activated and best selling products show up in your magento admin statistics. Make sure your products are visible in Catalog in order to show up in this carousel - simple products marked as not visible individually, will not show up in this carousel only if product visibility is enabled.) 
+                        </p>
+                        <p>
+                           In order for <strong>Recently Viewed Carousel</strong> to be displayed, make sure you inserted the carousel in your page/block.  Users must be logged in and visited at least one product in order for this carousel to be populated.
+                        </p>
+                        <p>
+                           In order for <strong>Related Products Carousels, Up-sell Products Carousels</strong> to be displayed on product page make sure the carousels are Enabled and the product you are checking have defined at least one related or up-sell product in magento catalog.
+                        </p>
+                        <p>
+                           For <strong>Cross-sell Products</strong> to be displayed, make sure you have defined Cross-sell products in your catalog, add that product to cart and check the shopping cart page.
+                        </p>
+                        <p>
+                           For <strong>Custom Category Carousel</strong> to be displayed, make sure you entered the correct category and the category contains at least one product. (option available only in <a href = "https://www.weltpixel.com/owl-carousel-and-slider.html" target="_blank">Pro version</a> of this extension)
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!--end How to configure-->
+            <!--Change Log-->
+            <div id="change-log" class="section clearfix white">
+               <div class="col-sm-6 text">
+                  <h2>Change Log.</h2>
+
+                   <p><strong>What’s new in v.1.11.1 - April 25, 2021</strong></p>
+                   <ul>
+                       <li>Fixed a bug that caused all banners within a Slider to disappear unless there was an Image type banner present in the Slider.
+                       </li>
+                       <li>Fixed an incorrect licensing message on B2B Magento Enterprise instances which would display when an invalid license was entered.
+                       </li>
+                       <li>Confirmed compatibility with the latest Magento 2.4.4 and 2.3.7-p3 versions as well as PHP 8.1.
+                       </li>
+                       <br>
+                       <br>
+                   </ul>
+
+                  <p><strong>What’s new in v.1.10.17 - October 22, 2021</strong></p>
+                    <ul>
+                        <li>New Feature: Added a new sorting option for Recently Viewed Product Carousels that allow for sorting items in the order they were seen.
+                        </li>
+                        <li>New Feature: Added new options to control banner transtion speed when using the AutoPlay functionality.
+                        </li>
+                        <li>New Feature: Added options to control radius for Banner Slider Next/Prev buttons.
+                        </li>
+                        <li>Fixed a bug that caused the Next/Prev text to show on Next/Prev carousel and banner buttons.
+                        </li>
+                        <li>Confirmed compatibility with the latest Magento 2.4.3-p1 and 2.3.7-p2 versions.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.15 - August 31, 2021</strong></p>
+                    <ul>
+                        <li>Fixed an error that occurred when inserting a Sale Carousel into a CMS Page when the Magento Flat Catalog was enabled.
+                        </li>
+                        <li>Added minor CSS adjustments to Carousel and Banner arrows.
+                        </li>
+                        <li>Confirmed compatibility with the newly released Magento 2.4.3, 2.4.2-p2 and 2.3.7-p1 versions.
+                        </li>
+                        <li>Added .localhost as an accepted domain termination for the licensing process.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.11 - July 7, 2021</strong></p>
+                    <ul>
+                        <li>Added improvments to the WeltPixel Developer Magento Admin section. Latest Cron Jobs now lists the last 100 executed Cron Jobs.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.9 - May 18, 2021</strong></p>
+                    <ul>
+                        <li>Fixed a bug that, in some cases, prevented video and custom banner types from functioning due to a code dependency on mobile image.
+                        </li>
+                        <li>Fixed an error that was thrown on the frontend when the default Magento Sale Attribute did not exist on the Magento instance.
+                        </li>
+                        <li>Fixed an issue that prevented Banner statuses from being updated from the Magento Admin grid.
+                        </li>
+                        <li>Added minor CSS adjustments to Banners without the autoheight functionality enabled.
+                        </li>
+                        <li>Confirmed compatibility with the newly released Magento 2.3.7 and 2.4.2-p1 versions.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.7 - March 26, 2021</strong></p>
+                    <ul>
+                        <li>New feature: Added an integration with our Product Labels module which now allows for displaying Product Labels on Product Carousels, both via widgets and Related/Up-Sell Carousels on Product Pages. Requires the <a href="https://www.weltpixel.com/magento-2-product-labels-new-sale-discount-stickers.html" target="blank"><strong>WeltPixel Product Labels</strong></a> extension.
+                        </li>
+                        <li>Added additional verifications to prevent errors when certain product attributes were missing from the Magento instance.
+                        </li>
+                        <li>Fixed a bug that prevented scrolling on mobile when touching a Product Carousel or Banner Slider.
+                        </li>
+                        <li>Fixed a small misalignment of the old price discounted price in Product Carousels.
+                        </li>
+                        <li>Added minor CSS adjutsments to the Next/Prev arrows functionality.
+                        </li>
+                        <li>Fixed a minor height calculation issue for Banner Sliders.
+                        </li>
+                        <li>Removed an unused library for improved performance.
+                        </li>
+                        <li>Excluded Magento 2.0.x - 2.2.x from new features and fixes starting with this release.
+                        </li>
+                        <li>Adjusted WeltPixel Developer section comments.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.5 - February 12, 2021</strong></p>
+                    <ul>
+                        <li>New Feature: Added additional Sorting Options for items in Product Carousels. Options include: Product ID Ascending / Product ID Descending / Price Ascending / Price Descending / Alphabetically Ascending / Alphabetically Descending.
+                        </li>
+                        <li>New Feature: Added new Design Options for Next/Prev buttons. This includes position options for Next/Prev Arrows, options for Dots Navigation, as well as allowing you to set custom transition speeds for both designs.
+                        </li>
+                        <li>Added new Prev/Next design options and transition speed options when using the CMS Reviews Widget with the OWL Carousel extension (Requires the <a href="https://www.weltpixel.com/magento-2-product-reviews-and-rating-extension.html" target="blank">CMS Product Reviews Widget extension</a>).
+                        </li>
+                        <li>New Feature: Added a new Carousel Type based on user-defined conditions. This provides more control over which products are displayed in the widget.
+                        </li>
+                        <li>Fixed an issue that prevented products with a Special Price from being included in Sale Product Carousels.
+                        </li>
+                        <li>Fixed an issue that resulted in browser error being thrown on mobile upon scrolling between products in a Carousel.
+                        </li>
+                        <li>Confirmed compatibility with the newly released Magento 2.4.2 version.
+                        </li>
+                        <li>Added additional backend versioning verifications.
+                        </li>
+                        <li>Backend module code optimizations.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.1 - October 22, 2020</strong></p>
+                    <ul>
+                        <li>Fixed a bug that caused an inability to save Banners from within the Sliders Manager section in the Magento Admin.
+                        </li>
+                        <li>Fixed an issue related to the Bestsellers Product Carousel whereby changing the period for items to be displayed did not work.
+                        </li>
+                        <li>Confirmed compatibility with the newly released Magento 2.4.1 version.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.10.0 - August 10, 2020</strong></p>
+                    <ul>
+                        <li>Fixed a small issue that caused Product Carousels to shift by one item upon page load. This was only a problem for the Best Sell Product Carousel.
+                        </li>
+                        <li>Confirmed compatibility with the newly released Magento 2.4.0 version.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.8 - July 6, 2020</strong></p>
+                    <ul>
+                        <li>Fixed an issue which, on certain configurations caused Add to Carts from product carousels to be redirected to a 404 page.
+                        </li>
+                        <li>Added an integration with the Product Reviews Widget extension to allow for reviews to be displayed in a carousel.
+                        </li>
+                        <li>Fixed a bug that caused banners to be deselected in the banner grid when changing the Sort Order.
+                        </li>
+                        <li>Whitelisted domain for Content Security Policies introduced in Magento 2.3.5.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.7 - May 7, 2020</strong></p>
+                    <ul>
+                        <li>Fixed a display issue present only on the Internet Explorer and Edge browsers.
+                        </li>
+                        <li>Confirmed compatibility with Magento 2.3.5.
+                        </li>
+                        <li>Implemented small Backend performance optimizations.
+                        </li>
+                        <li>Added nxcli.net (Nexcess temporary URL) as a valid domain in the licensing process.
+                        </li>
+                        <li>Added an option in the Developer section to allow for switching Magento's CSP between "report-only" and "restrict".
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.6 - April 9, 2020</strong></p>
+                    <ul>
+                        <li>Fixed a bug that caused images to disappear from Product Carousels when Lazy Load was enabled and Loop was disabled via Carousel options.
+                        </li>
+                        <li>Fixed an issue whereby the Recently Viewed Products carousel was not working.
+                        </li>
+                        <li>Addressed a few browser warnings related to jQuery UI.
+                        </li>
+                        <li>Fixed a Backend issue on Magento Commerce whereby the Category Schedule functionality was not working properly.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.5 - March 10, 2020</strong></p>
+                    <ul>
+                        <li>Added backend Google reCaptcha compatibility for Magento 2.3.x
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.4 - February 5, 2020</strong></p>
+                    <ul>
+                        <li>Removed obsolete export functionality from the Banner Slider Magento Admin settings.
+                        </li>
+                        <li>Code enhancements for increased security. Changed User Group info collection method.
+                        </li>
+                        <li>Confirmed compatibility for Magento 2.3.4.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.2 - November 27, 2019</strong></p>
+                    <ul>
+                        <li>Optimized compatibility with Full Page Cache and Varnish Cache for the Schedule Banner functionality.
+                        </li>
+                        <li>Fixed an issue which whereby "Next" and "Prev" text was displayed on Banner next / prev buttons on the Chrome browser. This issue was caused by a recent Google Chrome update. 
+                        </li>
+                        <li>Fixed an issue whereby the Select All button did not work on Related Product carousels.
+                        </li>
+                        <li>Added new translations.
+                        </li>
+                        <li>Added Magento and PHP version in the WeltPixel Developer section.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.1 - October 16, 2019</strong></p>
+                    <ul>
+                        <li>Fixed an issue which caused the Random Sort option to malfunction.
+                        </li>
+                        <li>Removed obsolte isScopePrivate parameter to ensure best practice.
+                        </li>
+                        <li>Fixed an issue which caused certain carousel templates to load on the frontend even when disabled.
+                        </li>
+                        <li>Fixed an error that was thrown in the Magento Admin when disabling the Best Sell Carousel.
+                        </li>
+                        <li>Added comments in the Admin Section for better explaining the Add to Wishlist and Add to Compare options.
+                        </li>
+                        <li>Added the possibility to show review stars on Product Carousels.
+                        </li>
+                        <li>Fixed a caching issue that occurred when a carousel was inserted both on the Home Page and on the Product Page.
+                        </li>
+                        <li>CSS adjustments.
+                        </li>
+                        <li>Confirmed compatibility with the latst Magento 2.3.3 version.
+                        </li>
+                        <li>Included the <a href="https://wesupplylabs.com/" target="blank">WeSupply</a> Toolbox integration extension - Proactive Notifications Email & SMS, Returns & RMA, Store Locator, Delivery Date Estimate, Logistics Analytics, NPS & CSAT score. Get Free on-boarding and launch within 24 hours. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.9.0 - July 18, 2019</strong></p>
+                    <ul>
+                        <li>Fixed a bug related to a missing img tag when the Lazy Load option was used with a Related Products carousel. The bug affected the Free version only.
+                        </li>
+                        <li>Fixed an issue which caused the Related Products carousel title to display even if the carousel was disabled.
+                        </li>
+                        <li>Fixed a bug which caused Carousel display issues when inserted as a widget into certain page sections.
+                        </li>
+                        <li>Confirmed compatibility with Magento 2.3.2.
+                        </li>
+                        <li>Added HTTPS endpoint for licensing process.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.8.5 - June 7, 2019</strong></p>
+                    <ul>
+                        <li>Fixed an issue which caused the Loop functionality not to work when Lazy Loading was applied to product carousels.
+                        </li>
+                        <li>Fixed a bug that caused product images to disappear on mobile when they had Listing Hover Images applied.
+                        </li>
+                        <li>Fixed a duplicate id error that occured when using a Best Sell Carousel.
+                        </li>
+                        <li>Adjusted Next/Prev button arrow positioning on all resolutions.
+                        </li>
+                        <li>-Corrected a spelling error in the Recently Viewed Products carousel template.
+                        </li>
+                        <li>Small CSS adjustments.
+                        </li>
+                        <li>Small performance improvements.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.8.4 - April 25, 2019</strong></p>
+                    <ul>
+                        <li>Added PHP version in the WeltPixel Developer Section.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.8.3 - April 3rd, 2019</strong></p>
+                    <ul>
+                        <li>Added a new functionality. A thumb image can now be added to each banner and can be used to switch between them. The functionality is similar to Dots, but now images can be added instead. Available only in the PRO version of the module.
+                        </li>
+                        <li>Fixed an issue related to product page caching when extension was enabled.
+                        </li>
+                        <li>CSS adjustments.
+                        </li>
+                        <li>Confirmed compatibility for Magento 2.3.1.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.8.2 - January 24, 2019</strong></p>
+                    <ul>
+                        <li>Added the option to upload a new loader image for banners and carousels directly from the Magento Admin.
+                        </li>
+                        <li>Fixed placeholder for video on owl banner/slider. 
+                        </li>
+                        <li>Fixed a bug in which adding a product to the cart directly from the carousel redirected to a blank page.
+                        </li>
+                        <li>Custom CSS code added to the banners is now applied all the time, not only when Custom HTML content also added from the admin.
+                        </li>
+                        <li>Code optimization, removed duplicated code.
+                        </li>
+                        <li>Helpcenter adjustment, removed Zendesk iframe and added a simple link to our Support Center in order to avoid any potential conflicts with other admin js added by 3rd party extensions.
+                        </li>
+                        <li>Fix for multiple rewritten ImageFactory classes, rewrite check validity, rewrite checks optimizations.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.8.0 - December 8, 2018</strong></p>
+                    <ul>
+                        <li>Added Slide By functionality (PRO Version only) - Single or multiple item slide on Carousel scroll.
+                        </li>
+                        <li>Fixed a bug where the 'Select All' action in Magento Admin was not applying to Banner Slider grid in Admin. 
+                        </li>
+                        <li>Compatibility adjustments for Magento 2.1.16/2.2.7/2.3.0. 
+                        </li>
+                        <li>PHP 7.2 compatibility added.
+                        </li>
+                        <li>As Magento 2.3 comes with major core changes, we have provided a different set of files in order to achieve the best performance on each version.
+                        </li>
+                        <br>
+                        <br>
+                    </ul>
+
+                  <p><strong>What’s new in v.1.7.5 - October 24, 2018</strong></p>
+                    <ul>
+                        <li>Optimization - use the mobile image as fallback if no desktop image is used. 
+                        </li>
+                        <li>Fixed bug - now you can disable slider from slider grid in admin panel. 
+                        </li>
+                        <li>Added cache lifetime parameter to widget in order to avoid out of stock products showing up in carousel - re-add widget to page to receive this fix - it is not enough to update the extension. 
+                        </li>
+                        <li>Added detailed error messages for invalid licenses for an easier identification of the cause.
+                        </li>
+                        <li>License improvements, added *.magento.cloud as a valid test domain for Enterprise Cloud environments. Now both ‘magentosite.cloud’ and ‘magneto.cloud’ can be used for testing purpose with the production domain license.
+                        </li>
+                        <br>
+                        <br>
+                    </ul> 
+
+                  <p><strong>What’s new in v.1.7.4 - September 25, 2018</strong></p>
+                    <ul>
+                        <li>Fixed carousel and sliders arrows (design) for IE11 and Edge browsers. 
+                        </li>
+                        <li>Admin menu styling to fit screen size 1366px. 
+                        </li>
+                        <li>Fix for production mode with merged JS - missing color pallet display now fixed. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul> 
+
+                  <p><strong>What’s new in v.1.7.3 - August 23, 2018</strong></p>
+                    <ul>
+                        <li>New feature: Banners are now reusable in multiple Sliders (Pro feature). 
+                        </li>
+                        <li>New feature: OWL Best sell carousel - added option to select period for best sell statistics day, week, month, year, all time. (Pro feature). 
+                        </li>
+                        <li>Fixed banner preview in Magento admin, keep original ratio (both Free and Pro). 
+                        </li>
+                        <li>License improvements, adding *.magento.cloud as a valid test domain. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul> 
+
+                  <p><strong>What’s new in v.1.7.2 - August 2, 2018</strong></p>
+                    <ul>
+                        <li>Fixed currency cache issue. 
+                        </li>
+                        <li>Mobile optimizations. 
+                        </li>
+                        <li>Best seller carousel max items limit now working. 
+                        </li>
+                        <li>Fixed admin random logout issue. 
+                        </li>
+                        <li>Licensing improvements, allowing 3 letter domain as valid domain. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul> 
+
+                  <p><strong>What’s new in v.1.7.1 - July 12, 2018</strong></p>
+                    <ul>
+                        <li>Compatibility with Magento 2.2.5 both Open Source & Commerce Cloud B2B. 
+                        </li>
+                        <li>Added domain.test & [any_subdomain].domain.test to the list of valid urls for staging/development environments. Added domain validation with port number included for licensing purpose. 
+                        </li>
+                        <li>Added licensing compatibility with Magento B2B. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul>  
+
+                        <p><strong>What’s new in v.1.7.0 - July 5, 2018</strong></p>
+                          <ul>
+                              <li>Recently viewed widget optimization, widget loaded even if not added to homepage. 
+                              </li>
+                              <li>Optimized image loading for banners, mobile image not showed anymore in desktop view.
+                              </li>
+                              <li>Added option to enable/disable WeltPixel admin notifications. 
+                              </li>
+                              <li>Show store and server related information under debugging tab: Magento Mode, Magento Edition, Server User, Magento Installation Path, Current server time, Latest cron jobs.
+                              </li>
+                              <li>Added licensing, license key needs to be generated under weltpixel.com account for purchased product, based on domain name and added under your magento installation.
+                              </li>
+                              <br>
+                              <br>
+                          </ul>
+
+                  <p><strong>What’s new in v.1.6.4 - May 16, 2018</strong></p>
+                    <ul>
+                        <li>Compatibility with Magento 2.2.4, logger broken reference fix, changed to rewrite from plugin. 
+                        </li>
+                        <li>Recently viewed products now showing in carousels when full page cache is enabled. 
+                        </li>
+                        <li>Recently viewed products now showing in carousels even for guest users. 
+                        </li>
+                        <br>
+                        <br>
+                    </ul>  
+
+
+
+                   <p><strong>What’s new in version 1.6.3 - April 10, 2018</strong></p>
+                  <ul>
+                     <li>
+                        OWL Carousel and Slider Pro: Configurable products are now included in OWL Best Sell Carousel.
+                     </li>
+                     <br>
+                     <br>
+                  </ul>
+
+                <p><strong>What’s new in version 1.6.2 - March 23, 2018</strong></p>
+               <ul>
+                  <li>
+                     OWL Carousel and Slider Pro: Banner link click configured in admin now available also on banner title and description.
+                  </li>
+                  <li>
+                     Design and shadow bug fix for cross sell products to match the rest of the carousels..
+                  </li>
+                  <li>
+                     Center Add to cart, wishlist, compare buttons on carousels
+                  </li>
+                  <li>
+                     Redesign for slider and carousel left/right arrows.
+                  </li>
+                  <br>
+                  <br>
+               </ul>
+
+               <p><strong>What’s new in version 1.6.0 - March 1st, 2018</strong></p>
+               <ul>
+                  <li>
+                     Change image resolution in carousels from 240x300px to 480x600px to avoid image quality loss.
+                  </li>
+                  <br>
+                  <br>
+               </ul>
+
+               <p><strong>What’s new in version 1.5.8 - January 12, 2018</strong></p>
+               <ul>
+                  <li>
+                     Added version control for installed WeltPixel modules, including latest version check.
+                  </li>
+                  <li>
+                     Fixed visibility of last carousel item if Stage Padding is grater than 0.
+                  </li>
+                  <li>
+                     Fixed Stage Padding save issues.
+                  </li>
+                  <li>
+                     Fixed errors for null config values.
+                  </li>
+                  <li>
+                     OWL carousels, fix for image size generation.
+                  </li>
+                  <li>
+                     Fixed configurable products swatch change and hover image switch.
+                  </li>
+                  <li>
+                     Removed duplicated general carousel config options, now available only on breakpoint level in order to avoid confusion and improve usability.
+                  </li>
+                  <br>
+                  <br>
+               </ul>
+               <p><strong>What’s new in version 1.5.7 - December 14, 2017</strong></p>
+               <ul>
+                  <li>
+                     Added Support Center functionality in Magento Admin.
+                  </li>
+                  <li>
+                     Added Debugger functionality, checks for rewrites and points potential issues.
+                  </li>
+                  <li>
+                     Fix year format of date picker field.
+                  </li>
+                  <li>
+                     Remove 4px banner margin.
+                  </li>
+                  <li>
+                     Fix for banners, now centered on resolutions smaller than 768px.
+                  </li>
+                  <li>
+                     Unused classes cleanup.
+                  </li>
+                  <br>
+                  <br>
+               </ul>
+               <p><strong>What’s new in version 1.5.5 - October 20, 2017</strong></p>
+               <ul>
+                  <li>
+                     Added a smooth first load of OWL PRO Slider, removed the Next/Prev slider effect.
+                  </li>
+                  <li>
+                     Fix for hover image, Prev / Next glitch.
+                  </li>
+                  <li>
+                     Fix for lazy load option enabled.
+                  </li>
+                  <li>
+                     Lazy load OWL functionality fixed for custom and product sliders.
+                  </li>
+                  <li>
+                     Lazy Load implementation for related, upsell, crossel items.
+                  </li>
+                  <li>
+                     Lazy loading OWL bug when lazy load on and items fewer than used items.
+                  </li>
+                  <li>
+                     Lazy load image attribute added only if carousel enabled.<br><br>
+                  </li>
+                  <br>
+                  <br>
+               </ul>
+               <p><strong>What’s new in version 1.5.3 - September 20, 2017</strong></p>
+               <ul>
+                  <li>
+                     Added Hover Image functionality on listing pages with possibility to select the second image from product image settings. (available in PRO version).
+                  </li>
+                  <li>
+                     Added mobile image & desktop image functionality for banners with frontend cache separation (available in PRO version).
+                  </li>
+                  <li>
+                     Added Custom Category Carousels, show products from specific category (available in PRO version).
+                  </li>
+                  <li>
+                     Added Google Analytics banner tracking per store-view instead of global.
+                  </li>
+                  <li>
+                     Design adjustments for dots.
+                  </li>
+                  <li>
+                     Cache for product blocks added.
+                  </li>
+                  <li>
+                     Next/Prev button admin saving fix.
+                  </li>
+                  <li>
+                     Auto height admin saving fix.
+                  </li>
+                  <li>
+                     Fixed product page carousels box shadow.
+                  </li>
+                  <li>
+                     Compatibility adjustments for Magento Enterprise 2.1.8.
+                  </li>
+                  <li>
+                     Function param doc fixes.
+                     <br><br>
+                  </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.3.4 - May 16, 2017</strong></p>
+                  <ul>
+                     <li>
+                        Added translations files under /i18n/en_US.csv.
+                     </li>
+                     <li>
+                        Fixed native bug of OWL carousel, prev / next buttons visibility control on breakpoints.
+                     </li>
+                     <li>
+                        Removed Banner store view selector, not relevant as banner is not configurable per store view.
+                     </li>
+                     <li>
+                        Fixed Banner Slider hardcoded date format, date now working in all international formats.
+                        <br>
+                        <br>
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.3.3 - April 05, 2017</strong></p>
+                  <ul>
+                     <li>
+                        Fixed OWL carousel loading issues, some times when images were too big slider was not loading properly.
+                        <br>
+                        <br>
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.3.2 - March 20, 2017</strong></p>
+                  <ul>
+                     <li>
+                        Added possibility to track Banner Click-Through-Rate (CTR) and revenue generated by the banner.
+                     </li>
+                     <li>
+                        Fixed transparency issue - slides now visible on Safari browser, OWL Banner Slider
+                     </li>
+                     <li>
+                        Fixed mobile navigation icons
+                     </li>
+                     <li>
+                        Fixed  prev / next navigation out of screen
+                     </li>
+                     <li>
+                        Fixed carousel product picture padding when used in CMS pages
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.3.1 - 02/21/2017</strong></p>
+                  <ul>
+                     <li>
+                        New option - control Dots visibility of product carousels per each configured breakpoint 
+                     </li>
+                     <li>
+                        Fixed - recently viewed products collecion fix for product carousel
+                     </li>
+                     <li>
+                        Fixed - not rendering head title html if no title set in backend
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.2.2 - 01/23/2017</strong></p>
+                  <ul>
+                     <li>
+                        Refactoring admin option names, admin hints for a better user experience
+                     </li>
+                     <li>
+                        New documentation, html format, detailed with different structure
+                     </li>
+                     <li>
+                        Small css adjustments and fixes
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.1.0 - 11/22/2016</strong></p>
+                  <ul>
+                     <li>
+                        Renamed from “sell” to “Sale” products
+                     </li>
+                     <li>
+                        Fix for proper product base url fetching
+                     </li>
+                     <li>
+                        Image link bug fix
+                     </li>
+                     <li>
+                        Option added for display to wishlist and compare
+                     </li>
+                     <li>
+                        Time changed for setTimeout
+                     </li>
+                     <li>
+                        Bug fixed to arrows position and ajaxComplete for loading
+                     </li>
+                     <li>
+                        Title tag changed in h3
+                     </li>
+                     <li>
+                        Loader fix
+                     </li>
+                     <li>
+                        Dots and arrows fix
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.0.4 - 10/12/2016</strong></p>
+                  <ul>
+                     <li>
+                        Options to display wishlist and compare on product page slide
+                     </li>
+                     <li>
+                        Fixed loader for banner slider and product page carousel, in some cases loader kept loading
+                     </li>
+                     <li>
+                        Frontend layout fixes
+                     </li>
+                     <li>
+                        Fixed product case url fetching
+                     </li>
+                     <li>
+                        Default config changes, enable product sliders by default
+                     </li>
+                     <li>
+                        Typo changes
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.0.3 - 08/24/2016</strong></p>
+                  <ul>
+                     <li>
+                        Adjusted default settings for banner sliders
+                     </li>
+                     <li>
+                        Added validation for fields that caused confusion when setting up sliders
+                     </li>
+                     <li>
+                        Bug fixed: image lost when saving the banner
+                     </li>
+                     <li>
+                        Added info comments on admin options
+                     </li>
+                     <li>
+                        New design feature:  apply a different design for each banner using custom CSS / banner
+                     </li>
+                     <li>
+                        Reorganised admin options for a more intuitive usability
+                     </li>
+                  </ul>
+                  <p><strong>What’s new in version 1.0.2 - 06/05/2016</strong></p>
+                  <ul>
+                     <li>
+                        Fix for slider, in some circumstances the images were not loaded
+                     </li>
+                     <li>
+                        Fix for loader which sometimes loaded infinitely
+                     </li>
+                     <li>
+                        Fix for slider, when slider was clicked the homepage refreshed, even if no link was set.
+                     </li>
+                  </ul>
+               </div>
+               <div class="col-sm-6 image no-padding">
+                  <img src="images/product-owl/CHANGELOG-R.png" class="width-full" alt="weltpixel">
+               </div>
+            </div>
+            <!--end Change log-->
+         </div>
+         <!-- Description ends here -->
+      </div>
+      <!-- Custom styles for this template -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+      <link href="https://cdn.rawgit.com/google/code-prettify/master/styles/sons-of-obsidian.css" rel="stylesheet">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-32203574-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-32203574-1');
+</script>
+   </body>
+</html>

@@ -1,0 +1,30 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<!-- BEGIN GCR Badge Code -->
+<script id='merchantWidgetScript' src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+<script>
+  merchantWidgetScript.addEventListener('load', function () {
+    if (window.merchantwidget) {
+      window.merchantwidget.start({
+        merchant_id: 5327375994,
+        position: "BOTTOM_LEFT",
+        region: "IN"
+      });
+      
+      // Accessibility Fix for iframe title
+      var observer = new MutationObserver(function(mutations, me) {
+        var iframe = document.getElementById('merchantwidgetiframe');
+        if (iframe) {
+          iframe.setAttribute('title', 'Google Customer Reviews Badge');
+          me.disconnect(); 
+        }
+      });
+      observer.observe(document, {
+        childList: true,
+        subtree: true
+      });
+    }
+  });
+</script>
+<!-- END GCR Badge Code -->

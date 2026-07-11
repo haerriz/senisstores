@@ -1,0 +1,14 @@
+<?php
+/** @var \Haerriz\CatalogDimensions\Block\Product\Dimensions $block */
+$dimensions = $block->getShippingDimensions();
+?>
+<?php if ($dimensions): ?>
+    <div class="product-dimensions-info" style="margin: 15px 0; padding: 10px; background-color: #f9f9f9; border-radius: 4px; border: 1px solid #eee;">
+        <span style="font-weight: 600; color: #333; display: block; margin-bottom: 5px; font-size: 14px;">Package Dimensions:</span>
+        <span style="color: #666; font-size: 13px;">
+            <?= $block->escapeHtml($dimensions['length']) ?> cm (L) × 
+            <?= $block->escapeHtml($dimensions['width']) ?> cm (W) × 
+            <?= $block->escapeHtml($dimensions['height']) ?> cm (H)
+        </span>
+    </div>
+<?php endif; ?>

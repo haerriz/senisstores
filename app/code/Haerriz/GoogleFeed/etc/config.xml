@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license https://magebit.com/code-license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <haerriz_googlefeed>
+            <general>
+                <enabled>1</enabled>
+                <title>Seni's Stores Product Feed</title>
+                <description>Google Merchant Center product feed for Seni's Stores</description>
+                <default_brand>Seni's Stores</default_brand>
+                <default_condition>new</default_condition>
+            </general>
+        </haerriz_googlefeed>
+    </default>
+</config>
