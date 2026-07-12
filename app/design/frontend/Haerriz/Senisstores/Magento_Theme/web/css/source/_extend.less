@@ -172,3 +172,21 @@
         width: 20%;
     }
 }
+
+
+// --- Accessibility Fix for Review Links ---
+& when (@media-common = true) {
+    .reviews-actions a,
+    .product-reviews-summary .reviews-actions a.action.add {
+        color: #004488; // Darker blue for better contrast
+        text-decoration: underline; // Do not rely on color alone
+        text-underline-offset: 2px;
+        font-weight: 600;
+
+        &:hover,
+        &:focus {
+            color: #002244;
+            text-decoration: underline;
+        }
+    }
+}
