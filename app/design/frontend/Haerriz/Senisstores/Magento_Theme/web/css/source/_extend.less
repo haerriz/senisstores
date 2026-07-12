@@ -69,3 +69,106 @@
 .media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__xl) {
     // your code
 }
+
+
+// --- Modern UI for New Products Widget Grid ---
+& when (@media-common = true) {
+    .block.widget .products-grid .product-items {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    .block.widget .products-grid .product-item {
+        display: flex;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-bottom: 20px;
+    }
+
+    .block.widget .products-grid .product-item-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background: #ffffff;
+        position: relative;
+        text-align: center;
+
+        &:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: #cccccc;
+        }
+
+        .product-item-photo {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .product-item-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-item-name {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .price-box {
+            margin-bottom: 10px;
+        }
+
+        .product-reviews-summary {
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .product-item-actions {
+            margin-top: auto;
+            justify-content: center;
+        }
+    }
+}
+
+// Mobile (up to max-width: 767px)
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .block.widget .products-grid .product-item {
+        width: 50%;
+    }
+    .block.widget .products-grid .product-item-info {
+        padding: 10px;
+        
+        .product-item-actions {
+            .actions-primary {
+                display: block;
+                width: 100%;
+                .action.tocart {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+// Tablet (min-width: 768px and max-width: 1023px)
+& when (@media-target = 'desktop'), (@media-target = 'all') {
+    @media only screen and (min-width: @screen__m) and (max-width: (@screen__l - 1)) {
+        .block.widget .products-grid .product-item {
+            width: 33.333%;
+        }
+    }
+}
+
+// Desktop (min-width: 1024px)
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+    .block.widget .products-grid .product-item {
+        width: 20%;
+    }
+}
