@@ -303,3 +303,41 @@
 // Header icons color override (Mobile View primarily)
 @header-icons-color: #ffffff;
 @header-icons-color-hover: #ffffff;
+
+
+// Fix for Product Actions alignment (Qty box and secondary actions)
+.product-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start; // Align top of form (qty) with secondary actions
+}
+
+.product-item-actions .actions-primary {
+    flex: 1 1 calc(100% - 70px);
+    max-width: calc(100% - 70px);
+}
+
+.product-item-actions .actions-secondary {
+    flex: 0 0 70px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px; // Visually center with the Qty box
+}
+
+.product-item-actions .actions-primary form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-item-actions .actions-primary form .field.qty {
+    flex: 0 0 auto;
+    margin-bottom: 10px;
+}
+
+.product-item-actions .actions-primary form .action.tocart {
+    flex: 1 1 100%;
+    width: 100%;
+}
