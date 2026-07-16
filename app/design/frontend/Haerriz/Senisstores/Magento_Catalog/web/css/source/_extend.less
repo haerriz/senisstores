@@ -1,0 +1,44 @@
+
+& when (@media-common = true) {
+    .product-item-actions {
+        .field.qty {
+            max-width: 100%;
+        }
+        .qty-update-wrapper {
+            max-width: 100%;
+            flex-wrap: nowrap;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    // 1. Force 2-column layout for Category and Widget grids on mobile
+    .products-grid .product-item,
+    .block.widget .products-grid .product-item {
+        width: 50% !important;
+        margin-left: 0 !important;
+        padding: 0 5px !important;
+        float: left !important;
+    }
+    
+    // 2. Fix float catching due to uneven heights
+    .products-grid .product-items > .product-item:nth-child(2n+1),
+    .block.widget .products-grid .product-items > .product-item:nth-child(2n+1) {
+        clear: left !important;
+    }
+    .products-grid .product-items > .product-item:nth-child(2n),
+    .block.widget .products-grid .product-items > .product-item:nth-child(2n) {
+        clear: none !important;
+    }
+    
+    .product-item-actions {
+        .qty-update-wrapper {
+            .action.minus, .action.plus {
+                padding: 5px 8px !important;
+            }
+            .input-text.qty {
+                width: 32px !important;
+            }
+        }
+    }
+}

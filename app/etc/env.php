@@ -242,6 +242,10 @@ return [
                     'elasticsearch7_password' => 'fcd5dcc20fe07f1bbc58',
                     'opensearch_server_timeout' => '15',
                     'elasticsearch7_server_timeout' => '15'
+                ],
+                'seo' => [
+                    'category_canonical_tag' => '1',
+                    'product_canonical_tag' => '1'
                 ]
             ],
             'cataloginventory' => [
@@ -264,20 +268,20 @@ return [
             ],
             'trans_email' => [
                 'ident_general' => [
-                    'name' => 'Seni S Stores',
+                    'name' => 'Senis Stores',
                     'email' => 'admin@senisstores.com'
                 ],
                 'ident_sales' => [
-                    'name' => 'Seni S Stores',
-                    'email' => 'admin@senisstores.com'
+                    'name' => 'Senis Stores Orders',
+                    'email' => 'orders@senisstores.com'
                 ],
                 'ident_support' => [
                     'name' => 'Seni S Stores',
                     'email' => 'admin@senisstores.com'
                 ],
                 'ident_custom1' => [
-                    'name' => 'Seni S Stores',
-                    'email' => 'admin@senisstores.com'
+                    'name' => 'Senis Stores Newsletter',
+                    'email' => 'newsletter@senisstores.com'
                 ],
                 'ident_custom2' => [
                     'name' => 'Seni S Stores',
@@ -400,8 +404,13 @@ return [
             ],
             'system' => [
                 'smtp' => [
-                    'host' => 'localhost',
-                    'port' => '25'
+                    'host' => 'smtp.hostinger.com',
+                    'port' => '465',
+                    'transport' => 'smtp',
+                    'auth' => 'login',
+                    'username' => 'admin@senisstores.com',
+                    'ssl' => 'ssl',
+                    'password' => '0:3:uXxoEgMQS0LjRPE+makGgsIG9rOoJcn0uTMlHzB6A5Y5nLQ/od6nMpo='
                 ],
                 'full_page_cache' => [
                     'varnish' => [
@@ -474,5 +483,10 @@ return [
                 ]
             ]
         ]
+    ],
+    'smtp_mapping' => [
+        'orders@senisstores.com' => 'Whatsapp@2027',
+        'newsletter@senisstores.com' => 'Whatsapp@2027',
+        'newsletter1@senisstores.com' => 'Whatsapp@2027'
     ]
 ];

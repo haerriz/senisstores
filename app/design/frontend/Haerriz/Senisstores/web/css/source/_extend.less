@@ -1,0 +1,67 @@
+
+
+
+
+// --- Haerriz QtyUpdate Mobile Grid Fix ---
+.product-item-actions .field.qty { max-width: 100%; margin-bottom: 10px; }
+.product-item-actions .qty-update-wrapper { max-width: 100%; flex-wrap: nowrap; }
+
+@media (max-width: 767px) {
+    /* Convert grid to Flexbox */
+    ol.products-list, ol.product-items,
+    .products-grid .product-items,
+    .block.widget .products-grid .product-items,
+    .widget-new-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Force 2-column layout width exactly 49% without margin issues */
+    ol.product-items > li.product-item,
+    .products-grid .product-item,
+    .block.widget .products-grid .product-item,
+    .widget-new-grid .product-item {
+        width: 49% !important;
+        max-width: 49% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin-bottom: 20px !important;
+        float: none !important;
+        clear: none !important;
+    }
+    
+    /* Ensure cards stretch to match heights */
+    .product-item-info {
+        width: 100% !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Push actions (Add to Cart) to the bottom of the card */
+    .product-item-details {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
+    }
+    .product-item-inner {
+        margin-top: auto !important;
+    }
+    .product-item-actions {
+        margin-top: auto !important;
+    }
+    
+    /* Shrink padding for Qty buttons on very small screens */
+    .product-item-actions .qty-update-wrapper .action.minus,
+    .product-item-actions .qty-update-wrapper .action.plus {
+        padding: 5px 8px !important;
+    }
+    .product-item-actions .qty-update-wrapper .input-text.qty {
+        width: 32px !important;
+    }
+}
