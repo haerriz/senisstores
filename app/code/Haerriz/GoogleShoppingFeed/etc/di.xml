@@ -12,7 +12,7 @@
 
     <virtualType name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">haerriz_googleshoppingfeed_profile</argument>
+            <argument name="mainTable" xsi:type="string">haerriz_google_shopping_feed_profile</argument>
             <argument name="resourceModel" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile</argument>
         </arguments>
     </virtualType>
