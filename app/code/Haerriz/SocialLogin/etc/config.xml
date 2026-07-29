@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <haerriz_sociallogin>
+            <google>
+                <enable>0</enable>
+            </google>
+            <facebook>
+                <enable>0</enable>
+            </facebook>
+            <github>
+                <enable>0</enable>
+            </github>
+        </haerriz_sociallogin>
+    </default>
+</config>

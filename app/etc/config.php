@@ -359,6 +359,7 @@ return [
         'Haerriz_Csp' => 1,
         'Haerriz_CustomerReviews' => 1,
         'Haerriz_GoogleFeed' => 1,
+        'Haerriz_GoogleShoppingFeed' => 1,
         'Haerriz_Marketing' => 1,
         'Haerriz_PackagingCharges' => 1,
         'Haerriz_QtyUpdate' => 1,
@@ -6886,170 +6887,10 @@ Disallow: /*SID=
                         'default_keywords' => 'Seni\'s Stores, Theni 625531 Best Hardware shop in Theni',
                         'shortcut_icon' => 'stores/1/senisstores-logo.png',
                         'title_suffix' => 'Seni\'s Stores',
-                        'includes' => '<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C32SB5HY9B"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag(\'js\', new Date());
-
-  gtag(\'config\', \'G-C32SB5HY9B\');
-</script>
-
-<!-- Primary Meta Tags -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="canonical" href="https://senisstores.com/" />
- 
-<!-- Open Graph / Social Sharing -->
-<meta property="og:title" content="Seni S Stores – Best Hardware Shop in Theni | Screws, Nuts, Bolts, Paints, Adhesives & Tools">
-<meta property="og:description" content="Trusted hardware store serving Theni, Periyakulam Road & nearby areas. Wholesale & retail. Fast home delivery.">
-<meta property="og:url" content="https://senisstores.com/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Seni S Stores - Theni">
-<meta property="og:image" content="https://senisstores.com/assets/images/cover.jpg">
- 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Seni S Stores – Best Hardware Shop in Theni">
-<meta name="twitter:description" content="Buy screws, nuts, bolts, paint, adhesives & building materials. Fast delivery in Theni & surroundings.">
- 
-<!-- Local SEO Schema -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"HardwareStore",
-  "name":"Seni S Stores",
-  "image":"https://senisstores.com/assets/images/logo.png",
-  "@id":"https://senisstores.com/",
-  "url":"https://senisstores.com/",
-  "telephone":"+91 9442650753",
-  "priceRange":"₹",
-  "address":{
-     "@type":"PostalAddress",
-     "streetAddress":"1129A Periyakulam Road",
-     "addressLocality":"Theni",
-     "postalCode":"625531",
-     "addressRegion":"Tamil Nadu",
-     "addressCountry":"IN"
-  },
-  "geo":{
-     "@type":"GeoCoordinates",
-     "latitude":10.0113,
-     "longitude":77.4771
-  },
-  "openingHours":"Mo-Su 08:00-21:00",
-  "sameAs":[
-     "https://www.google.com/maps/search/?api=1&query=Seni+S+Stores+Theni",
-     "https://instagram.com/senisstores",
-     "https://facebook.com/senisstores"
-  ]
-}
-</script>
- 
-<!-- Search Engines -->
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<meta name="googlebot" content="index, follow">
-',
-                    ],
-                    'header' => [
-                        'welcome' => 'welcome!',
-                        'logo_src' => 'stores/1/senisstores-logo-new.png',
-                        'logo_width' => '250',
-                    ],
-                    'footer' => [
-                        'copyright' => 'Copyright © 1997-present Seni S Stores, Inc. All rights reserved.',
-                    ],
-                    'theme' => [
-                        'theme_id' => 'frontend/Haerriz/Senisstores',
-                    ],
-                ],
-                'email_marketing' => [
-                    'general' => [
-                        'enabled' => '1',
-                        'synchronization' => [
-                            'created_from' => null,
-                        ],
+                        'includes' => '',
                     ],
                 ],
             ],
         ],
-        'websites' => [
-            'admin' => [
-                'web' => [
-                    'routers' => [
-                        'frontend' => [
-                            'disabled' => 'true',
-                        ],
-                    ],
-                    'default' => [
-                        'no_route' => 'admin/noroute/index',
-                    ],
-                ],
-            ],
-            'base' => [
-                'payment' => [
-                    'authorizenet_acceptjs' => [
-                        'cctypes' => 'AE,VI,MC,DI,JCB,DN',
-                        'order_status' => 'processing',
-                        'payment_action' => 'authorize',
-                        'currency' => 'USD',
-                    ],
-                ],
-            ],
-        ],
-        'website' => [
-            'admin' => [
-                'connector_configuration' => [
-                    'transactional_data' => [
-                        'order_statuses' => 'canceled,closed,complete,fraud,holded,payment_review,paypal_canceled_reversal,paypal_reversed,pending,pending_payment,pending_paypal,processing',
-                    ],
-                    'catalog_sync' => [
-                        'catalog_type' => 'simple,virtual,configurable,downloadable,grouped,bundle',
-                        'catalog_visibility' => '1,2,3,4',
-                    ],
-                ],
-            ],
-        ],
-    ],
-    'themes' => [
-        'frontend/Magento/blank' => [
-            'parent_id' => null,
-            'theme_path' => 'Magento/blank',
-            'theme_title' => 'Magento Blank',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Magento/blank',
-        ],
-        'adminhtml/Magento/backend' => [
-            'parent_id' => null,
-            'theme_path' => 'Magento/backend',
-            'theme_title' => 'Magento 2 backend',
-            'is_featured' => '0',
-            'area' => 'adminhtml',
-            'type' => '0',
-            'code' => 'Magento/backend',
-        ],
-        'frontend/Magento/luma' => [
-            'parent_id' => 'Magento/blank',
-            'theme_path' => 'Magento/luma',
-            'theme_title' => 'Magento Luma',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Magento/luma',
-        ],
-        'frontend/Haerriz/Senisstores' => [
-            'parent_id' => 'Magento/luma',
-            'theme_path' => 'Haerriz/Senisstores',
-            'theme_title' => 'Senisstores Theme',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Haerriz/Senisstores',
-        ],
-    ],
-    'i18n' => [
-
     ],
 ];

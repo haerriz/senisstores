@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="haerriz_google_shopping_feed_profile" resource="default" engine="innodb" comment="Google Shopping Feed Profiles">
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Feed Name"/>
+        <column xsi:type="smallint" name="status" padding="6" unsigned="true" nullable="false" default="0" comment="Status"/>
+        <column xsi:type="varchar" name="store_id" nullable="false" length="255" comment="Store View ID"/>
+        <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Filename"/>
+        <column xsi:type="varchar" name="feed_type" nullable="false" length="50" default="csv" comment="Feed Format (csv, xml)"/>
+        <column xsi:type="text" name="conditions_serialized" nullable="true" comment="Product Filter Conditions"/>
+        <column xsi:type="text" name="attributes_mapping_serialized" nullable="true" comment="Attributes Mapping"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="profile_id"/>
+        </constraint>
+    </table>
+</schema>

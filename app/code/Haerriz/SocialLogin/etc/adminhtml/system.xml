@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="haerriz" translate="label" sortOrder="100">
+            <label>Haerriz</label>
+        </tab>
+        <section id="haerriz_sociallogin" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Social Login</label>
+            <tab>haerriz</tab>
+            <resource>Haerriz_SocialLogin::config</resource>
+            
+            <group id="google" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Login</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="client_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Client ID</label>
+                </field>
+                <field id="client_secret" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Client Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+            </group>
+
+            <group id="facebook" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Facebook Login</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App ID</label>
+                </field>
+                <field id="app_secret" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+            </group>
+
+            <group id="github" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>GitHub Login</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="client_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>GitHub Client ID</label>
+                </field>
+                <field id="client_secret" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>GitHub Client Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

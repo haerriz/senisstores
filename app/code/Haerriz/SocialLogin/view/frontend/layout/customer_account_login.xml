@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Haerriz\SocialLogin\Block\Google" name="haerriz.sociallogin.google" template="Haerriz_SocialLogin::google_button.phtml" before="-" />
+            <block class="Haerriz\SocialLogin\Block\Facebook" name="haerriz.sociallogin.facebook" template="Haerriz_SocialLogin::facebook_button.phtml" after="haerriz.sociallogin.google" />
+            <block class="Haerriz\SocialLogin\Block\Github" name="haerriz.sociallogin.github" template="Haerriz_SocialLogin::github_button.phtml" after="haerriz.sociallogin.facebook" />
+        </referenceContainer>
+    </body>
+</page>
