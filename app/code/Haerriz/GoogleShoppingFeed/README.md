@@ -4,7 +4,8 @@ A robust, enterprise-grade Magento 2 module for generating Google Shopping Feeds
 
 ## Features
 - **Dynamic Attribute Mapping**: Infinite dynamic rows to map Magento attributes to Google attributes.
-- **Enterprise Modifiers**: Modify feed output (e.g. Strip HTML Tags, Round Prices, Uppercase).
+- **Google Taxonomy Mapping**: Effortlessly categorize your products according to Google's strict taxonomy requirements.
+- **Enterprise Modifiers**: Modify feed output with an extensible Modifier Pool (e.g., Strip HTML Tags, Round Prices, Tax Calculation).
 - **Merchant API Integration**: Uses OAuth Service Accounts to communicate directly with Google Merchant Center.
 - **Automated Cron Jobs**: Automatically generates and syncs feeds silently in the background.
 

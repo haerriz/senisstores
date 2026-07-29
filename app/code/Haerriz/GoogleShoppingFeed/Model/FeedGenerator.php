@@ -6,21 +6,25 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductColl
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Store\Model\StoreManagerInterface;
+use Haerriz\GoogleShoppingFeed\Model\Modifier\Pool as ModifierPool;
 
 class FeedGenerator
 {
     protected $productCollectionFactory;
     protected $filesystem;
     protected $storeManager;
+    protected $modifierPool;
 
     public function __construct(
         ProductCollectionFactory $productCollectionFactory,
         Filesystem $filesystem,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ModifierPool $modifierPool
     ) {
         $this->productCollectionFactory = $productCollectionFactory;
         $this->filesystem = $filesystem;
         $this->storeManager = $storeManager;
+        $this->modifierPool = $modifierPool;
     }
 
     public function generate(FeedProfileInterface $profile)
@@ -74,7 +78,7 @@ class FeedGenerator
             $row = [];
             foreach ($mapping as $map) {
                 $value = $product->getData($map['magento_attribute']);
-                $value = $this->applyModifier($value, $map['modifier'] ?? '');
+                $value = $this->applyModifier($value, $map['modifier'] ?? '', $product);
                 $row[] = $value;
             }
             $stream->writeCsv($row);
@@ -87,22 +91,40 @@ class FeedGenerator
 
     protected function generateXml($collection, $profile, $filename)
     {
-        // XML Generation Logic
+        $directory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+        
+        $xmlContent = '<?xml version="1.0"?>' . "\n";
+        $xmlContent .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">' . "\n";
+        $xmlContent .= '<channel>' . "\n";
+        $xmlContent .= '<title><![CDATA[' . $profile->getName() . ']]></title>' . "\n";
+        $xmlContent .= '<link><![CDATA[' . $this->storeManager->getStore()->getBaseUrl() . ']]></link>' . "\n";
+        
+        $mapping = json_decode($profile->getAttributesMappingSerialized(), true) ?? [];
+        
+        foreach ($collection as $product) {
+            $xmlContent .= "  <item>\n";
+            foreach ($mapping as $map) {
+                $googleTag = $map['google_attribute'];
+                $value = $product->getData($map['magento_attribute']);
+                $value = $this->applyModifier($value, $map['modifier'] ?? '', $product);
+                
+                // Skip empty values unless required
+                if ($value !== null && $value !== '') {
+                    $xmlContent .= "    <{$googleTag}><![CDATA[{$value}]]></{$googleTag}>\n";
+                }
+            }
+            $xmlContent .= "  </item>\n";
+        }
+        
+        $xmlContent .= '</channel>' . "\n";
+        $xmlContent .= '</rss>';
+
+        $directory->writeFile('google_feed/' . $filename, $xmlContent);
         return true;
     }
 
-    protected function applyModifier($value, $modifier)
+    protected function applyModifier($value, $modifierCode, $product)
     {
-        if (!$value) return '';
-        switch ($modifier) {
-            case 'strip_tags':
-                return strip_tags($value);
-            case 'round_price':
-                return round((float)$value, 2);
-            case 'uppercase':
-                return strtoupper($value);
-            default:
-                return $value;
-        }
+        return $this->modifierPool->apply($value, $modifierCode, $product);
     }
 }

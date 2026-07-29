@@ -20,4 +20,13 @@
         </arguments>
     </virtualType>
 
+    <type name="Haerriz\GoogleShoppingFeed\Model\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="strip_tags" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\StripTags</item>
+                <item name="round_price" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\RoundPrice</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>
