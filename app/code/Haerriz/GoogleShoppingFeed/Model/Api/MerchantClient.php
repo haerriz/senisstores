@@ -12,8 +12,8 @@ class MerchantClient
     protected $scopeConfig;
     protected $logger;
 
-    // The user's specified Merchant Center ID
-    const MERCHANT_ID = '5327375994';
+    // Configuration paths
+    const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/api/merchant_id';
     const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/api/service_account_json';
 
     public function __construct(
@@ -22,6 +22,14 @@ class MerchantClient
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->logger = $logger;
+    }
+
+    /**
+     * Get configured Merchant ID
+     */
+    public function getMerchantId()
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_MERCHANT_ID);
     }
 
     /**
@@ -51,14 +59,19 @@ class MerchantClient
     public function insertProduct($productData)
     {
         try {
+            $merchantId = $this->getMerchantId();
+            if (!$merchantId) {
+                throw new \Exception("Merchant ID is not configured.");
+            }
+
             $client = $this->getClient();
             
             // Example stub for inserting via Merchant API
-            $this->logger->info("Submitting product to Merchant Center " . self::MERCHANT_ID . " via Merchant API");
+            $this->logger->info("Submitting product to Merchant Center " . $merchantId . " via Merchant API");
             
             // Perform the API Call
             // $service = new \Google\Service\ShoppingContent($client);
-            // $service->products->insert(self::MERCHANT_ID, $productData);
+            // $service->products->insert($merchantId, $productData);
             
             return true;
         } catch (\Exception $e) {
