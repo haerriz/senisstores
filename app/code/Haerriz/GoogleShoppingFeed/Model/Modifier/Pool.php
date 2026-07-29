@@ -29,10 +29,19 @@ class Pool
             return $value;
         }
 
-        if (!isset($this->modifiers[$modifierCode])) {
-            return $value; // or throw exception depending on strictness
+        $code = $modifierCode;
+        $argument = null;
+
+        // Matches modifier_name(argument_value)
+        if (preg_match('/^([a-zA-Z0-9_-]+)(?:\((.*)\))?$/', $modifierCode, $matches)) {
+            $code = $matches[1];
+            $argument = isset($matches[2]) ? $matches[2] : null;
         }
 
-        return $this->modifiers[$modifierCode]->modify($value, $product);
+        if (!isset($this->modifiers[$code])) {
+            return $value;
+        }
+
+        return $this->modifiers[$code]->modify($value, $product, $argument);
     }
 }

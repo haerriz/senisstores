@@ -19,11 +19,21 @@
                 <label>Google Merchant API Integration</label>
                 <field id="merchant_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant ID</label>
+                    <validate>validate-digits</validate>
                     <comment>Your Google Merchant Center ID (e.g., 5327375994)</comment>
                 </field>
-                <field id="service_account_json" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_account_json" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Service Account JSON Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment>Paste the entire contents of your Google Cloud Service Account JSON file here.</comment>
+                </field>
+            </group>
+            <group id="logging" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Developer Logging Settings</label>
+                <field id="debug" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Debug Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Write detailed debug logs to var/log/haerriz_googleshoppingfeed.log.</comment>
                 </field>
             </group>
         </section>

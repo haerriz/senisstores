@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Backend/etc/menu.xsd">
     <menu>
-        <add id="Haerriz_GoogleShoppingFeed::main" title="Haerriz Google Feed" module="Haerriz_GoogleShoppingFeed" sortOrder="20" resource="Haerriz_GoogleShoppingFeed::main"/>
-        <add id="Haerriz_GoogleShoppingFeed::feeds" title="Manage Feeds" module="Haerriz_GoogleShoppingFeed" sortOrder="10" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/feed/index" resource="Haerriz_GoogleShoppingFeed::feeds"/>
+        <add id="Haerriz_GoogleShoppingFeed::main" title="Haerriz Google Feed" module="Haerriz_GoogleShoppingFeed" sortOrder="20" resource="Haerriz_GoogleShoppingFeed::feed_management"/>
+        <add id="Haerriz_GoogleShoppingFeed::feeds" title="Manage Feeds" module="Haerriz_GoogleShoppingFeed" sortOrder="10" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/feed/index" resource="Haerriz_GoogleShoppingFeed::feed_profiles"/>
     </menu>
 </config>

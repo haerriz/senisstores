@@ -3,12 +3,33 @@
 
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfile"/>
     <preference for="Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfileRepository"/>
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJob"/>
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedJobRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJobRepository"/>
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLog"/>
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedLogRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLogRepository"/>
+
+    <!-- Custom Logger Configuration -->
+    <virtualType name="Haerriz\GoogleShoppingFeed\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/log/haerriz_googleshoppingfeed.log</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Haerriz\GoogleShoppingFeed\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">haerrizGoogleShoppingFeed</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Haerriz\GoogleShoppingFeed\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- UI Component Data Source Registration -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="haerriz_googleshoppingfeed_feed_listing_data_source" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile\Grid\Collection</item>
+                <item name="haerriz_googleshoppingfeed_job_listing_data_source" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob\Grid\Collection</item>
             </argument>
         </arguments>
     </type>
@@ -20,11 +41,32 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">haerriz_google_shopping_feed_job</argument>
+            <argument name="resourceModel" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob</argument>
+        </arguments>
+    </virtualType>
+
     <type name="Haerriz\GoogleShoppingFeed\Model\Modifier\Pool">
         <arguments>
             <argument name="modifiers" xsi:type="array">
                 <item name="strip_tags" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\StripTags</item>
                 <item name="round_price" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\RoundPrice</item>
+                <item name="prepend_text" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\PrependText</item>
+                <item name="append_text" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\AppendText</item>
+                <item name="capitalize" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\Capitalize</item>
+                <item name="google_taxonomy" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\GoogleTaxonomy</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Haerriz\GoogleShoppingFeed\Model\Storage\AdapterPool">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="local" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Local</item>
+                <item name="ftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Ftp</item>
+                <item name="sftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Sftp</item>
             </argument>
         </arguments>
     </type>

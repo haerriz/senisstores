@@ -8,9 +8,10 @@ class RoundPrice implements ModifierInterface
     /**
      * @param string $value
      * @param Product $product
+     * @param string|null $argument
      * @return string
      */
-    public function modify($value, Product $product)
+    public function modify($value, Product $product, $argument = null)
     {
         if (is_numeric($value)) {
             return number_format(round((float)$value, 2), 2, '.', '');

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">haerriz_googleshoppingfeed_job_listing.haerriz_googleshoppingfeed_job_listing_data_source</item>
+            <item name="deps" xsi:type="string">haerriz_googleshoppingfeed_job_listing.haerriz_googleshoppingfeed_job_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">haerriz_googleshoppingfeed_job_columns</item>
+    </argument>
+    <dataSource name="haerriz_googleshoppingfeed_job_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">haerriz_googleshoppingfeed_job_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">job_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">job_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <columns name="haerriz_googleshoppingfeed_job_columns">
+        <column name="job_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="sorting" xsi:type="string">desc</item>
+                    <item name="label" xsi:type="string" translate="true">Job ID</item>
+                </item>
+            </argument>
+        </column>
+        <column name="profile_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Profile ID</item>
+                </item>
+            </argument>
+        </column>
+        <column name="status">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                </item>
+            </argument>
+        </column>
+        <column name="total_products">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Total Products</item>
+                </item>
+            </argument>
+        </column>
+        <column name="processed_products">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Processed Products</item>
+                </item>
+            </argument>
+        </column>
+        <column name="trigger_source">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Source</item>
+                </item>
+            </argument>
+        </column>
+        <column name="exported_count">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Exported</item>
+                </item>
+            </argument>
+        </column>
+        <column name="skipped_count">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Skipped</item>
+                </item>
+            </argument>
+        </column>
+        <column name="file_size">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">File Size (Bytes)</item>
+                </item>
+            </argument>
+        </column>
+        <column name="duration">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Duration (s)</item>
+                </item>
+            </argument>
+        </column>
+        <column name="delivery_result">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Delivery Result</item>
+                </item>
+            </argument>
+        </column>
+        <column name="started_at">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Started At</item>
+                </item>
+            </argument>
+        </column>
+        <column name="finished_at">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Finished At</item>
+                </item>
+            </argument>
+        </column>
+    </columns>
+</listing>

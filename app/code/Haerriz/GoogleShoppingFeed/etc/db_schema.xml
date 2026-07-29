@@ -4,15 +4,79 @@
         <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
         <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Feed Name"/>
         <column xsi:type="smallint" name="status" padding="6" unsigned="true" nullable="false" default="0" comment="Status"/>
-        <column xsi:type="varchar" name="store_id" nullable="false" length="255" comment="Store View ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0" comment="Store View ID"/>
+        <column xsi:type="varchar" name="currency" nullable="false" length="3" default="USD" comment="Currency"/>
         <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Filename"/>
         <column xsi:type="varchar" name="feed_type" nullable="false" length="50" default="csv" comment="Feed Format (csv, xml)"/>
-        <column xsi:type="text" name="conditions_serialized" nullable="true" comment="Product Filter Conditions"/>
-        <column xsi:type="text" name="attributes_mapping_serialized" nullable="true" comment="Attributes Mapping"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Product Filter Conditions"/>
+        <column xsi:type="mediumtext" name="attributes_mapping_serialized" nullable="true" comment="Attributes Mapping"/>
+        <column xsi:type="varchar" name="delivery_type" nullable="false" length="32" default="local" comment="Delivery Type"/>
+        <column xsi:type="varchar" name="delivery_host" nullable="true" length="255" comment="Delivery Host"/>
+        <column xsi:type="int" name="delivery_port" padding="5" unsigned="true" nullable="true" comment="Delivery Port"/>
+        <column xsi:type="varchar" name="delivery_username" nullable="true" length="255" comment="Delivery Username"/>
+        <column xsi:type="text" name="delivery_password" nullable="true" comment="Delivery Password"/>
+        <column xsi:type="varchar" name="delivery_path" nullable="true" length="255" comment="Delivery Path"/>
+        <column xsi:type="varchar" name="cron_expression" nullable="true" length="128" comment="Custom Cron Expression"/>
+        <column xsi:type="varchar" name="frequency" nullable="true" length="32" comment="Cron Frequency"/>
+        <column xsi:type="varchar" name="timezone" nullable="true" length="64" comment="Timezone"/>
+        <column xsi:type="timestamp" name="next_run_at" nullable="true" comment="Next Scheduled Run"/>
+        <column xsi:type="varchar" name="concurrency_policy" nullable="false" length="32" default="skip" comment="Concurrency Policy"/>
+        <column xsi:type="int" name="max_retries" padding="5" unsigned="true" nullable="false" default="3" comment="Max Retries"/>
+        <column xsi:type="int" name="retry_count" padding="5" unsigned="true" nullable="false" default="0" comment="Current Retry Count"/>
+        <column xsi:type="int" name="consecutive_failures" padding="5" unsigned="true" nullable="false" default="0" comment="Consecutive Failures Count"/>
+        <column xsi:type="smallint" name="is_locked" padding="5" unsigned="true" nullable="false" default="0" comment="Is Running Lock"/>
+        <column xsi:type="timestamp" name="locked_at" nullable="true" comment="Lock Time"/>
+        <column xsi:type="smallint" name="utm_enabled" padding="5" unsigned="true" nullable="false" default="0" comment="Enable UTM Tracking"/>
+        <column xsi:type="varchar" name="utm_source" nullable="true" length="128" comment="UTM Source"/>
+        <column xsi:type="varchar" name="utm_medium" nullable="true" length="128" comment="UTM Medium"/>
+        <column xsi:type="varchar" name="utm_campaign" nullable="true" length="128" comment="UTM Campaign"/>
+        <column xsi:type="varchar" name="utm_term" nullable="true" length="128" comment="UTM Term"/>
+        <column xsi:type="varchar" name="utm_content" nullable="true" length="128" comment="UTM Content"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="profile_id"/>
         </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_PROFILE_STORE_ID_STORE_STORE_ID" table="haerriz_google_shopping_feed_profile" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_job" resource="default" engine="innodb" comment="Google Shopping Feed Jobs">
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Job ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" comment="Profile ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="50" default="pending" comment="Job Status"/>
+        <column xsi:type="int" name="total_products" padding="10" unsigned="true" nullable="false" default="0" comment="Total Products"/>
+        <column xsi:type="int" name="processed_products" padding="10" unsigned="true" nullable="false" default="0" comment="Processed Products"/>
+        <column xsi:type="varchar" name="trigger_source" nullable="false" length="32" default="cron" comment="Trigger Source"/>
+        <column xsi:type="int" name="selected_count" padding="10" unsigned="true" nullable="false" default="0" comment="Selected Products Count"/>
+        <column xsi:type="int" name="exported_count" padding="10" unsigned="true" nullable="false" default="0" comment="Exported Products Count"/>
+        <column xsi:type="int" name="skipped_count" padding="10" unsigned="true" nullable="false" default="0" comment="Skipped Products Count"/>
+        <column xsi:type="int" name="warning_count" padding="10" unsigned="true" nullable="false" default="0" comment="Warnings Count"/>
+        <column xsi:type="int" name="error_count" padding="10" unsigned="true" nullable="false" default="0" comment="Errors Count"/>
+        <column xsi:type="bigint" name="file_size" unsigned="true" nullable="false" default="0" comment="Generated File Size"/>
+        <column xsi:type="varchar" name="checksum" nullable="true" length="64" comment="Generated File Checksum"/>
+        <column xsi:type="decimal" name="duration" scale="2" precision="10" nullable="false" default="0.00" comment="Duration in Seconds"/>
+        <column xsi:type="bigint" name="peak_memory" unsigned="true" nullable="false" default="0" comment="Peak Memory in Bytes"/>
+        <column xsi:type="varchar" name="delivery_result" nullable="true" length="255" comment="Delivery Result Summary"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="started_at" on_update="false" nullable="true" comment="Start Time"/>
+        <column xsi:type="timestamp" name="finished_at" on_update="false" nullable="true" comment="Finish Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="job_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_JOB_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_job" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_log" resource="default" engine="innodb" comment="Google Shopping Feed Logs">
+        <column xsi:type="int" name="log_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Log ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="true" comment="Profile ID"/>
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="true" comment="Job ID"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="50" default="info" comment="Log Type"/>
+        <column xsi:type="text" name="message" nullable="false" comment="Log Message"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_LOG_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_log" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="SET NULL"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_LOG_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_log" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="CASCADE"/>
     </table>
 </schema>
