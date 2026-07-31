@@ -140,4 +140,5 @@
         </arguments>
     </type>
 
+    <preference for="Haerriz\GoogleShoppingFeed\Api\RowValidatorInterface" type="Haerriz\GoogleShoppingFeed\Model\Validation\GoogleShoppingRowValidator" />
 </config>
