@@ -1,0 +1,174 @@
+{
+    "haerriz_google_shopping_feed_profile": {
+        "column": {
+            "profile_id": true,
+            "name": true,
+            "status": true,
+            "feed_type": true,
+            "store_id": true,
+            "filename": true,
+            "cron_expr": true,
+            "excluded_category_ids": true,
+            "attributes_mapping_serialized": true,
+            "category_mapping_serialized": true,
+            "conditions_serialized": true,
+            "delivery_type": true,
+            "delivery_host": true,
+            "delivery_username": true,
+            "delivery_password": true,
+            "delivery_path": true,
+            "delivery_port": true,
+            "compression": true,
+            "sharding_type": true,
+            "shard_value": true,
+            "cron_expression": true,
+            "frequency": true,
+            "timezone": true,
+            "next_run_at": true,
+            "concurrency_policy": true,
+            "missed_run_policy": true,
+            "max_retries": true,
+            "retry_count": true,
+            "consecutive_failures": true,
+            "is_locked": true,
+            "locked_at": true,
+            "utm_enabled": true,
+            "utm_source": true,
+            "utm_medium": true,
+            "utm_campaign": true,
+            "utm_term": true,
+            "utm_content": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "HAERRIZ_GOOGLE_SHOPPING_FEED_PROFILE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "haerriz_google_shopping_feed_job": {
+        "column": {
+            "job_id": true,
+            "profile_id": true,
+            "status": true,
+            "total_products": true,
+            "processed_products": true,
+            "trigger_source": true,
+            "selected_count": true,
+            "exported_count": true,
+            "skipped_count": true,
+            "warning_count": true,
+            "error_count": true,
+            "file_size": true,
+            "checksum": true,
+            "duration": true,
+            "peak_memory": true,
+            "delivery_result": true,
+            "failure_category": true,
+            "failure_message": true,
+            "exception_class": true,
+            "correlation_id": true,
+            "artifact_path": true,
+            "format": true,
+            "profile_snapshot": true,
+            "created_at": true,
+            "started_at": true,
+            "finished_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_3382847173C9D5A7C3AF82A4951F4E5F": true
+        }
+    },
+    "haerriz_google_shopping_feed_log": {
+        "column": {
+            "log_id": true,
+            "profile_id": true,
+            "job_id": true,
+            "type": true,
+            "message": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_B9EE4AAA9F4166602E5C64366A107438": true,
+            "FK_D4C91832FBB843D636281F8D369D1BD1": true
+        }
+    },
+    "haerriz_google_shopping_feed_artifact": {
+        "column": {
+            "artifact_id": true,
+            "job_id": true,
+            "file_path": true,
+            "checksum": true,
+            "file_size": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_5C2B1A165C1DCD7131836713A74B64B1": true
+        }
+    },
+    "haerriz_google_shopping_feed_job_item": {
+        "column": {
+            "item_id": true,
+            "job_id": true,
+            "product_id": true,
+            "sku": true,
+            "status": true,
+            "message": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_F57DA8C799E4F7748B49C0D5F7FAF866": true
+        }
+    },
+    "haerriz_google_shopping_feed_remote_state": {
+        "column": {
+            "state_id": true,
+            "profile_id": true,
+            "product_id": true,
+            "offer_id": true,
+            "sync_status": true,
+            "payload_hash": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_6D1E92588F0651B24606CA3F3D2E3506": true
+        }
+    },
+    "haerriz_google_shopping_feed_taxonomy": {
+        "column": {
+            "category_id": true,
+            "taxonomy_id": true,
+            "full_path": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "haerriz_google_shopping_feed_category_mapping": {
+        "column": {
+            "mapping_id": true,
+            "magento_category_id": true,
+            "taxonomy_path": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "haerriz_google_shopping_feed_checkpoint": {
+        "column": {
+            "checkpoint_id": true,
+            "job_id": true,
+            "last_product_id": true,
+            "status": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

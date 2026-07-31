@@ -20,6 +20,7 @@ class DataProviderTest extends TestCase
         $modelMock->method('getId')->willReturn(1);
         $modelMock->method('getData')->willReturn([
             'profile_id' => 1,
+            'delivery_password' => 'encrypted-secret',
             'attributes_mapping_serialized' => json_encode([['google_attribute' => 'g:id', 'magento_attribute' => 'sku']])
         ]);
         
@@ -30,6 +31,7 @@ class DataProviderTest extends TestCase
         
         $this->assertArrayHasKey(1, $data);
         $this->assertArrayHasKey('attributes_mapping', $data[1]);
+        $this->assertArrayNotHasKey('delivery_password', $data[1]);
         $this->assertEquals('g:id', $data[1]['attributes_mapping'][0]['google_attribute']);
     }
 }

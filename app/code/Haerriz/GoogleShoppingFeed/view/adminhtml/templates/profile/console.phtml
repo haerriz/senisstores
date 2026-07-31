@@ -1,0 +1,74 @@
+<?php
+/** @var \Magento\Backend\Block\Template $block */
+$profileId = (int)$block->getRequest()->getParam('id');
+$triggerUrl = $block->getUrl('*/*/triggerAjax', ['id' => $profileId]);
+$progressUrl = $block->getUrl('*/*/progress', ['id' => $profileId]);
+$backUrl = $block->getUrl('*/*/');
+?>
+
+    <!-- SPIDER WEB CLUSTER NAVIGATION -->
+    <div class="feed-cluster-nav" style="background: #fff; padding: 10px 20px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; display: flex; gap: 15px; align-items: center;">
+        <strong style="color: #666; margin-right: 10px;"><?= __("Module Quick Links:") ?></strong>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/dashboard/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Dashboard") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/feed/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #007bdb; color: #fff;"><?= __("Manage Profiles") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/taxonomy/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Taxonomy Mapper") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/job/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Job History") ?></a>
+    </div>
+    <div id="feed-live-console" data-bind="scope: 'feedConsole'">
+    <div class="page-main-actions">
+        <div class="page-actions">
+            <button class="action-default" type="button" onclick="window.location.href='<?= $backUrl ?>'">
+                <span><?= __('Back to Profiles') ?></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="fieldset-wrapper">
+        <div class="fieldset-wrapper-title">
+            <span class="title"><?= __('Live Generation Console') ?></span>
+        </div>
+        <div class="admin__fieldset">
+            <div style="padding:20px; background:#fff; border:1px solid #ccc; border-radius:4px;">
+                
+                <div style="font-size:18px; margin-bottom:10px;">
+                    <strong>Status:</strong> <span data-bind="text: statusText, style: {color: statusColor}">Initializing...</span>
+                </div>
+
+                <div style="background:#e0e0e0; border-radius:10px; width:100%; height:20px; margin-bottom:10px; overflow:hidden;">
+                    <div style="background:#007bdb; height:100%; transition: width 0.5s;" data-bind="style: {width: progressPercent() + '%'}"></div>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <span data-bind="text: processedProducts">0</span> / <span data-bind="text: totalProducts">0</span> <?= __('Products Processed') ?> 
+                    (<span data-bind="text: progressPercent">0</span>%)
+                </div>
+
+                <div style="font-size:14px; margin-bottom:5px;"><strong><?= __('Generation Logs') ?></strong></div>
+                <div style="background:#1e1e1e; color:#00ff00; font-family:monospace; padding:10px; height:400px; overflow-y:scroll; border-radius:4px;" id="console-logs">
+                    <!-- ko foreach: logs -->
+                    <div data-bind="style: {color: $data.level === 'error' ? '#ff4c4c' : ($data.level === 'warning' ? '#ffff00' : '#00ff00')}">
+                        [<span data-bind="text: created_at"></span>] <span data-bind="text: level.toUpperCase()"></span>: <span data-bind="text: message"></span>
+                    </div>
+                    <!-- /ko -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#feed-live-console": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "feedConsole": {
+                    "component": "Haerriz_GoogleShoppingFeed/js/components/live-console",
+                    "triggerUrl": "<?= $triggerUrl ?>",
+                    "progressUrl": "<?= $progressUrl ?>"
+                }
+            }
+        }
+    }
+}
+</script>

@@ -7,6 +7,12 @@
         </item>
         <item name="spinner" xsi:type="string">haerriz_googleshoppingfeed_feed_columns</item>
         <item name="buttons" xsi:type="array">
+            <item name="setup_google" xsi:type="array">
+                <item name="name" xsi:type="string">setup_google</item>
+                <item name="label" xsi:type="string" translate="true">Setup Google Feed</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/setupGoogle</item>
+            </item>
             <item name="add" xsi:type="array">
                 <item name="name" xsi:type="string">add</item>
                 <item name="label" xsi:type="string" translate="true">Add New Feed</item>
@@ -31,6 +37,56 @@
             </argument>
         </argument>
     </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction">
+            <action name="enable">
+                <settings>
+                    <confirm>
+                        <message translate="true">Enable the selected profiles?</message>
+                        <title translate="true">Enable profiles</title>
+                    </confirm>
+                    <url path="haerriz_googleshoppingfeed/feed/massStatus">
+                        <param name="action">enable</param>
+                    </url>
+                    <type>enable</type>
+                    <label translate="true">Enable</label>
+                </settings>
+            </action>
+            <action name="disable">
+                <settings>
+                    <url path="haerriz_googleshoppingfeed/feed/massStatus">
+                        <param name="action">disable</param>
+                    </url>
+                    <type>disable</type>
+                    <label translate="true">Disable</label>
+                </settings>
+            </action>
+            <action name="generate">
+                <settings>
+                    <url path="haerriz_googleshoppingfeed/feed/massGenerate"/>
+                    <type>generate</type>
+                    <label translate="true">Generate Selected</label>
+                </settings>
+            </action>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Delete the selected profiles?</message>
+                        <title translate="true">Delete profiles</title>
+                    </confirm>
+                    <url path="haerriz_googleshoppingfeed/feed/massStatus">
+                        <param name="action">delete</param>
+                    </url>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
     <columns name="haerriz_googleshoppingfeed_feed_columns">
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
@@ -45,6 +101,7 @@
                     <item name="filter" xsi:type="string">textRange</item>
                     <item name="sorting" xsi:type="string">asc</item>
                     <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
                 </item>
             </argument>
         </column>
@@ -53,16 +110,64 @@
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Name</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
                 </item>
             </argument>
         </column>
-        <column name="status" component="Magento_Ui/js/grid/columns/select">
+        <column name="file" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\FileDownload">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\Status</item>
                 <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">select</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">File</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+        <column name="mode" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\ExecutionMode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Mode</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+        <column name="store" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\StoreView">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Store</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column>
+        <column name="generated" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\GenerationSummary">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Generated</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item>
+            </argument>
+        </column>
+        <actionsColumn name="actions" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\FeedActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">profile_id</item>
+                    <item name="sortOrder" xsi:type="number">100</item>
+                </item>
+            </argument>
+            <settings>
+                <indexField>profile_id</indexField>
+                <label translate="true">Action</label>
+            </settings>
+        </actionsColumn>
+        <column name="status" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\StatusBadge">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
                     <item name="label" xsi:type="string" translate="true">Status</item>
-                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">110</item>
                 </item>
             </argument>
         </column>

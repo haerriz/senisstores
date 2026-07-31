@@ -26,16 +26,6 @@ class Conditions extends Generic implements TabInterface
      */
     protected $repository;
 
-    /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Backend\Block\Widget\Form\Renderer\Fieldset $rendererFieldset
-     * @param \Magento\Rule\Block\Conditions $conditions
-     * @param \Haerriz\GoogleShoppingFeed\Model\RuleFactory $ruleFactory
-     * @param \Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface $repository
-     * @param array $data
-     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -53,51 +43,26 @@ class Conditions extends Generic implements TabInterface
         parent::__construct($context, $registry, $formFactory, $data);
     }
 
-    /**
-     * Get tab label
-     *
-     * @return \Magento\Framework\Phrase
-     */
     public function getTabLabel()
     {
         return __('Conditions');
     }
 
-    /**
-     * Get tab title
-     *
-     * @return \Magento\Framework\Phrase
-     */
     public function getTabTitle()
     {
         return __('Conditions');
     }
 
-    /**
-     * Can show tab
-     *
-     * @return bool
-     */
     public function canShowTab()
     {
         return true;
     }
 
-    /**
-     * Is hidden
-     *
-     * @return bool
-     */
     public function isHidden()
     {
         return false;
     }
 
-    /**
-     * Prepare form
-     *
-     * @return $this
-     */
     protected function _prepareForm()
     {
         $id = $this->getRequest()->getParam('id');
@@ -119,7 +84,7 @@ class Conditions extends Generic implements TabInterface
         $form->setHtmlIdPrefix('rule_');
 
         $renderer = $this->rendererFieldset->setTemplate(
-            'Magento_Rule::fieldset.phtml'
+            'Magento_CatalogRule::promo/fieldset.phtml'
         )->setNewChildUrl(
             $this->getUrl('haerriz_googleshoppingfeed/feed/conditions', ['form' => 'rule_conditions_fieldset'])
         );

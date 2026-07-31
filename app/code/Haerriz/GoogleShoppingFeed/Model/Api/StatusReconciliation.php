@@ -1,69 +1,72 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Model\Api;
 
-use Haerriz\GoogleShoppingFeed\Model\Api\MerchantClientV1;
-use Haerriz\GoogleShoppingFeed\Model\FeedLogHandler;
+use Haerriz\GoogleShoppingFeed\Model\Config;
+use Haerriz\GoogleShoppingFeed\Model\FeedRemoteStateRepository;
+use Psr\Log\LoggerInterface;
 
 class StatusReconciliation
 {
-    /**
-     * @var MerchantClientV1
-     */
-    protected $clientV1;
+    private $merchantClient;
+    private $config;
+    private $remoteStateRepo;
+    private $logger;
 
-    /**
-     * @var FeedLogHandler
-     */
-    protected $logHandler;
-
-    /**
-     * @param MerchantClientV1 $clientV1
-     * @param FeedLogHandler $logHandler
-     */
     public function __construct(
-        MerchantClientV1 $clientV1,
-        FeedLogHandler $logHandler
+        MerchantClientV1 $merchantClient,
+        Config $config,
+        FeedRemoteStateRepository $remoteStateRepo,
+        LoggerInterface $logger
     ) {
-        $this->clientV1 = $clientV1;
-        $this->logHandler = $logHandler;
+        $this->merchantClient  = $merchantClient;
+        $this->config          = $config;
+        $this->remoteStateRepo = $remoteStateRepo;
+        $this->logger          = $logger;
     }
 
     /**
-     * Reconcile approving warnings or disapprovals for synchronized SKU
-     *
-     * @param string $sku
-     * @param int $profileId
-     * @return void
+     * Pull latest approval statuses from Google Merchant Center
+     * and update local haerriz_google_shopping_feed_remote_state table.
      */
-    public function reconcileProductStatus($sku, $profileId)
+    public function reconcile(int $storeId = 0): array
     {
-        try {
-            $client = $this->clientV1->getProductsClient();
-            $name = sprintf(
-                'accounts/%s/products/%s~en~US~%s',
-                $this->clientV1->getMerchantId(),
-                'online',
-                $sku
-            );
+        $merchantId = $this->config->getMerchantId($storeId);
 
-            $product = $client->getProduct($name);
-            $itemStatus = $product->getItemStatus();
-            
-            if ($itemStatus) {
-                foreach ($itemStatus->getIssues() as $issue) {
-                    $message = sprintf(
-                        "MC Issue for SKU %s - Code: %s. Severity: %s. Description: %s. Field: %s",
-                        $sku,
-                        $issue->getCode(),
-                        $issue->getSeverity(),
-                        $issue->getDescription(),
-                        $issue->getAttribute()
-                    );
-                    $this->logHandler->log($profileId, null, 'warning', $message);
-                }
-            }
-        } catch (\Exception $e) {
-            // absorption for missing / not yet fully compiled MC records
+        if (!$merchantId) {
+            return ['reconciled' => false, 'reason' => 'no_merchant_id'];
         }
+
+        $reconciled = 0;
+        $statuses   = [];
+
+        try {
+            $remoteProducts = $this->merchantClient->listProducts($merchantId);
+
+            foreach ($remoteProducts as $remoteProduct) {
+                $sku    = $remoteProduct['offerId']   ?? '';
+                $status = $remoteProduct['status']    ?? 'unknown';
+                $issues = $remoteProduct['itemLevelIssues'] ?? [];
+
+                // Persist to local state table
+                try {
+                    $state = $this->remoteStateRepo->getByOfferIdAndProfile($sku, $merchantId);
+                    $state->setRemoteStatus($status);
+                    $state->setIssues(json_encode($issues));
+                    $state->setSyncedAt(date('Y-m-d H:i:s'));
+                    $this->remoteStateRepo->save($state);
+                    $reconciled++;
+                } catch (\Exception $innerEx) {
+                    $this->logger->debug("StatusReconciliation: SKU [{$sku}] state update failed: " . $innerEx->getMessage());
+                }
+
+                $statuses[$sku] = $status;
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error("StatusReconciliation::reconcile failed: " . $e->getMessage());
+            return ['reconciled' => false, 'error' => $e->getMessage()];
+        }
+
+        return ['reconciled' => true, 'count' => $reconciled, 'statuses' => $statuses];
     }
 }

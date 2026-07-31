@@ -7,7 +7,7 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action
 {
-    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feeds';
+    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feed_profiles';
 
     protected $resultPageFactory;
 

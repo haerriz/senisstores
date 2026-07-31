@@ -1,94 +1,56 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Model\Api;
 
-use Haerriz\GoogleShoppingFeed\Model\Api\MerchantClientV1;
-use Google\Shopping\Merchant\Products\V1\InsertProductInputRequest;
-use Google\Shopping\Merchant\Products\V1\DeleteProductInputRequest;
-use Google\Shopping\Merchant\Products\V1\ProductInput;
-use Google\Shopping\Merchant\Products\V1\ProductAttributes;
-use Google\Shopping\Type\Price;
+use Haerriz\GoogleShoppingFeed\Model\Config;
+use Psr\Log\LoggerInterface;
 
 class ProductSynchronizer
 {
-    /**
-     * @var MerchantClientV1
-     */
-    protected $clientV1;
+    private $merchantClient;
+    private $config;
+    private $logger;
 
-    /**
-     * @param MerchantClientV1 $clientV1
-     */
-    public function __construct(MerchantClientV1 $clientV1)
-    {
-        $this->clientV1 = $clientV1;
+    public function __construct(
+        MerchantClientV1 $merchantClient,
+        Config $config,
+        LoggerInterface $logger
+    ) {
+        $this->merchantClient = $merchantClient;
+        $this->config         = $config;
+        $this->logger         = $logger;
     }
 
     /**
-     * Synchronize product input (insert or patch mode)
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @param string $dataSourceName
-     * @param array $attributesMapping
-     * @param string $mode 'full' or 'patch'
-     * @return \Google\Shopping\Merchant\Products\V1\ProductInput
+     * Synchronize products with Google Merchant Center.
+     * Batches inserts/updates to avoid API rate limits.
      */
-    public function syncProduct($product, $dataSourceName, $attributesMapping = [], $mode = 'full')
+    public function sync(array $products, int $storeId = 0): array
     {
-        $client = $this->clientV1->getProductsClient();
-        $parent = 'accounts/' . $this->clientV1->getMerchantId();
+        $merchantId = $this->config->getMerchantId($storeId);
 
-        $productInput = new ProductInput();
-        $productInput->setOfferId($product->getSku());
-        $productInput->setContentLanguage('en');
-        $productInput->setFeedLabel('IN');
-
-        $attributes = new ProductAttributes();
-        $attributes->setTitle($product->getName());
-        
-        $price = new Price();
-        $price->setAmountMicros((int)($product->getPrice() * 1000000));
-        $price->setCurrencyCode('INR');
-        $attributes->setPrice($price);
-
-        // Map stock availability
-        $attributes->setAvailability($product->isSalable() ? 'in_stock' : 'out_of_stock');
-
-        $productInput->setProductAttributes($attributes);
-
-        $request = new InsertProductInputRequest();
-        $request->setParent($parent);
-        $request->setProductInput($productInput);
-        $request->setDataSource($dataSourceName);
-
-
-        return $client->insertProductInput($request);
-    }
-
-    /**
-     * Delete product from Merchant Center datasource
-     *
-     * @param string $sku
-     * @param string $dataSourceName
-     * @return bool
-     */
-    public function deleteProduct($sku, $dataSourceName)
-    {
-        try {
-            $client = $this->clientV1->getProductsClient();
-            $name = sprintf(
-                'accounts/%s/productInputs/en~IN~%s',
-                $this->clientV1->getMerchantId(),
-                $sku
-            );
-
-            $request = new DeleteProductInputRequest();
-            $request->setName($name);
-            $request->setDataSource($dataSourceName);
-
-            $client->deleteProductInput($request);
-            return true;
-        } catch (\Exception $e) {
-            return false;
+        if (!$merchantId) {
+            $this->logger->warning("ProductSynchronizer: No Merchant ID configured for store {$storeId}");
+            return ['synced' => 0, 'status' => 'skipped', 'reason' => 'no_merchant_id'];
         }
+
+        $synced  = 0;
+        $errors  = [];
+        $batches = array_chunk($products, 50); // Google Merchant API max batch = 50
+
+        foreach ($batches as $batch) {
+            try {
+                $result = $this->merchantClient->batchInsertProducts($merchantId, $batch);
+                $synced += $result['inserted'] ?? count($batch);
+            } catch (\Exception $e) {
+                $this->logger->error("ProductSynchronizer batch failed: " . $e->getMessage());
+                $errors[] = $e->getMessage();
+            }
+        }
+
+        return [
+            'synced' => $synced,
+            'errors' => $errors,
+            'status' => empty($errors) ? 'success' : 'partial',
+        ];
     }
 }

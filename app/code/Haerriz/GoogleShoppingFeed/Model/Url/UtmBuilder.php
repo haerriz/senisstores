@@ -22,15 +22,15 @@ class UtmBuilder
 
         $params = [];
         $utmFields = [
-            FeedProfileInterface::UTM_SOURCE => 'utm_source',
-            FeedProfileInterface::UTM_MEDIUM => 'utm_medium',
-            FeedProfileInterface::UTM_CAMPAIGN => 'utm_campaign',
-            FeedProfileInterface::UTM_TERM => 'utm_term',
-            FeedProfileInterface::UTM_CONTENT => 'utm_content'
+            'getUtmSource' => 'utm_source',
+            'getUtmMedium' => 'utm_medium',
+            'getUtmCampaign' => 'utm_campaign',
+            'getUtmTerm' => 'utm_term',
+            'getUtmContent' => 'utm_content'
         ];
 
-        foreach ($utmFields as $const => $key) {
-            $val = $profile->getData($const);
+        foreach ($utmFields as $getter => $key) {
+            $val = $profile->{$getter}();
             if (!empty($val)) {
                 $val = $this->replacePlaceholders($val, $profile, $product);
                 $params[$key] = urlencode($val);

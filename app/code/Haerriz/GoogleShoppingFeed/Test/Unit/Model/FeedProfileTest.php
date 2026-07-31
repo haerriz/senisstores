@@ -13,7 +13,10 @@ class FeedProfileTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->model = new FeedProfile();
+        $this->model = $this->getMockBuilder(FeedProfile::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
     }
 
     public function testGetSetId()

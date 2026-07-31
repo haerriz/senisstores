@@ -5,7 +5,7 @@ use Magento\Backend\App\Action;
 
 class NewAction extends Action
 {
-    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feeds';
+    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feed_profiles';
 
     public function execute()
     {

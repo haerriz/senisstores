@@ -3,23 +3,18 @@ namespace Haerriz\GoogleShoppingFeed\Test\Unit\Model\Storage;
 
 use PHPUnit\Framework\TestCase;
 use Haerriz\GoogleShoppingFeed\Model\Storage\AdapterPool;
-use Haerriz\GoogleShoppingFeed\Model\Storage\AdapterInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Haerriz\GoogleShoppingFeed\Model\Delivery\DeliveryPool;
 
 class AdapterPoolTest extends TestCase
 {
-    public function testGetAdapterSuccess()
+    public function testGetResolvesAdapter()
     {
-        $adapterMock = $this->createMock(AdapterInterface::class);
-        $pool = new AdapterPool(['local' => $adapterMock]);
+        $deliveryPool = $this->createMock(DeliveryPool::class);
+        $adapter = $this->createMock(\Haerriz\GoogleShoppingFeed\Api\DeliveryAdapterInterface::class);
+        $deliveryPool->method('get')->with('local')->willReturn($adapter);
 
-        $this->assertSame($adapterMock, $pool->get('local'));
-    }
-
-    public function testGetAdapterThrowsException()
-    {
-        $pool = new AdapterPool([]);
-        $this->expectException(LocalizedException::class);
-        $pool->get('invalid');
+        $pool = new AdapterPool($deliveryPool);
+        $resolved = $pool->get('local');
+        $this->assertSame($adapter, $resolved);
     }
 }

@@ -3,5 +3,8 @@
     <menu>
         <add id="Haerriz_GoogleShoppingFeed::main" title="Haerriz Google Feed" module="Haerriz_GoogleShoppingFeed" sortOrder="20" resource="Haerriz_GoogleShoppingFeed::feed_management"/>
         <add id="Haerriz_GoogleShoppingFeed::feeds" title="Manage Feeds" module="Haerriz_GoogleShoppingFeed" sortOrder="10" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/feed/index" resource="Haerriz_GoogleShoppingFeed::feed_profiles"/>
+        <add id="Haerriz_GoogleShoppingFeed::jobs" title="Job History" module="Haerriz_GoogleShoppingFeed" sortOrder="20" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/job/index" resource="Haerriz_GoogleShoppingFeed::history"/>
+        <add id="Haerriz_GoogleShoppingFeed::dashboard" title="Dashboard" module="Haerriz_GoogleShoppingFeed" sortOrder="5" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/dashboard/index" resource="Haerriz_GoogleShoppingFeed::feed_management"/>
+        <add id="Haerriz_GoogleShoppingFeed::taxonomy" title="Taxonomy Mapping" module="Haerriz_GoogleShoppingFeed" sortOrder="15" parent="Haerriz_GoogleShoppingFeed::main" action="haerriz_googleshoppingfeed/taxonomy/index" resource="Haerriz_GoogleShoppingFeed::feed_management"/>
     </menu>
 </config>

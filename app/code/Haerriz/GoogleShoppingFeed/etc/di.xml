@@ -1,30 +1,76 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Haerriz\GoogleShoppingFeed\Api\ProductProviderInterface" type="Haerriz\GoogleShoppingFeed\Model\ProductProvider" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfileRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedJobRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJobRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedLogRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLogRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedArtifactRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedArtifactRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedJobItemRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJobItemRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedRemoteStateRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedRemoteStateRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\CategoryMappingRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\Taxonomy\CategoryMappingRepository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\ProductTypeResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\ProductTypeResolver" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\ProductValueResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\ProductValueResolver" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface" type="Haerriz\GoogleShoppingFeed\Model\CredentialProvider" />
 
-    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfile"/>
-    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfileRepository"/>
-    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJob"/>
-    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedJobRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJobRepository"/>
-    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLog"/>
-    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedLogRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLogRepository"/>
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfile" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJob" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLog" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
 
-    <!-- Custom Logger Configuration -->
-    <virtualType name="Haerriz\GoogleShoppingFeed\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+    
+    <!-- Interface->Implementation preferences for all cluster connections -->
+    <preference for="Haerriz\GoogleShoppingFeed\Api\GenerationOrchestratorInterface" type="Haerriz\GoogleShoppingFeed\Model\Generation\Orchestrator" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\JobLoggerInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLogHandler" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedTemplateRegistryInterface" type="Haerriz\GoogleShoppingFeed\Model\Template\PresetRegistry" />
+
+    <!-- ProductEligibilityPolicy: wired into FeedExporter -->
+    <preference for="Haerriz\GoogleShoppingFeed\Api\ProductEligibilityPolicyInterface" type="Haerriz\GoogleShoppingFeed\Model\Product\EligibilityPolicy" />
+
+    <!-- OfferIdentityResolver: wired into ProductValueResolver -->
+    <preference for="Haerriz\GoogleShoppingFeed\Api\OfferIdentityResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\Product\OfferIdentityResolver" />
+
+    <!-- TaxonomyRepository: wired into Taxonomy\Mapping for search() fallback -->
+    <preference for="Haerriz\GoogleShoppingFeed\Api\TaxonomyRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\Taxonomy\Repository" />
+
+    <!-- Preset value object for FeedTemplateInterface -->
+    <preference for="Haerriz\GoogleShoppingFeed\Api\FeedTemplateInterface" type="Haerriz\GoogleShoppingFeed\Model\Template\Preset" />
+
+    <preference for="Haerriz\GoogleShoppingFeed\Api\ModifierPipelineInterface" type="Haerriz\GoogleShoppingFeed\Model\Modifier\Pipeline" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\WriterInterface" type="Haerriz\GoogleShoppingFeed\Model\Writer\GoogleXml" />
+
+    <type name="Haerriz\GoogleShoppingFeed\Model\Writer\Pool">
         <arguments>
-            <argument name="fileName" xsi:type="string">/log/haerriz_googleshoppingfeed.log</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Haerriz\GoogleShoppingFeed\Logger\Logger" type="Magento\Framework\Logger\Monolog">
-        <arguments>
-            <argument name="name" xsi:type="string">haerrizGoogleShoppingFeed</argument>
-            <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Haerriz\GoogleShoppingFeed\Logger\Handler</item>
+            <argument name="writers" xsi:type="array">
+                <item name="xml" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\GoogleXml</item>
+                <item name="google_shopping_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\GoogleXml</item>
+                <item name="microsoft_merchant_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\GoogleXml</item>
+                <item name="csv" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="meta_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="instagram_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="snapchat_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="tiktok_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="pinterest_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="amazon_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="ebay_inventory_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="rakuten_catalog_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\Delimited</item>
+                <item name="jsonl" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\JsonLines</item>
+                <item name="openai_commerce_v1" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Writer\JsonLines</item>
             </argument>
         </arguments>
-    </virtualType>
+    </type>
 
-    <!-- UI Component Data Source Registration -->
+    <type name="Haerriz\GoogleShoppingFeed\Model\Delivery\DeliveryPool">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="local" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Delivery\LocalAdapter</item>
+                <item name="ftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Delivery\FtpAdapter</item>
+                <item name="sftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Delivery\SftpAdapter</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
@@ -34,39 +80,62 @@
         </arguments>
     </type>
 
-    <virtualType name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <type name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile\Grid\Collection">
         <arguments>
             <argument name="mainTable" xsi:type="string">haerriz_google_shopping_feed_profile</argument>
+            <argument name="eventPrefix" xsi:type="string">haerriz_googleshoppingfeed_profile_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">profile_grid_collection</argument>
             <argument name="resourceModel" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedProfile</argument>
         </arguments>
-    </virtualType>
+    </type>
 
-    <virtualType name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <type name="Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob\Grid\Collection">
         <arguments>
             <argument name="mainTable" xsi:type="string">haerriz_google_shopping_feed_job</argument>
+            <argument name="eventPrefix" xsi:type="string">haerriz_googleshoppingfeed_job_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">job_grid_collection</argument>
             <argument name="resourceModel" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob</argument>
         </arguments>
-    </virtualType>
+    </type>
 
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="haerriz_feed_generate" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\GenerateFeed</item>
+                <item name="haerriz_feed_validate" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\ValidateFeed</item>
+                <item name="haerriz_feed_import_taxonomy" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\ImportGoogleTaxonomy</item>
+                <item name="haerriz_feed_cleanup_artifacts" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\CleanupArtifacts</item>
+                <item name="haerriz_feed_merchant_sync" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\MerchantSync</item>
+                <item name="haerriz_feed_merchant_reconcile" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\MerchantReconcile</item>
+                <item name="haerriz_feed_consume_jobs" xsi:type="object">Haerriz\GoogleShoppingFeed\Console\Command\ConsumeFeedJobs</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Product Type Strategy Pool: maps Magento product types to feed resolver strategies -->
+    <type name="Haerriz\GoogleShoppingFeed\Model\Product\Type\Pool">
+        <arguments>
+            <argument name="strategies" xsi:type="array">
+                <item name="simple" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\Simple</item>
+                <item name="virtual" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\VirtualProduct</item>
+                <item name="downloadable" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\Downloadable</item>
+                <item name="configurable" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\Configurable</item>
+                <item name="bundle" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\Bundle</item>
+                <item name="grouped" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Product\Type\Grouped</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Modifier Pool: all text transformation modifiers -->
     <type name="Haerriz\GoogleShoppingFeed\Model\Modifier\Pool">
         <arguments>
             <argument name="modifiers" xsi:type="array">
                 <item name="strip_tags" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\StripTags</item>
                 <item name="round_price" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\RoundPrice</item>
-                <item name="prepend_text" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\PrependText</item>
                 <item name="append_text" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\AppendText</item>
+                <item name="prepend_text" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\PrependText</item>
                 <item name="capitalize" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\Capitalize</item>
                 <item name="google_taxonomy" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Modifier\GoogleTaxonomy</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="Haerriz\GoogleShoppingFeed\Model\Storage\AdapterPool">
-        <arguments>
-            <argument name="adapters" xsi:type="array">
-                <item name="local" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Local</item>
-                <item name="ftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Ftp</item>
-                <item name="sftp" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Storage\Sftp</item>
             </argument>
         </arguments>
     </type>

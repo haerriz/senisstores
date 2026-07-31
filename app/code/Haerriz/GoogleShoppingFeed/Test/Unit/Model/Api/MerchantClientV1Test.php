@@ -4,7 +4,8 @@ namespace Haerriz\GoogleShoppingFeed\Test\Unit\Model\Api;
 use PHPUnit\Framework\TestCase;
 use Haerriz\GoogleShoppingFeed\Model\Api\MerchantClientV1;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Encryption\EncryptorInterface;
+use Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface;
+use Haerriz\GoogleShoppingFeed\Model\Logger\Sanitizer;
 use Psr\Log\LoggerInterface;
 
 class MerchantClientV1Test extends TestCase
@@ -17,13 +18,14 @@ class MerchantClientV1Test extends TestCase
     protected function setUp(): void
     {
         $this->scopeConfigMock = $this->createMock(ScopeConfigInterface::class);
-        $this->encryptorMock = $this->createMock(EncryptorInterface::class);
+        $this->encryptorMock = $this->createMock(CredentialProviderInterface::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
 
         $this->clientV1 = new MerchantClientV1(
             $this->scopeConfigMock,
             $this->encryptorMock,
-            $this->loggerMock
+            $this->loggerMock,
+            new Sanitizer()
         );
     }
 
@@ -39,10 +41,10 @@ class MerchantClientV1Test extends TestCase
 
     public function testGetClientThrowsExceptionWhenNoCredentials()
     {
-        $this->scopeConfigMock->expects($this->once())
-            ->method('getValue')
+        $this->encryptorMock->expects($this->once())
+            ->method('getConfigSecret')
             ->with(MerchantClientV1::XML_PATH_SERVICE_ACCOUNT_JSON)
-            ->willReturn(null);
+            ->willReturn('');
 
         $this->expectException(\Exception::class);
         $this->clientV1->getProductsClient();

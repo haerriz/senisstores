@@ -1,0 +1,69 @@
+<?php
+/** @var \Haerriz\GoogleShoppingFeed\Block\Adminhtml\Job\View $block */
+$job = $block->getJob();
+?>
+<div class="page-main-actions">
+    <div class="page-actions">
+        <div class="page-actions-buttons">
+            <a class="action-default scalable back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>">
+                <span><?= $block->escapeHtml(__('Back to Job History')) ?></span>
+            </a>
+            <?php if ($job->getData('artifact_path')): ?>
+                <a class="action-primary" href="<?= $block->escapeUrl($block->getDownloadUrl()) ?>">
+                    <span><?= $block->escapeHtml(__('Download Artifact')) ?></span>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Job Details')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <table class="admin__table-secondary">
+            <tbody>
+            <?php foreach ($block->getDetails() as $label => $value): ?>
+                <tr>
+                    <th><?= $block->escapeHtml(__($label)) ?></th>
+                    <td><?= $block->escapeHtml($value !== '' ? $value : '—') ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Sanitized Job Log')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <table class="data-grid">
+            <thead>
+            <tr>
+                <th class="data-grid-th"><?= $block->escapeHtml(__('Time')) ?></th>
+                <th class="data-grid-th"><?= $block->escapeHtml(__('Level')) ?></th>
+                <th class="data-grid-th"><?= $block->escapeHtml(__('Message')) ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php $hasLogs = false; ?>
+            <?php foreach ($block->getLogs() as $log): ?>
+                <?php $hasLogs = true; ?>
+                <tr>
+                    <td><?= $block->escapeHtml((string)$log->getCreatedAt()) ?></td>
+                    <td><?= $block->escapeHtml((string)$log->getType()) ?></td>
+                    <td><?= $block->escapeHtml($block->sanitize($log->getMessage())) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            <?php if (!$hasLogs): ?>
+                <tr>
+                    <td colspan="3"><?= $block->escapeHtml(__('No log entries were recorded for this job.')) ?></td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</section>

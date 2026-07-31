@@ -30,6 +30,8 @@ class DataProvider extends AbstractDataProvider
         $items = $this->collection->getItems();
         foreach ($items as $model) {
             $data = $model->getData();
+            unset($data['delivery_password']);
+            unset($data['delivery_private_key'], $data['delivery_key_passphrase']);
             
             // Enterprise Feature: Deserialize dynamic rows data
             if (!empty($data['attributes_mapping_serialized'])) {
@@ -37,6 +39,12 @@ class DataProvider extends AbstractDataProvider
             }
             if (!empty($data['conditions_serialized'])) {
                 $data['conditions'] = json_decode($data['conditions_serialized'], true);
+            }
+            foreach (['include_category_ids', 'exclude_category_ids'] as $listField) {
+                $listValue = $data[$listField] ?? '';
+                $data[$listField] = $listValue === null || $listValue === ''
+                    ? []
+                    : array_values(array_filter(array_map('intval', explode(',', $listValue))));
             }
             
             $this->loadedData[$model->getId()] = $data;

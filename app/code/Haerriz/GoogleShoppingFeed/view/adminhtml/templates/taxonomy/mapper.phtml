@@ -1,0 +1,94 @@
+<?php
+/** @var \Magento\Backend\Block\Template $block */
+$treeUrl = $block->getUrl('*/*/treeAjax');
+$saveUrl = $block->getUrl('*/*/saveMappingAjax');
+?>
+
+    <!-- SPIDER WEB CLUSTER NAVIGATION -->
+    <div class="feed-cluster-nav" style="background: #fff; padding: 10px 20px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; display: flex; gap: 15px; align-items: center;">
+        <strong style="color: #666; margin-right: 10px;"><?= __("Module Quick Links:") ?></strong>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/dashboard/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Dashboard") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/feed/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Manage Profiles") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/taxonomy/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #007bdb; color: #fff;"><?= __("Taxonomy Mapper") ?></a>
+        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/job/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Job History") ?></a>
+    </div>
+    <div id="taxonomy-mapper-container" data-bind="scope: 'taxonomyMapper'">
+    <div style="display: flex; gap: 20px;">
+        
+        <!-- Left Pane: Magento Categories -->
+        <div style="flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h3><?= __('1. Select a Store Category') ?></h3>
+            <div data-bind="visible: isLoading" style="text-align: center; padding: 20px;">Loading...</div>
+            <div style="max-height: 600px; overflow-y: auto;">
+                <table class="data-grid" style="width:100%;">
+                    <tbody data-bind="foreach: magentoCategories">
+                        <tr data-bind="click: $parent.selectMagentoCategory.bind($parent, $data), style: { background: $parent.selectedMagentoId() == id ? '#e0f7fa' : '#fff', cursor: 'pointer' }">
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                                <span data-bind="text: name"></span>
+                                <!-- ko if: $parent.getMappingLabel(id) -->
+                                    <div style="font-size:11px; color: #4caf50; margin-top:4px;">
+                                        &#8627; Mapped: <span data-bind="text: $parent.getMappingLabel(id)"></span>
+                                    </div>
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Pane: Google Taxonomy -->
+        <div style="flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;">
+            <h3><?= __('2. Assign Google Category') ?></h3>
+            
+            <div data-bind="visible: !selectedMagentoId()" style="text-align:center; padding:50px; color:#999;">
+                <?= __('Please select a Store Category from the left pane first.') ?>
+            </div>
+
+            <div data-bind="visible: selectedMagentoId()">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" class="admin__control-text" placeholder="Search Google Taxonomy..." data-bind="value: searchQuery, valueUpdate: 'keyup'" style="width:100%;" />
+                </div>
+                
+                <div style="max-height: 500px; overflow-y: auto; border: 1px solid #eee;">
+                    <table class="data-grid" style="width:100%;">
+                        <tbody data-bind="foreach: filteredGoogleCategories">
+                            <tr data-bind="click: $parent.mapCategory.bind($parent, $data), style: { background: $parent.isMapped($data.id) ? '#e8f5e9' : '#fff', cursor: 'pointer' }">
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                                    <strong data-bind="text: id" style="margin-right:10px; color:#666;"></strong>
+                                    <span data-bind="text: name"></span>
+                                    <!-- ko if: $parent.isMapped($data.id) -->
+                                        <span style="float:right; color:#4caf50; font-weight:bold;">&#10003;</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 15px; text-align: right;">
+                    <button type="button" class="action-secondary" data-bind="click: removeMapping">
+                        <span><?= __('Remove Mapping') ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#taxonomy-mapper-container": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "taxonomyMapper": {
+                    "component": "Haerriz_GoogleShoppingFeed/js/components/taxonomy-mapper",
+                    "treeUrl": "<?= $treeUrl ?>",
+                    "saveUrl": "<?= $saveUrl ?>"
+                }
+            }
+        }
+    }
+}
+</script>

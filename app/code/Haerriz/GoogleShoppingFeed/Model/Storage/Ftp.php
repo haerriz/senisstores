@@ -2,10 +2,10 @@
 namespace Haerriz\GoogleShoppingFeed\Model\Storage;
 
 use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
+use Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface;
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\Ftp as FtpIo;
-use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 class Ftp implements AdapterInterface
@@ -21,7 +21,7 @@ class Ftp implements AdapterInterface
     protected $ftpIo;
 
     /**
-     * @var EncryptorInterface
+     * @var CredentialProviderInterface
      */
     protected $encryptor;
 
@@ -33,11 +33,11 @@ class Ftp implements AdapterInterface
     public function __construct(
         Filesystem $filesystem,
         FtpIo $ftpIo,
-        EncryptorInterface $encryptor
+        CredentialProviderInterface $credentialProvider
     ) {
         $this->filesystem = $filesystem;
         $this->ftpIo = $ftpIo;
-        $this->encryptor = $encryptor;
+        $this->encryptor = $credentialProvider;
     }
 
     /**
@@ -61,7 +61,8 @@ class Ftp implements AdapterInterface
                 'port' => $profile->getDeliveryPort() ?: 21,
                 'user' => $profile->getDeliveryUsername(),
                 'password' => $decryptedPassword,
-                'pasv' => true
+                'passive' => (bool)$profile->getData('ftp_passive'),
+                'timeout' => max(1, (int)$profile->getData('delivery_timeout'))
             ];
 
             if (!$this->ftpIo->open($config)) {
@@ -73,8 +74,12 @@ class Ftp implements AdapterInterface
                 $this->ftpIo->cd($remoteDir);
             }
 
-            $filename = basename($localFilePath);
-            $result = $this->ftpIo->write($filename, $absoluteLocalPath);
+            $filename = basename((string)($profile->getData('remote_filename') ?: $localFilePath));
+            $temporary = '.' . $filename . '.' . bin2hex(random_bytes(8)) . '.tmp';
+            $result = $this->ftpIo->write($temporary, $absoluteLocalPath);
+            if ($result) {
+                $result = $this->ftpIo->mv($temporary, $filename);
+            }
 
             $this->ftpIo->close();
 
@@ -84,7 +89,30 @@ class Ftp implements AdapterInterface
 
             return true;
         } catch (\Exception $e) {
-            throw new LocalizedException(__('FTP Upload Error: %1', $e->getMessage()), $e);
+            throw new LocalizedException(__('FTP upload failed. Verify the connection settings.'), $e);
+        }
+    }
+
+    public function testConnection(FeedProfileInterface $profile)
+    {
+        $password = $this->encryptor->decrypt($profile->getDeliveryPassword());
+        $opened = false;
+        try {
+            $this->ftpIo->open([
+                'host' => $profile->getDeliveryHost(),
+                'port' => $profile->getDeliveryPort() ?: 21,
+                'user' => $profile->getDeliveryUsername(),
+                'password' => $password,
+                'passive' => (bool)$profile->getData('ftp_passive'),
+                'timeout' => max(1, (int)$profile->getData('delivery_timeout')),
+            ]);
+            $opened = true;
+            $path = (string)$profile->getDeliveryPath();
+            return $path === '' || (bool)$this->ftpIo->cd($path);
+        } finally {
+            if ($opened) {
+                $this->ftpIo->close();
+            }
         }
     }
 }

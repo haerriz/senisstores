@@ -2,285 +2,155 @@
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">haerriz_googleshoppingfeed_feed_form.feed_profile_form_data_source</item>
-            <item name="deps" xsi:type="string">haerriz_googleshoppingfeed_feed_form.feed_profile_form_data_source</item>
+            <item name="provider" xsi:type="string">haerriz_googleshoppingfeed_feed_form.haerriz_googleshoppingfeed_feed_form_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">Feed Information</item>
-        <item name="config" xsi:type="array">
-            <item name="dataScope" xsi:type="string">data</item>
-            <item name="namespace" xsi:type="string">haerriz_googleshoppingfeed_feed_form</item>
-        </item>
+        <item name="label" xsi:type="string" translate="true">Google Feed Wizard</item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
-        <item name="buttons" xsi:type="array">
-            <item name="back" xsi:type="string">Haerriz\GoogleShoppingFeed\Block\Adminhtml\Feed\Edit\BackButton</item>
-            <item name="save" xsi:type="string">Haerriz\GoogleShoppingFeed\Block\Adminhtml\Feed\Edit\SaveButton</item>
-        </item>
     </argument>
-    <dataSource name="feed_profile_form_data_source">
-        <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\FeedProfile\DataProvider</argument>
-            <argument name="name" xsi:type="string">feed_profile_form_data_source</argument>
-            <argument name="primaryFieldName" xsi:type="string">profile_id</argument>
-            <argument name="requestFieldName" xsi:type="string">id</argument>
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
-                </item>
-            </argument>
-        </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="Haerriz\GoogleShoppingFeed\Block\Adminhtml\Feed\Edit\SaveButton"/>
+            <button name="back" class="Haerriz\GoogleShoppingFeed\Block\Adminhtml\Feed\Edit\BackButton"/>
+        </buttons>
+        <namespace>haerriz_googleshoppingfeed_feed_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>haerriz_googleshoppingfeed_feed_form.haerriz_googleshoppingfeed_feed_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="haerriz_googleshoppingfeed_feed_form_data_source">
         <argument name="data" xsi:type="array">
             <item name="js_config" xsi:type="array">
                 <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
             </item>
         </argument>
-    </dataSource>
-    <fieldset name="general">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">1. General Settings</item>
-            </item>
-        </argument>
-        <field name="profile_id">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Haerriz\GoogleShoppingFeed\Model\FeedProfile\DataProvider</argument>
+            <argument name="name" xsi:type="string">haerriz_googleshoppingfeed_feed_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">profile_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="visible" xsi:type="boolean">false</item>
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
+                    <item name="submit_url" xsi:type="url" path="haerriz_googleshoppingfeed/feed/save"/>
                 </item>
             </argument>
+        </argument>
+        <settings>
+            <submitUrl path="haerriz_googleshoppingfeed/feed/save"/>
+        </settings>
+    </dataSource>
+
+    <!-- STEP 1: General Settings -->
+    <fieldset name="step_1_general">
+        <settings>
+            <label translate="true">Step 1: General Settings</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        <field name="profile_id" formElement="input">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="visible" xsi:type="boolean">false</item><item name="dataType" xsi:type="string">text</item><item name="source" xsi:type="string">profile</item></item></argument>
         </field>
         <field name="name">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Feed Name</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">10</item>
-                    <item name="validation" xsi:type="array">
-                        <item name="required-entry" xsi:type="boolean">true</item>
-                    </item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Feed Name</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="validation" xsi:type="array"><item name="required-entry" xsi:type="boolean">true</item></item><item name="sortOrder" xsi:type="number">10</item></item></argument>
         </field>
         <field name="status">
-            <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\Status</item>
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">number</item>
-                    <item name="label" xsi:type="string" translate="true">Status</item>
-                    <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">20</item>
-                </item>
-            </argument>
-        </field>
-        <field name="filename">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Filename</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">30</item>
-                    <item name="notice" xsi:type="string">E.g., google_feed.xml</item>
-                    <item name="validation" xsi:type="array">
-                        <item name="required-entry" xsi:type="boolean">true</item>
-                    </item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\Status</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">number</item><item name="label" xsi:type="string" translate="true">Status</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">20</item></item></argument>
         </field>
         <field name="feed_type">
-            <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\FeedType</item>
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Feed Format</item>
-                    <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">40</item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\FeedType</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Feed Channel &amp; Template</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">30</item></item></argument>
         </field>
         <field name="store_id">
-            <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Magento\Store\Ui\Component\Listing\Column\Store\Options</item>
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Store View</item>
-                    <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">25</item>
-                    <item name="validation" xsi:type="array">
-                        <item name="required-entry" xsi:type="boolean">true</item>
-                    </item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Store</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">number</item><item name="label" xsi:type="string" translate="true">Store View</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">40</item></item></argument>
         </field>
-        <field name="currency">
-            <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Locale\Currency</item>
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Currency</item>
-                    <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">26</item>
-                    <item name="validation" xsi:type="array">
-                        <item name="required-entry" xsi:type="boolean">true</item>
-                    </item>
-                </item>
-            </argument>
+        <field name="filename">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Output Filename</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="validation" xsi:type="array"><item name="required-entry" xsi:type="boolean">true</item></item><item name="notice" xsi:type="string" translate="true">e.g. google_shopping.xml, instagram_feed.csv, openai_feed.jsonl</item><item name="sortOrder" xsi:type="number">50</item></item></argument>
         </field>
     </fieldset>
-    <fieldset name="conditions">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">2. Product Filtering Conditions</item>
-            </item>
-        </argument>
-        <htmlContent name="html_content">
-            <argument name="block" xsi:type="object">Haerriz\GoogleShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Conditions</argument>
-        </htmlContent>
+
+    <!-- STEP 2: Exclude Categories -->
+    <fieldset name="step_2_exclude_categories">
+        <settings>
+            <label translate="true">Step 2: Exclude Categories</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <field name="excluded_category_ids">
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\Category</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Categories to Exclude</item><item name="formElement" xsi:type="string">multiselect</item><item name="source" xsi:type="string">profile</item><item name="notice" xsi:type="string" translate="true">Select categories whose products should be excluded from feed generation.</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
+        </field>
     </fieldset>
-    <fieldset name="mapping">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">3. Attribute Mapping</item>
-            </item>
-        </argument>
-        <!-- Enterprise Feature: Dynamic Rows for Attribute Mapping -->
-        <dynamicRows name="attributes_mapping">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="addButtonLabel" xsi:type="string" translate="true">Add Attribute Mapping</item>
-                    <item name="componentType" xsi:type="string">dynamicRows</item>
-                    <item name="itemTemplate" xsi:type="string">record</item>
-                </item>
-            </argument>
-            <container name="record">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="isTemplate" xsi:type="boolean">true</item>
-                        <item name="is_collection" xsi:type="boolean">true</item>
-                        <item name="componentType" xsi:type="string">container</item>
-                    </item>
-                </argument>
-                <field name="google_attribute">
-                    <argument name="data" xsi:type="array">
-                        <item name="config" xsi:type="array">
-                            <item name="dataType" xsi:type="string">text</item>
-                            <item name="formElement" xsi:type="string">input</item>
-                            <item name="label" xsi:type="string" translate="true">Google Attribute (e.g. g:title)</item>
-                            <item name="dataScope" xsi:type="string">google_attribute</item>
-                        </item>
-                    </argument>
-                </field>
-                <field name="magento_attribute">
-                    <argument name="data" xsi:type="array">
-                        <item name="config" xsi:type="array">
-                            <item name="dataType" xsi:type="string">text</item>
-                            <item name="formElement" xsi:type="string">input</item>
-                            <item name="label" xsi:type="string" translate="true">Magento Attribute</item>
-                            <item name="dataScope" xsi:type="string">magento_attribute</item>
-                        </item>
-                    </argument>
-                </field>
-                <field name="modifier">
-                    <argument name="data" xsi:type="array">
-                        <item name="config" xsi:type="array">
-                            <item name="dataType" xsi:type="string">text</item>
-                            <item name="formElement" xsi:type="string">select</item>
-                            <item name="label" xsi:type="string" translate="true">Modifier</item>
-                            <item name="dataScope" xsi:type="string">modifier</item>
-                        </item>
-                    </argument>
-                </field>
-                <actionDelete>
-                    <argument name="data" xsi:type="array">
-                        <item name="config" xsi:type="array">
-                            <item name="componentType" xsi:type="string">actionDelete</item>
-                            <item name="dataType" xsi:type="string">text</item>
-                            <item name="label" xsi:type="string" translate="true">Actions</item>
-                        </item>
-                    </argument>
-                </actionDelete>
-            </container>
-        </dynamicRows>
+
+    <!-- STEP 3: Rename Categories -->
+    <fieldset name="step_3_rename_categories">
+        <settings>
+            <label translate="true">Step 3: Rename Categories</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <field name="category_mapping_config" formElement="textarea">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="label" xsi:type="string" translate="true">Category Taxonomy Mappings (JSON)</item><item name="notice" xsi:type="string" translate="true">Map store categories to Google/Channel Taxonomy (e.g. {"10": "Apparel &amp; Accessories > Clothing"})</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
+        </field>
     </fieldset>
-    <fieldset name="delivery">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">4. Delivery &amp; Upload Configuration</item>
-            </item>
-        </argument>
+
+    <!-- STEP 4: Basic Product Information -->
+    <fieldset name="step_4_basic_product_info">
+        <settings>
+            <label translate="true">Step 4: Basic Product Information</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <field name="mapping_config" formElement="textarea">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="label" xsi:type="string" translate="true">Basic Attribute Mapping Schema (JSON)</item><item name="notice" xsi:type="string" translate="true">Default mapping for id, title, description, price, link, image_link, availability</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
+        </field>
+    </fieldset>
+
+    <!-- STEP 5: Optional Product Information -->
+    <fieldset name="step_5_optional_product_info">
+        <settings>
+            <label translate="true">Step 5: Optional Product Information</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <field name="utm_source">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">UTM Source</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
+        </field>
+        <field name="utm_medium">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">UTM Medium</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">20</item></item></argument>
+        </field>
+        <field name="utm_campaign">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">UTM Campaign</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">30</item></item></argument>
+        </field>
+    </fieldset>
+
+    <!-- STEP 6: Schedule Settings -->
+    <fieldset name="step_6_schedule_settings">
+        <settings>
+            <label translate="true">Step 6: Schedule Settings</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <field name="cron_expr">
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Cron Schedule Expression</item><item name="formElement" xsi:type="string">input</item><item name="notice" xsi:type="string" translate="true">Standard 5-part cron syntax, e.g., 0 3 * * * (Daily at 3 AM)</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
+        </field>
+    </fieldset>
+
+    <!-- STEP 7: Destination -->
+    <fieldset name="step_7_destination">
+        <settings>
+            <label translate="true">Step 7: Destination</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
         <field name="delivery_type">
-            <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\DeliveryType</item>
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Delivery Type</item>
-                    <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">10</item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\DeliveryType</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Delivery Adapter</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">10</item></item></argument>
         </field>
         <field name="delivery_host">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Host</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">20</item>
-                </item>
-            </argument>
-        </field>
-        <field name="delivery_port">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Port</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">30</item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Remote Host / FTP Server</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">20</item></item></argument>
         </field>
         <field name="delivery_username">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Username</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">40</item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Username</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">30</item></item></argument>
         </field>
         <field name="delivery_password">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Password</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">50</item>
-                </item>
-            </argument>
-        </field>
-        <field name="delivery_path">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Remote Path</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">profile</item>
-                    <item name="sortOrder" xsi:type="number">60</item>
-                </item>
-            </argument>
+            <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Password</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">40</item></item></argument>
         </field>
     </fieldset>
 </form>

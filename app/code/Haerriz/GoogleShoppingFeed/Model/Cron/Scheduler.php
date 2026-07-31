@@ -1,121 +1,104 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Model\Cron;
 
-use DateTime;
-use DateTimeZone;
+use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
 
 class Scheduler
 {
     /**
-     * Calculate next run datetime based on frequency, custom cron expression, and timezone
+     * Check if a feed profile is due for generation based on its cron expression.
      *
-     * @param string $frequency
-     * @param string|null $cronExpr
-     * @param string|null $timezoneStr
-     * @param string|null $fromTimeStr Base time from which to calculate next run (defaults to now)
-     * @return string Datetime in UTC format (Y-m-d H:i:s)
+     * @param FeedProfileInterface $profile
+     * @param \DateTime|null $now
+     * @return bool
      */
-    public function calculateNextRun($frequency, $cronExpr = null, $timezoneStr = null, $fromTimeStr = null)
+    public function isDue(FeedProfileInterface $profile, \DateTime $now = null): bool
     {
-        $timezone = $timezoneStr ? new DateTimeZone($timezoneStr) : new DateTimeZone('UTC');
-        $now = new DateTime($fromTimeStr ?: 'now', new DateTimeZone('UTC'));
-        $now->setTimezone($timezone);
+        if (!(bool)$profile->getStatus()) {
+            return false;
+        }
 
-        switch ($frequency) {
-            case 'hourly':
-                $now->modify('+1 hour');
-                $now->setTime((int)$now->format('H'), 0, 0); // start of next hour
-                break;
+        $cronExpr = (string)$profile->getCronExpr();
+        if (empty($cronExpr)) {
+            return false;
+        }
 
-            case 'daily':
-                $now->modify('+1 day');
-                $now->setTime(2, 0, 0); // standard daily run at 2 AM local time
-                break;
+        if ($now === null) {
+            $now = new \DateTime();
+        }
 
-            case 'weekly':
-                $now->modify('+1 week');
-                $now->setTime(2, 0, 0);
-                break;
+        try {
+            return $this->matchesCronExpression($cronExpr, $now);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+    }
 
-            case 'monthly':
-                $now->modify('+1 month');
-                $now->setTime(2, 0, 0);
-                break;
+    /**
+     * Lightweight cron expression parser.
+     * Supports: * (wildcard), n (exact), n-m (range), n/s (step), a,b,c (list)
+     */
+    private function matchesCronExpression(string $expr, \DateTime $now): bool
+    {
+        $parts = preg_split('/\s+/', trim($expr));
+        if (count($parts) !== 5) {
+            throw new \InvalidArgumentException("Invalid cron expression: {$expr}");
+        }
 
-            case 'custom':
-            default:
-                if (!empty($cronExpr)) {
-                    $nextTime = $this->calculateCustomCron($cronExpr, $now->getTimestamp());
-                    $now->setTimestamp($nextTime);
-                } else {
-                    $now->modify('+1 day'); // fallback
+        [$minute, $hour, $dayOfMonth, $month, $dayOfWeek] = $parts;
+
+        return $this->matchesCronField($minute,      (int)$now->format('i'), 0, 59)
+            && $this->matchesCronField($hour,        (int)$now->format('G'), 0, 23)
+            && $this->matchesCronField($dayOfMonth,  (int)$now->format('j'), 1, 31)
+            && $this->matchesCronField($month,       (int)$now->format('n'), 1, 12)
+            && $this->matchesCronField($dayOfWeek,   (int)$now->format('w'), 0, 6);
+    }
+
+    private function matchesCronField(string $field, int $value, int $min, int $max): bool
+    {
+        // Handle comma-separated lists
+        if (strpos($field, ',') !== false) {
+            foreach (explode(',', $field) as $part) {
+                if ($this->matchesCronField(trim($part), $value, $min, $max)) {
+                    return true;
                 }
-                break;
-        }
-
-        $now->setTimezone(new DateTimeZone('UTC'));
-        return $now->format('Y-m-d H:i:s');
-    }
-
-    /**
-     * Lightweight custom cron parser/validator returning next timestamp matching expression
-     *
-     * @param string $expr
-     * @param int $currentTimestamp
-     * @return int
-     */
-    protected function calculateCustomCron($expr, $currentTimestamp)
-    {
-        // For basic custom expressions, match standard simple cron syntax, or calculate minimum step
-        // To be lightweight and robust, let's step minute-by-minute up to a threshold (e.g. 1 year) to find match
-        $parts = explode(' ', preg_replace('/\s+/', ' ', trim($expr)));
-        if (count($parts) < 5) {
-            return $currentTimestamp + 86400; // fallback daily increment
-        }
-
-        list($min, $hour, $day, $month, $wday) = $parts;
-        $time = $currentTimestamp;
-        $maxIterations = 525600; // Max minutes in a year to prevent infinite loops
-
-        for ($i = 0; $i < $maxIterations; $i++) {
-            $time += 60; // increment minute
-            $d = getdate($time);
-
-            if ($this->matchCronPart($min, $d['minutes']) &&
-                $this->matchCronPart($hour, $d['hours']) &&
-                $this->matchCronPart($day, $d['mday']) &&
-                $this->matchCronPart($month, $d['mon']) &&
-                $this->matchCronPart($wday, $d['wday'])
-            ) {
-                return $time;
             }
+            return false;
         }
 
-        return $currentTimestamp + 86400;
-    }
+        // Handle step values: */2 or 1-5/2
+        if (strpos($field, '/') !== false) {
+            [$rangeStr, $stepStr] = explode('/', $field, 2);
+            $step = (int)$stepStr;
+            if ($step <= 0) {
+                return false;
+            }
+            if ($rangeStr === '*') {
+                return ($value - $min) % $step === 0;
+            }
+            // Range with step: 1-10/2
+            if (strpos($rangeStr, '-') !== false) {
+                [$start, $end] = array_map('intval', explode('-', $rangeStr, 2));
+                if ($value < $start || $value > $end) {
+                    return false;
+                }
+                return ($value - $start) % $step === 0;
+            }
+            return false;
+        }
 
-    /**
-     * Check if a cron part matches current value
-     */
-    protected function matchCronPart($part, $value)
-    {
-        if ($part === '*') {
+        // Handle wildcard
+        if ($field === '*') {
             return true;
         }
-        
-        // Match lists (e.g. 1,2,5)
-        if (strpos($part, ',') !== false) {
-            $items = explode(',', $part);
-            return in_array($value, $items);
+
+        // Handle range: 1-5
+        if (strpos($field, '-') !== false) {
+            [$start, $end] = array_map('intval', explode('-', $field, 2));
+            return $value >= $start && $value <= $end;
         }
 
-        // Match intervals (e.g. */5)
-        if (strpos($part, '*/') !== false) {
-            $step = (int)str_replace('*/', '', $part);
-            return $step > 0 && ($value % $step === 0);
-        }
-
-        // Exact match
-        return (int)$part === (int)$value;
+        // Exact value
+        return (int)$field === $value;
     }
 }

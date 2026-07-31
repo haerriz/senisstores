@@ -35,13 +35,11 @@ class UtmBuilderTest extends TestCase
             ->method('getUtmEnabled')
             ->willReturn(1);
 
-        $this->profileMock->expects($this->any())
-            ->method('getData')
-            ->willReturnMap([
-                [FeedProfileInterface::UTM_SOURCE, null, 'google'],
-                [FeedProfileInterface::UTM_MEDIUM, null, 'cpc'],
-                [FeedProfileInterface::UTM_CAMPAIGN, null, '{sku}-campaign']
-            ]);
+        $this->profileMock->method('getUtmSource')->willReturn('google');
+        $this->profileMock->method('getUtmMedium')->willReturn('cpc');
+        $this->profileMock->method('getUtmCampaign')->willReturn('{sku}-campaign');
+        $this->profileMock->method('getUtmTerm')->willReturn('');
+        $this->profileMock->method('getUtmContent')->willReturn('');
 
         $this->productMock->expects($this->any())
             ->method('getSku')

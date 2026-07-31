@@ -2,7 +2,8 @@
 namespace Haerriz\GoogleShoppingFeed\Model\Api;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Encryption\EncryptorInterface;
+use Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface;
+use Haerriz\GoogleShoppingFeed\Model\Logger\Sanitizer;
 use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Shopping\Merchant\Products\V1\Client\ProductInputsServiceClient;
 use Google\Shopping\Merchant\DataSources\V1\Client\DataSourcesServiceClient;
@@ -20,9 +21,14 @@ class MerchantClientV1
     protected $scopeConfig;
 
     /**
-     * @var EncryptorInterface
+     * @var CredentialProviderInterface
      */
     protected $encryptor;
+
+    /**
+     * @var Sanitizer
+     */
+    private $sanitizer;
 
     /**
      * @var LoggerInterface
@@ -36,12 +42,14 @@ class MerchantClientV1
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        EncryptorInterface $encryptor,
-        LoggerInterface $logger
+        CredentialProviderInterface $credentialProvider,
+        LoggerInterface $logger,
+        Sanitizer $sanitizer
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->encryptor = $encryptor;
+        $this->encryptor = $credentialProvider;
         $this->logger = $logger;
+        $this->sanitizer = $sanitizer;
     }
 
     /**
@@ -62,7 +70,7 @@ class MerchantClientV1
      */
     public function getProductsClient()
     {
-        $jsonKey = $this->scopeConfig->getValue(self::XML_PATH_SERVICE_ACCOUNT_JSON);
+        $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
         if (!$jsonKey) {
             throw new \Exception("Google Merchant API Service Account JSON is not configured.");
         }
@@ -85,7 +93,7 @@ class MerchantClientV1
      */
     public function getDataSourcesClient()
     {
-        $jsonKey = $this->scopeConfig->getValue(self::XML_PATH_SERVICE_ACCOUNT_JSON);
+        $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
         if (!$jsonKey) {
             throw new \Exception("Google Merchant API Service Account JSON is not configured.");
         }
@@ -116,7 +124,9 @@ class MerchantClientV1
             $client->listDataSources($request);
             return true;
         } catch (\Exception $e) {
-            $this->logger->error("Google Merchant Connection Test failed: " . $e->getMessage());
+            $this->logger->error(
+                $this->sanitizer->sanitize('Google Merchant connection test failed: ' . $e->getMessage())
+            );
             return false;
         }
     }

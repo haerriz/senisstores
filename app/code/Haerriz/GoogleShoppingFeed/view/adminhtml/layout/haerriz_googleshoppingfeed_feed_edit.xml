@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="editor"/>
     <body>
         <referenceContainer name="content">
-            <uiComponent name="haerriz_googleshoppingfeed_feed_form"/>
+            <block class="Magento\Backend\Block\Template" name="feed_preview_modal" template="Haerriz_GoogleShoppingFeed::profile/preview.phtml" after="-" />
+            <block class="Magento\Backend\Block\Template" name="feed_visual_mapper" template="Haerriz_GoogleShoppingFeed::profile/visual-mapper.phtml" after="-" />
         </referenceContainer>
     </body>
 </page>

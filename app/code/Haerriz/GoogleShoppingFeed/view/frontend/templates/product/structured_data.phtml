@@ -1,0 +1,9 @@
+<?php
+/** @var \Haerriz\GoogleShoppingFeed\Block\Product\StructuredData $block */
+$jsonLd = $block->getJsonLd();
+if ($jsonLd):
+?>
+<script type="application/ld+json">
+<?= $jsonLd ?>
+</script>
+<?php endif; ?>

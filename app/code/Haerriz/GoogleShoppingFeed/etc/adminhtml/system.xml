@@ -1,39 +1,58 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="haerriz" translate="label" sortOrder="1000">
-            <label>Haerriz Extensions</label>
+        <tab id="haerriz" translate="label" sortOrder="200">
+            <label>HAERRIZ</label>
         </tab>
-        <section id="haerriz_googleshoppingfeed" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Google Shopping Feed</label>
+        <section id="haerriz_googleshoppingfeed" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Product Feed</label>
             <tab>haerriz</tab>
             <resource>Haerriz_GoogleShoppingFeed::config</resource>
+            
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General Settings</label>
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable Extension</label>
+                <label>General Settings &amp; Cron</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-            </group>
-            <group id="api" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Google Merchant API Integration</label>
-                <field id="merchant_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant ID</label>
-                    <validate>validate-digits</validate>
-                    <comment>Your Google Merchant Center ID (e.g., 5327375994)</comment>
+                <field id="cli_php_path" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>CLI PHP Executable Path</label>
+                    <comment>Path to CLI PHP binary (e.g. /usr/bin/php)</comment>
                 </field>
-                <field id="service_account_json" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Service Account JSON Key</label>
+            </group>
+
+            <group id="google_merchant_api" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Merchant Center API Settings (Direct Content API Integration)</label>
+                <field id="merchant_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Merchant Account ID</label>
+                    <comment>Your Google Merchant Center ID (e.g. 5351234567). Required for direct Content API for Shopping sync.</comment>
+                </field>
+                <field id="service_account_json" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Service Account JSON Key</label>
+                    <comment>Paste the full content of your Google Cloud Service Account JSON key file ({ "type": "service_account", ... }).</comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                    <comment>Paste the entire contents of your Google Cloud Service Account JSON file here.</comment>
+                </field>
+                <field id="target_country" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Target Country</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <comment>Default country for Google Merchant product listings (e.g. India / United States).</comment>
+                </field>
+                <field id="target_currency" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Target Currency Code</label>
+                    <comment>ISO Currency code (e.g. INR, USD, EUR).</comment>
+                </field>
+                <field id="api_mode" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Mode</label>
+                    <source_model>Haerriz\GoogleShoppingFeed\Model\Config\Source\ApiMode</source_model>
+                    <comment>Select Production for live Google Merchant sync or Sandbox for dry run testing.</comment>
                 </field>
             </group>
-            <group id="logging" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Developer Logging Settings</label>
-                <field id="debug" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable Debug Logging</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Write detailed debug logs to var/log/haerriz_googleshoppingfeed.log.</comment>
+
+            <group id="system_info" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>System Information &amp; Diagnostics</label>
+                <field id="info" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Haerriz\GoogleShoppingFeed\Block\Adminhtml\System\Config\SystemInfo</frontend_model>
                 </field>
             </group>
         </section>

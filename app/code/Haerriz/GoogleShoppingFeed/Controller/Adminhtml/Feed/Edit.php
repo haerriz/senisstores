@@ -8,7 +8,7 @@ use Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface;
 
 class Edit extends Action
 {
-    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feeds';
+    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::feed_profiles';
 
     protected $resultPageFactory;
     protected $repository;

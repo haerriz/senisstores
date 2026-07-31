@@ -1,26 +1,32 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="haerriz_google_shopping_feed_profile" resource="default" engine="innodb" comment="Google Shopping Feed Profiles">
-        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
-        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Feed Name"/>
-        <column xsi:type="smallint" name="status" padding="6" unsigned="true" nullable="false" default="0" comment="Status"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Profile ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Profile Name"/>
+        <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="false" default="1" comment="Status"/>
+        <column xsi:type="varchar" name="feed_type" nullable="false" length="50" default="google_shopping_v1" comment="Feed Format/Type"/>
         <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0" comment="Store View ID"/>
-        <column xsi:type="varchar" name="currency" nullable="false" length="3" default="USD" comment="Currency"/>
-        <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Filename"/>
-        <column xsi:type="varchar" name="feed_type" nullable="false" length="50" default="csv" comment="Feed Format (csv, xml)"/>
-        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Product Filter Conditions"/>
-        <column xsi:type="mediumtext" name="attributes_mapping_serialized" nullable="true" comment="Attributes Mapping"/>
-        <column xsi:type="varchar" name="delivery_type" nullable="false" length="32" default="local" comment="Delivery Type"/>
+        <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Feed Output Filename"/>
+        <column xsi:type="varchar" name="cron_expr" nullable="true" length="128" comment="Cron Expression"/>
+        <column xsi:type="text" name="excluded_category_ids" nullable="true" comment="Comma-separated Excluded Category IDs"/>
+        <column xsi:type="mediumtext" name="attributes_mapping_serialized" nullable="true" comment="Attributes Mapping JSON"/>
+        <column xsi:type="mediumtext" name="category_mapping_serialized" nullable="true" comment="Category Mapping JSON"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Serialized Rule Conditions"/>
+        <column xsi:type="varchar" name="delivery_type" nullable="false" length="32" default="local" comment="Delivery Adapter Type"/>
         <column xsi:type="varchar" name="delivery_host" nullable="true" length="255" comment="Delivery Host"/>
-        <column xsi:type="int" name="delivery_port" padding="5" unsigned="true" nullable="true" comment="Delivery Port"/>
         <column xsi:type="varchar" name="delivery_username" nullable="true" length="255" comment="Delivery Username"/>
-        <column xsi:type="text" name="delivery_password" nullable="true" comment="Delivery Password"/>
-        <column xsi:type="varchar" name="delivery_path" nullable="true" length="255" comment="Delivery Path"/>
+        <column xsi:type="text" name="delivery_password" nullable="true" comment="Encrypted Delivery Password"/>
+        <column xsi:type="varchar" name="delivery_path" nullable="true" length="255" comment="Delivery Remote Path"/>
+        <column xsi:type="int" name="delivery_port" padding="6" unsigned="true" nullable="true" comment="Delivery Port"/>
+        <column xsi:type="varchar" name="compression" nullable="false" length="16" default="none" comment="Compression Method"/>
+        <column xsi:type="varchar" name="sharding_type" nullable="false" length="32" default="none" comment="Sharding Type"/>
+        <column xsi:type="int" name="shard_value" padding="10" unsigned="true" nullable="false" default="0" comment="Shard Limit Value"/>
         <column xsi:type="varchar" name="cron_expression" nullable="true" length="128" comment="Custom Cron Expression"/>
         <column xsi:type="varchar" name="frequency" nullable="true" length="32" comment="Cron Frequency"/>
         <column xsi:type="varchar" name="timezone" nullable="true" length="64" comment="Timezone"/>
         <column xsi:type="timestamp" name="next_run_at" nullable="true" comment="Next Scheduled Run"/>
         <column xsi:type="varchar" name="concurrency_policy" nullable="false" length="32" default="skip" comment="Concurrency Policy"/>
+        <column xsi:type="varchar" name="missed_run_policy" nullable="false" length="32" default="next" comment="Missed Run Policy"/>
         <column xsi:type="int" name="max_retries" padding="5" unsigned="true" nullable="false" default="3" comment="Max Retries"/>
         <column xsi:type="int" name="retry_count" padding="5" unsigned="true" nullable="false" default="0" comment="Current Retry Count"/>
         <column xsi:type="int" name="consecutive_failures" padding="5" unsigned="true" nullable="false" default="0" comment="Consecutive Failures Count"/>
@@ -42,7 +48,7 @@
 
     <table name="haerriz_google_shopping_feed_job" resource="default" engine="innodb" comment="Google Shopping Feed Jobs">
         <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Job ID"/>
-        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" comment="Profile ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="true" comment="Profile ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="50" default="pending" comment="Job Status"/>
         <column xsi:type="int" name="total_products" padding="10" unsigned="true" nullable="false" default="0" comment="Total Products"/>
         <column xsi:type="int" name="processed_products" padding="10" unsigned="true" nullable="false" default="0" comment="Processed Products"/>
@@ -57,13 +63,20 @@
         <column xsi:type="decimal" name="duration" scale="2" precision="10" nullable="false" default="0.00" comment="Duration in Seconds"/>
         <column xsi:type="bigint" name="peak_memory" unsigned="true" nullable="false" default="0" comment="Peak Memory in Bytes"/>
         <column xsi:type="varchar" name="delivery_result" nullable="true" length="255" comment="Delivery Result Summary"/>
+        <column xsi:type="varchar" name="failure_category" nullable="true" length="64" comment="Failure Category"/>
+        <column xsi:type="text" name="failure_message" nullable="true" comment="Redacted Failure Message"/>
+        <column xsi:type="varchar" name="exception_class" nullable="true" length="255" comment="Exception Class"/>
+        <column xsi:type="varchar" name="correlation_id" nullable="true" length="64" comment="Correlation ID"/>
+        <column xsi:type="varchar" name="artifact_path" nullable="true" length="512" comment="Published Artifact Path"/>
+        <column xsi:type="varchar" name="format" nullable="true" length="32" comment="Artifact Format"/>
+        <column xsi:type="mediumtext" name="profile_snapshot" nullable="true" comment="Redacted Profile Configuration Snapshot"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
         <column xsi:type="timestamp" name="started_at" on_update="false" nullable="true" comment="Start Time"/>
         <column xsi:type="timestamp" name="finished_at" on_update="false" nullable="true" comment="Finish Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="job_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_JOB_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_job" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_JOB_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_job" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="SET NULL"/>
     </table>
 
     <table name="haerriz_google_shopping_feed_log" resource="default" engine="innodb" comment="Google Shopping Feed Logs">
@@ -78,5 +91,75 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_LOG_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_log" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="SET NULL"/>
         <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_LOG_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_log" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_artifact" resource="default" engine="innodb" comment="Feed Artifacts Metadata">
+        <column xsi:type="int" name="artifact_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Artifact ID"/>
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" comment="Job ID"/>
+        <column xsi:type="varchar" name="file_path" nullable="false" length="512" comment="File Path"/>
+        <column xsi:type="varchar" name="checksum" nullable="true" length="64" comment="Checksum"/>
+        <column xsi:type="bigint" name="file_size" unsigned="true" nullable="false" default="0" comment="File Size"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="artifact_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_ARTIFACT_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_artifact" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_job_item" resource="default" engine="innodb" comment="Feed Job Item Diagnostics">
+        <column xsi:type="int" name="item_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Item ID"/>
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" comment="Job ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="varchar" name="sku" nullable="true" length="64" comment="SKU"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="exported" comment="Item Status"/>
+        <column xsi:type="text" name="message" nullable="true" comment="Diagnostic Message"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="item_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_ITEM_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_job_item" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_remote_state" resource="default" engine="innodb" comment="Merchant API Remote Synchronization State">
+        <column xsi:type="int" name="state_id" padding="10" unsigned="true" nullable="false" identity="true" comment="State ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" comment="Profile ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="varchar" name="offer_id" nullable="false" length="128" comment="Merchant Offer ID"/>
+        <column xsi:type="varchar" name="sync_status" nullable="false" length="32" default="synced" comment="Sync Status"/>
+        <column xsi:type="varchar" name="payload_hash" nullable="true" length="64" comment="Payload Hash"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="state_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_REMOTE_PROFILE_ID" table="haerriz_google_shopping_feed_remote_state" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_taxonomy" resource="default" engine="innodb" comment="Imported Google Taxonomy Categories">
+        <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Category ID"/>
+        <column xsi:type="varchar" name="taxonomy_id" nullable="false" length="64" comment="Google Taxonomy ID"/>
+        <column xsi:type="varchar" name="full_path" nullable="false" length="512" comment="Full Category Path"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="category_id"/>
+        </constraint>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_category_mapping" resource="default" engine="innodb" comment="Store Category Taxonomy Mappings">
+        <column xsi:type="int" name="mapping_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Mapping ID"/>
+        <column xsi:type="int" name="magento_category_id" padding="10" unsigned="true" nullable="false" comment="Magento Category ID"/>
+        <column xsi:type="varchar" name="taxonomy_path" nullable="false" length="512" comment="Taxonomy Category Path"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="mapping_id"/>
+        </constraint>
+    </table>
+
+    <table name="haerriz_google_shopping_feed_checkpoint" resource="default" engine="innodb" comment="Resumable Queue Checkpoints">
+        <column xsi:type="int" name="checkpoint_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Checkpoint ID"/>
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" comment="Job ID"/>
+        <column xsi:type="int" name="last_product_id" padding="10" unsigned="true" nullable="false" default="0" comment="Last Exported Product ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="pending" comment="Partition Status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="checkpoint_id"/>
+        </constraint>
     </table>
 </schema>

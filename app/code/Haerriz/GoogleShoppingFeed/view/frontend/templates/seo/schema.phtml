@@ -1,9 +1,0 @@
-<?php
-/** @var $block \Haerriz\GoogleShoppingFeed\Block\Seo\Schema */
-$jsonLd = $block->getJsonLd();
-?>
-<?php if ($jsonLd): ?>
-<script type="application/ld+json">
-    <?= /* @noEscape */ $jsonLd ?>
-</script>
-<?php endif; ?>

@@ -1,37 +1,46 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Model\Storage;
 
-use Magento\Framework\Exception\LocalizedException;
+use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
 
 class AdapterPool
 {
-    /**
-     * @var AdapterInterface[]
-     */
-    protected $adapters;
+    private $local;
+    private $ftp;
+    private $sftp;
 
-    /**
-     * @param AdapterInterface[] $adapters
-     */
-    public function __construct(array $adapters = [])
-    {
-        $this->adapters = $adapters;
+    public function __construct(
+        Local $local,
+        Ftp $ftp,
+        Sftp $sftp
+    ) {
+        $this->local = $local;
+        $this->ftp = $ftp;
+        $this->sftp = $sftp;
     }
 
     /**
-     * Get storage adapter by code
-     *
-     * @param string $code
-     * @return AdapterInterface
-     * @throws LocalizedException
+     * Resolve the correct delivery adapter for a profile's delivery type.
      */
-    public function get($code)
+    public function get(string $deliveryType): AdapterInterface
     {
-        if (!isset($this->adapters[$code])) {
-            throw new LocalizedException(
-                __('Storage adapter for type "%1" is not configured.', $code)
-            );
+        switch (strtolower(trim($deliveryType))) {
+            case 'ftp':
+                return $this->ftp;
+            case 'sftp':
+                return $this->sftp;
+            case 'local':
+            default:
+                return $this->local;
         }
-        return $this->adapters[$code];
+    }
+
+    /**
+     * Deliver a generated feed file for a given profile.
+     */
+    public function deliver(FeedProfileInterface $profile, string $localFilePath): bool
+    {
+        $adapter = $this->get((string)$profile->getDeliveryType());
+        return $adapter->deliver($localFilePath, $profile);
     }
 }

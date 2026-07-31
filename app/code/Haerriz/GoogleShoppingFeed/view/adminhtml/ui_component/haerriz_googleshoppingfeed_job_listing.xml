@@ -63,6 +63,11 @@
                 </item>
             </argument>
         </column>
+        <column name="selected_count"><settings><label translate="true">Selected</label></settings></column>
+        <column name="warning_count"><settings><label translate="true">Warnings</label></settings></column>
+        <column name="error_count"><settings><label translate="true">Errors / Invalid</label></settings></column>
+        <column name="checksum"><settings><label translate="true">SHA-256</label></settings></column>
+        <column name="peak_memory"><settings><label translate="true">Peak Memory</label></settings></column>
         <column name="trigger_source">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -119,5 +124,8 @@
                 </item>
             </argument>
         </column>
+        <actionsColumn name="actions" class="Haerriz\GoogleShoppingFeed\Ui\Component\Listing\Column\JobActions">
+            <settings><indexField>job_id</indexField></settings>
+        </actionsColumn>
     </columns>
 </listing>

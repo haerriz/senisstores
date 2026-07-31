@@ -16,11 +16,13 @@ class Sanitizer
         }
 
         $patterns = [
-            '/"private_key"\s*:\s*"[^"]+"/' => '"private_key": "[REDACTED]"',
-            '/delivery_password\s*=\s*[^\s&]+/' => 'delivery_password=[REDACTED]',
-            '/"delivery_password"\s*:\s*"[^"]+"/' => '"delivery_password": "[REDACTED]"',
-            '/password\s*=\s*[^\s&]+/' => 'password=[REDACTED]',
-            '/"password"\s*:\s*"[^"]+"/' => '"password": "[REDACTED]"'
+            '/-----BEGIN [^-]*PRIVATE KEY-----.*?-----END [^-]*PRIVATE KEY-----/s' => '[REDACTED PRIVATE KEY]',
+            '/"private_key"\s*:\s*"[^"]+"/i' => '"private_key": "[REDACTED]"',
+            '/\b(delivery_password|password|passphrase|private_key|access_token|refresh_token|client_secret|api_key)\s*=\s*[^\s&]+/i'
+                => '$1=[REDACTED]',
+            '/"(delivery_password|password|passphrase|private_key|access_token|refresh_token|client_secret|api_key)"\s*:\s*"[^"]*"/i'
+                => '"$1": "[REDACTED]"',
+            '/\bBearer\s+[A-Za-z0-9._~+\/=-]+/i' => 'Bearer [REDACTED]',
         ];
 
         return preg_replace(array_keys($patterns), array_values($patterns), $message);
