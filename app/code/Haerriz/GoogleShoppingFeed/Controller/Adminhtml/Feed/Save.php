@@ -67,6 +67,8 @@ class Save extends Action implements HttpPostActionInterface
                 'utm_campaign',
                 'utm_term',
                 'utm_content',
+                'identifier_exists_mode',
+                'export_configurable_mode',
             ];
 
             foreach ($directFields as $field) {

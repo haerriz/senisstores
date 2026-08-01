@@ -10,6 +10,7 @@ use Psr\Log\LoggerInterface;
 class WebhookNotifier
 {
     public const XML_PATH_WEBHOOK_URL = 'haerriz_googleshoppingfeed/alerts/delivery_webhook_url';
+    private const MAX_ATTEMPTS = 3;
 
     private ScopeConfigInterface $scopeConfig;
     private Curl $curl;
@@ -49,16 +50,43 @@ class WebhookNotifier
             'checksum' => (string)($exportResult['checksum'] ?? ''),
         ];
 
-        try {
-            $this->curl->setHeaders(['Content-Type' => 'application/json']);
-            $this->curl->post($url, json_encode($payload));
-            $this->logger->info(sprintf(
-                'WebhookNotifier: posted delivery notice for profile #%d to %s',
-                (int)$profile->getId(),
-                $url
-            ));
-        } catch (\Throwable $e) {
-            $this->logger->warning('WebhookNotifier failed: ' . $e->getMessage());
+        $encoded = json_encode($payload);
+        if ($encoded === false) {
+            $this->logger->warning('WebhookNotifier failed: unable to encode payload.');
+            return;
+        }
+
+        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
+            try {
+                $this->curl->setHeaders(['Content-Type' => 'application/json']);
+                $this->curl->post($url, $encoded);
+                $status = (int)$this->curl->getStatus();
+                if ($status >= 400 || $status === 0) {
+                    throw new \RuntimeException('HTTP status ' . $status);
+                }
+                $this->logger->info(sprintf(
+                    'WebhookNotifier: posted delivery notice for profile #%d to %s',
+                    (int)$profile->getId(),
+                    $url
+                ));
+                return;
+            } catch (\Throwable $e) {
+                if ($attempt >= self::MAX_ATTEMPTS) {
+                    $this->logger->warning(sprintf(
+                        'WebhookNotifier failed after %d attempts: %s',
+                        self::MAX_ATTEMPTS,
+                        $e->getMessage()
+                    ));
+                    return;
+                }
+                $this->logger->warning(sprintf(
+                    'WebhookNotifier attempt %d/%d failed: %s',
+                    $attempt,
+                    self::MAX_ATTEMPTS,
+                    $e->getMessage()
+                ));
+                usleep(250000 * $attempt);
+            }
         }
     }
 }

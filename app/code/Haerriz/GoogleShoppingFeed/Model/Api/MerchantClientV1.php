@@ -12,8 +12,8 @@ use Psr\Log\LoggerInterface;
 
 class MerchantClientV1
 {
-    const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/api/merchant_id';
-    const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/api/service_account_json';
+    const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/google_merchant_api/merchant_id';
+    const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/google_merchant_api/service_account_json';
 
     /**
      * @var ScopeConfigInterface
@@ -129,5 +129,59 @@ class MerchantClientV1
             );
             return false;
         }
+    }
+
+    public function listProducts(string $merchantId): array
+    {
+        $client = $this->getProductsClient();
+        $parent = 'accounts/' . $merchantId;
+        if (method_exists($client, 'listProducts')) {
+            return $this->normalizeProductList($client->listProducts($parent));
+        }
+        if (method_exists($client, 'listProductInputs')) {
+            return $this->normalizeProductList($client->listProductInputs($parent));
+        }
+
+        throw new \RuntimeException('Installed Google Merchant Products client does not expose a product listing method.');
+    }
+
+    public function batchInsertProducts(string $merchantId, array $products): array
+    {
+        if ($products === []) {
+            return ['inserted' => 0];
+        }
+
+        $client = $this->getProductsClient();
+        if (!method_exists($client, 'insertProductInput')) {
+            throw new \RuntimeException('Installed Google Merchant Products client does not expose product insert support.');
+        }
+
+        $inserted = 0;
+        foreach ($products as $product) {
+            $client->insertProductInput('accounts/' . $merchantId, $product);
+            $inserted++;
+        }
+
+        return ['inserted' => $inserted];
+    }
+
+    private function normalizeProductList($response): array
+    {
+        $products = [];
+        $items = method_exists($response, 'iterateAllElements') ? $response->iterateAllElements() : $response;
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                $products[] = $item;
+                continue;
+            }
+            $products[] = [
+                'offerId' => method_exists($item, 'getOfferId') ? $item->getOfferId() : '',
+                'status' => method_exists($item, 'getStatus') ? $item->getStatus() : '',
+                'approvalStatus' => method_exists($item, 'getApprovalStatus') ? $item->getApprovalStatus() : '',
+                'itemLevelIssues' => method_exists($item, 'getItemLevelIssues') ? (array)$item->getItemLevelIssues() : [],
+            ];
+        }
+
+        return $products;
     }
 }

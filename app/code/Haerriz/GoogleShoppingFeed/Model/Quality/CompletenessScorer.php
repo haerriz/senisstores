@@ -9,7 +9,17 @@ use Haerriz\GoogleShoppingFeed\Model\RuleFactory;
 
 class CompletenessScorer
 {
-    private const CHECK_FIELDS = ['image', 'brand', 'gtin', 'mpn', 'description'];
+    private const CHECK_FIELDS = ['image', 'link', 'price', 'brand', 'gtin', 'mpn', 'description'];
+    private const CRITICAL_FIELDS = ['image', 'link', 'price'];
+    private const GUIDANCE = [
+        'image' => 'Set the base image or map image_link to a valid product image URL.',
+        'link' => 'Map link to product_url and confirm store URLs are enabled.',
+        'price' => 'Map price to the product price resolver and confirm currency is configured.',
+        'brand' => 'Set manufacturer or brand attribute, or map g:brand to your brand field.',
+        'gtin' => 'Map GTIN to UPC/EAN/GTIN where available.',
+        'mpn' => 'Map MPN to manufacturer part number where available.',
+        'description' => 'Map description or short_description with HTML stripping if needed.',
+    ];
 
     private ProductProviderInterface $productProvider;
     private ProductTypeResolverInterface $productTypeResolver;
@@ -36,7 +46,9 @@ class CompletenessScorer
      *   checked: int,
      *   complete: int,
      *   missing: array<string, array<int, string>>,
-     *   field_missing_counts: array<string, int>
+     *   field_missing_counts: array<string, int>,
+     *   critical_missing_counts: array<string, int>,
+     *   guidance: array<string, string>
      * }
      */
     public function score(FeedProfileInterface $profile, int $limit = 50): array
@@ -50,6 +62,8 @@ class CompletenessScorer
         $complete = 0;
         $missing = [
             'image' => [],
+            'link' => [],
+            'price' => [],
             'brand' => [],
             'gtin' => [],
             'mpn' => [],
@@ -90,6 +104,10 @@ class CompletenessScorer
         foreach (self::CHECK_FIELDS as $field) {
             $fieldMissingCounts[$field] = count($missing[$field]);
         }
+        $criticalMissingCounts = [];
+        foreach (self::CRITICAL_FIELDS as $field) {
+            $criticalMissingCounts[$field] = $fieldMissingCounts[$field] ?? 0;
+        }
 
         $score = $checked > 0 ? round(($complete / $checked) * 100, 1) : 0.0;
 
@@ -99,13 +117,15 @@ class CompletenessScorer
             'complete' => $complete,
             'missing' => $missing,
             'field_missing_counts' => $fieldMissingCounts,
+            'critical_missing_counts' => $criticalMissingCounts,
+            'guidance' => self::GUIDANCE,
         ];
     }
 
     /**
      * Flatten missing SKUs into CSV-friendly rows.
      *
-     * @return array<int, array{sku: string, field: string}>
+     * @return array<int, array{sku: string, field: string, severity: string, guidance: string}>
      */
     public function toReportRows(FeedProfileInterface $profile, int $limit = 500): array
     {
@@ -113,7 +133,12 @@ class CompletenessScorer
         $rows = [];
         foreach ($result['missing'] as $field => $skus) {
             foreach ($skus as $sku) {
-                $rows[] = ['sku' => $sku, 'field' => $field];
+                $rows[] = [
+                    'sku' => $sku,
+                    'field' => $field,
+                    'severity' => in_array($field, self::CRITICAL_FIELDS, true) ? 'critical' : 'warning',
+                    'guidance' => self::GUIDANCE[$field] ?? '',
+                ];
             }
         }
         return $rows;
@@ -142,6 +167,18 @@ class CompletenessScorer
                     $missing[] = $field;
                 }
                 continue;
+            }
+            if ($field === 'link') {
+                $value = $value
+                    ?? $normalized['product_url']
+                    ?? $normalized['url']
+                    ?? $product->getProductUrl();
+            }
+            if ($field === 'price') {
+                $value = $value
+                    ?? $normalized['sale_price']
+                    ?? $product->getFinalPrice()
+                    ?? $product->getPrice();
             }
             if ($field === 'brand') {
                 $value = $value

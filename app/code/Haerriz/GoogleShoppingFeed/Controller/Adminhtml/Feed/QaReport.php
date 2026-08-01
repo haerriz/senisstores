@@ -42,9 +42,14 @@ class QaReport extends Action implements HttpGetActionInterface
             $rows = $this->completenessScorer->toReportRows($profile, 500);
 
             $handle = fopen('php://temp', 'r+');
-            fputcsv($handle, ['sku', 'missing_field']);
+            fputcsv($handle, ['sku', 'missing_field', 'severity', 'guidance']);
             foreach ($rows as $row) {
-                fputcsv($handle, [$row['sku'], $row['field']]);
+                fputcsv($handle, [
+                    $row['sku'] ?? '',
+                    $row['field'] ?? '',
+                    $row['severity'] ?? 'warning',
+                    $row['guidance'] ?? '',
+                ]);
             }
             rewind($handle);
             $content = stream_get_contents($handle);

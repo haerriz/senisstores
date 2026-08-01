@@ -90,7 +90,44 @@ class RowBuilder
                 $profile
             );
         }
+        $this->applyIdentifierExistsPolicy($row, $profile);
         return $row;
+    }
+
+    private function applyIdentifierExistsPolicy(array &$row, FeedProfileInterface $profile): void
+    {
+        $mode = (string)$this->configReader->get($profile, 'identifier_exists_mode', 'auto');
+        $field = $this->findExistingField($row, ['g:identifier_exists', 'identifier_exists']);
+        if ($mode === 'always_yes' || $mode === 'always_no') {
+            $row[$field ?: 'g:identifier_exists'] = $mode === 'always_yes' ? 'yes' : 'no';
+            return;
+        }
+
+        $gtin = $this->getFirstValue($row, ['g:gtin', 'gtin']);
+        $mpn = $this->getFirstValue($row, ['g:mpn', 'mpn']);
+        if (trim((string)$gtin) === '' && trim((string)$mpn) === '') {
+            $row[$field ?: 'g:identifier_exists'] = 'no';
+        }
+    }
+
+    private function findExistingField(array $row, array $candidates): string
+    {
+        foreach ($candidates as $candidate) {
+            if (array_key_exists($candidate, $row)) {
+                return $candidate;
+            }
+        }
+        return '';
+    }
+
+    private function getFirstValue(array $row, array $candidates)
+    {
+        foreach ($candidates as $candidate) {
+            if (array_key_exists($candidate, $row)) {
+                return $row[$candidate];
+            }
+        }
+        return '';
     }
 
     private function applyConditionalValue(array $mapping, array $conditions, Product $product)

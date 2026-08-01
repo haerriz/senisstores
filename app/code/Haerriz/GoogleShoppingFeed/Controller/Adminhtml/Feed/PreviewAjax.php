@@ -58,6 +58,8 @@ class PreviewAjax extends Action implements HttpPostActionInterface
                 'price_includes_tax',
                 'include_tax',
                 'webhook_url',
+                'identifier_exists_mode',
+                'export_configurable_mode',
             ];
             foreach ($fields as $field) {
                 if (array_key_exists($field, $data)) {

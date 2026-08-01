@@ -89,6 +89,7 @@ class Metrics extends Template
             'merchant_approved' => $merchantCounts['approved'],
             'merchant_disapproved' => $merchantCounts['disapproved'],
             'merchant_pending' => $merchantCounts['pending'],
+            'merchant_tracked' => array_sum(array_map('intval', $merchantCounts)),
             'recent_disapproved' => $recentDisapproved,
             'legacy_conflict' => $this->legacyDetector->isConflictDetected(),
             'legacy_conflict_message' => $this->legacyDetector->getWarningMessage(),

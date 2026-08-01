@@ -16,8 +16,10 @@ define([
             format: ko.observable(''),
             channel: ko.observable(''),
             fieldErrors: ko.observableArray([]),
+            guidanceRows: ko.observableArray([]),
             completenessScore: ko.observable(0),
-            dryRunChanged: ko.observable(false)
+            dryRunChanged: ko.observable(false),
+            qaReportUrl: ''
         },
 
         initialize: function () {
@@ -46,10 +48,32 @@ define([
                         });
                         $actions.prepend($btn);
                     }
+                    if (!$('#btn-qa-report').length) {
+                        $('<button>', {
+                            id: 'btn-qa-report',
+                            title: 'Download QA Report',
+                            type: 'button',
+                            class: 'action-secondary',
+                            text: 'Download QA Report'
+                        }).on('click', function () {
+                            self.openQaReport();
+                        }).insertAfter('#btn-preview-feed');
+                    }
                 } else if (attempts > 40) {
                     clearInterval(checkExist);
                 }
             }, 250);
+        },
+
+        openQaReport: function () {
+            var id = $('[name="profile_id"], [name="data[profile_id]"]').val()
+                || $('[name="entity_id"], [name="data[entity_id]"]').val();
+            if (!id) {
+                this.hasError(true);
+                this.errorMessage('Save the profile before downloading a QA report.');
+                return;
+            }
+            window.location.href = this.qaReportUrl.replace('__PROFILE_ID__', encodeURIComponent(id));
         },
 
         openPreview: function () {
@@ -96,6 +120,7 @@ define([
             self.hasError(false);
             self.previewContent('');
             self.fieldErrors([]);
+            self.guidanceRows([]);
             self.rowCount(0);
             self.format('');
             self.channel('');
@@ -116,6 +141,7 @@ define([
                         self.fieldErrors(Array.isArray(res.field_errors) ? res.field_errors : []);
                         var completeness = res.completeness || {};
                         self.completenessScore(completeness.score != null ? completeness.score : 0);
+                        self.guidanceRows(self.buildGuidanceRows(completeness));
                     } else {
                         self.hasError(true);
                         self.errorMessage((res && res.message) || 'Unknown error occurred.');
@@ -138,6 +164,21 @@ define([
                     }
                     self.errorMessage(msg);
                 }
+            });
+        },
+
+        buildGuidanceRows: function (completeness) {
+            var counts = completeness.field_missing_counts || {};
+            var guidance = completeness.guidance || {};
+
+            return Object.keys(counts).filter(function (field) {
+                return counts[field] > 0;
+            }).map(function (field) {
+                return {
+                    field: field,
+                    missing: counts[field],
+                    guidance: guidance[field] || ''
+                };
             });
         }
     });

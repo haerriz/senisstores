@@ -34,8 +34,8 @@ class MerchantReconcile extends Command
         if ($result['reconciled']) {
             $output->writeln("<info>Reconciled {$result['count']} products.</info>");
         } else {
-            $output->writeln('<error>Reconciliation failed: ' . ($result['error'] ?? $result['reason'] ?? 'unknown') . '</error>');
-            return Command::FAILURE;
+            $output->writeln('<comment>Reconciliation skipped: ' . ($result['message'] ?? $result['error'] ?? $result['reason'] ?? 'unknown') . '</comment>');
+            return Command::SUCCESS;
         }
         return Command::SUCCESS;
     }

@@ -44,7 +44,10 @@ class Sftp implements AdapterInterface
             }
             return true;
         } catch (\Throwable $exception) {
-            throw new LocalizedException(__('SFTP upload failed. Verify the secure connection settings.'), $exception);
+            throw new LocalizedException(
+                __('SFTP upload failed. Verify the secure connection settings. %1', $exception->getMessage()),
+                $exception instanceof \Exception ? $exception : null
+            );
         } finally {
             if ($client) {
                 $client->disconnect();

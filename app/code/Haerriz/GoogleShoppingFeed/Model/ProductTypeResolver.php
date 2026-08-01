@@ -33,7 +33,9 @@ class ProductTypeResolver implements ProductTypeResolverInterface
         }
 
         $strategy = $this->typePool->getStrategy((string)$product->getTypeId());
-        $resolved = $strategy->resolveProducts($product);
+        $resolved = method_exists($strategy, 'resolveProductsForProfile')
+            ? $strategy->resolveProductsForProfile($product, $profile)
+            : $strategy->resolveProducts($product);
 
         return array_values(array_filter(
             $resolved,

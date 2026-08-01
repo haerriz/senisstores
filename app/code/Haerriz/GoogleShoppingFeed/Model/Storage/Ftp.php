@@ -89,7 +89,10 @@ class Ftp implements AdapterInterface
 
             return true;
         } catch (\Exception $e) {
-            throw new LocalizedException(__('FTP upload failed. Verify the connection settings.'), $e);
+            throw new LocalizedException(
+                __('FTP upload failed. Verify the connection settings. %1', $e->getMessage()),
+                $e
+            );
         }
     }
 

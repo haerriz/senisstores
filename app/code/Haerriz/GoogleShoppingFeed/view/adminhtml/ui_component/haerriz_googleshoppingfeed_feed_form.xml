@@ -119,6 +119,12 @@
         <field name="utm_campaign">
             <argument name="data" xsi:type="array"><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">UTM Campaign</item><item name="formElement" xsi:type="string">input</item><item name="source" xsi:type="string">profile</item><item name="sortOrder" xsi:type="number">30</item></item></argument>
         </field>
+        <field name="identifier_exists_mode">
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\IdentifierExistsMode</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Identifier Exists Mode</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="notice" xsi:type="string" translate="true">Auto writes identifier_exists=no when GTIN and MPN are both empty.</item><item name="default" xsi:type="string">auto</item><item name="sortOrder" xsi:type="number">40</item></item></argument>
+        </field>
+        <field name="export_configurable_mode">
+            <argument name="data" xsi:type="array"><item name="options" xsi:type="object">Haerriz\GoogleShoppingFeed\Model\Config\Source\ConfigurableExportMode</item><item name="config" xsi:type="array"><item name="dataType" xsi:type="string">text</item><item name="label" xsi:type="string" translate="true">Configurable Export Mode</item><item name="formElement" xsi:type="string">select</item><item name="source" xsi:type="string">profile</item><item name="notice" xsi:type="string" translate="true">Choose whether configurable products export child variants, parent offers, or both.</item><item name="default" xsi:type="string">children_only</item><item name="sortOrder" xsi:type="number">50</item></item></argument>
+        </field>
     </fieldset>
 
     <!-- STEP 6: Schedule Settings -->

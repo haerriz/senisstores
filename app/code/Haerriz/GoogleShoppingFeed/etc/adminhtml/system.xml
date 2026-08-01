@@ -20,6 +20,11 @@
                     <label>CLI PHP Executable Path</label>
                     <comment>Path to CLI PHP binary (e.g. /usr/bin/php)</comment>
                 </field>
+                <field id="qa_block_on_critical" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Block Delivery on Critical QA Issues</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, delivery is blocked if image, link, or price is missing in the QA sample. Default is warning-only.</comment>
+                </field>
             </group>
 
             <group id="logging" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -2,6 +2,19 @@
 
 All notable changes to the `Haerriz_GoogleShoppingFeed` Magento 2 module are documented here.
 
+## [2.3.1] - 2026-08-01
+
+### Fixed
+- **Preview controller**: Quick View now reads `PreviewService::buildSample()['rows']` and safely serializes arrays/objects for CSV/XML output.
+- **Delivery failures**: FTP/SFTP delivery retries transient failures and generation jobs now retain actionable delivery failure messages.
+
+### Added
+- **QA gate**: Feed generation records missing image/link/price warnings and can block delivery via `qa_block_on_critical`.
+- **Identifier workflow**: Profile-level `identifier_exists_mode` supports auto/always yes/always no behavior, with auto emitting `identifier_exists=no` when GTIN and MPN are absent.
+- **Configurable policy**: Profile-level `export_configurable_mode` controls children-only, parent-only, or parent-and-children export.
+- **Merchant status reconciliation**: Remote approval statuses are normalized into approved/disapproved/pending and missing credentials return a clear skipped result.
+- **Generation pipeline tests**: Unit coverage for lock skip, snapshot/export success, and delivery failure handling.
+
 ## [2.3.0] - 2026-08-01
 
 ### Added

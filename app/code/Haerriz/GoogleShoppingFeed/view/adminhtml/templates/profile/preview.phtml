@@ -1,6 +1,7 @@
 <?php
 /** @var \Magento\Backend\Block\Template $block */
 $previewUrl = $block->getUrl('*/*/previewAjax');
+$qaReportUrl = $block->getUrl('*/*/qaReport', ['id' => '__PROFILE_ID__']);
 ?>
 <!-- Inject the "Preview Feed" button dynamically next to the Save buttons using JS -->
 <div id="feed-preview-container" data-bind="scope: 'feedPreview'">
@@ -54,6 +55,26 @@ $previewUrl = $block->getUrl('*/*/previewAjax');
                 </table>
             </div>
 
+            <div data-bind="visible: guidanceRows().length > 0" style="margin-bottom:14px;">
+                <h4 style="margin:0 0 8px;"><?= $block->escapeHtml(__('QA Guidance')) ?></h4>
+                <table class="data-grid" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('Field')) ?></th>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('Missing')) ?></th>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('Guidance')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: guidanceRows">
+                        <tr>
+                            <td style="padding:8px; border-bottom:1px solid #eee;" data-bind="text: field"></td>
+                            <td style="padding:8px; border-bottom:1px solid #eee;" data-bind="text: missing"></td>
+                            <td style="padding:8px; border-bottom:1px solid #eee;" data-bind="text: guidance"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto; max-height: 500px;"><code data-bind="text: previewContent"></code></pre>
         </div>
 
@@ -71,7 +92,8 @@ $previewUrl = $block->getUrl('*/*/previewAjax');
             "components": {
                 "feedPreview": {
                     "component": "Haerriz_GoogleShoppingFeed/js/components/preview-modal",
-                    "previewUrl": "<?= $block->escapeJs($previewUrl) ?>"
+                    "previewUrl": "<?= $block->escapeJs($previewUrl) ?>",
+                    "qaReportUrl": "<?= $block->escapeJs($qaReportUrl) ?>"
                 }
             }
         }

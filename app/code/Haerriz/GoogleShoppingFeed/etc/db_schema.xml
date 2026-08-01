@@ -38,6 +38,8 @@
         <column xsi:type="varchar" name="utm_campaign" nullable="true" length="128" comment="UTM Campaign"/>
         <column xsi:type="varchar" name="utm_term" nullable="true" length="128" comment="UTM Term"/>
         <column xsi:type="varchar" name="utm_content" nullable="true" length="128" comment="UTM Content"/>
+        <column xsi:type="varchar" name="identifier_exists_mode" nullable="false" length="32" default="auto" comment="Identifier Exists Mode"/>
+        <column xsi:type="varchar" name="export_configurable_mode" nullable="false" length="32" default="children_only" comment="Configurable Product Export Mode"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

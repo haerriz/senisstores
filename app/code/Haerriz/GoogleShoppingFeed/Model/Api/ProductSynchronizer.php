@@ -32,6 +32,10 @@ class ProductSynchronizer
             $this->logger->warning("ProductSynchronizer: No Merchant ID configured for store {$storeId}");
             return ['synced' => 0, 'status' => 'skipped', 'reason' => 'no_merchant_id'];
         }
+        if (!$this->config->getServiceAccountJson($storeId)) {
+            $this->logger->warning("ProductSynchronizer: Merchant API credentials are not configured for store {$storeId}");
+            return ['synced' => 0, 'status' => 'skipped', 'reason' => 'missing_credentials'];
+        }
 
         $synced  = 0;
         $errors  = [];

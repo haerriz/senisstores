@@ -9,11 +9,15 @@ use Haerriz\GoogleShoppingFeed\Model\Artifact\ArtifactManager;
 use Haerriz\GoogleShoppingFeed\Model\Artifact\CurrentArtifactPublisher;
 use Haerriz\GoogleShoppingFeed\Model\Delivery\WebhookNotifier;
 use Haerriz\GoogleShoppingFeed\Model\Mapping\RowBuilder;
+use Haerriz\GoogleShoppingFeed\Model\Quality\CompletenessScorer;
 use Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob as JobResource;
 use Haerriz\GoogleShoppingFeed\Model\Storage\AdapterPool;
 use Haerriz\GoogleShoppingFeed\Model\Writer\Pool as WriterPool;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
+use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
 
 class FeedExporter
@@ -34,6 +38,8 @@ class FeedExporter
     private $eligibilityPolicy;
     private $logger;
     private WebhookNotifier $webhookNotifier;
+    private CompletenessScorer $completenessScorer;
+    private ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         Filesystem $filesystem,
@@ -49,7 +55,9 @@ class FeedExporter
         FeedLogHandler $feedLogHandler,
         ProductEligibilityPolicyInterface $eligibilityPolicy,
         LoggerInterface $logger,
-        WebhookNotifier $webhookNotifier
+        WebhookNotifier $webhookNotifier,
+        CompletenessScorer $completenessScorer,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->filesystem          = $filesystem;
         $this->productProvider     = $productProvider;
@@ -65,6 +73,8 @@ class FeedExporter
         $this->eligibilityPolicy   = $eligibilityPolicy;
         $this->logger              = $logger;
         $this->webhookNotifier     = $webhookNotifier;
+        $this->completenessScorer  = $completenessScorer;
+        $this->scopeConfig         = $scopeConfig;
     }
 
     public function export(FeedProfileInterface $profile, $outputPath, FeedJob $job = null, $limit = null)
@@ -181,15 +191,27 @@ class FeedExporter
         $this->artifactPublisher->publish($profile, $absolutePath);
 
         $exportResult = compact('selected', 'processed', 'exported', 'skipped', 'ineligible', 'invalid', 'warnings', 'fileSize', 'checksum', 'duration');
+        $exportResult['qa'] = $this->runQaGate($profile, $job, $warnings, $exported);
+        $exportResult['warnings'] = $warnings;
 
         // Deliver via adapter — uses AdapterPool::deliver()
         try {
-            $this->adapterPool->deliver($profile, $absolutePath);
+            $this->adapterPool->deliver($profile, $outputPath);
+            if ($job) {
+                $job->setDeliveryResult('Delivered via ' . (string)$profile->getDeliveryType());
+            }
             $this->feedLogHandler->log($job, 'info', "Delivery completed via adapter [{$profile->getDeliveryType()}]");
             $this->webhookNotifier->notify($profile, $exportResult);
-        } catch (\Exception $deliveryEx) {
-            $this->logger->warning("GoogleShoppingFeed: Delivery failed [{$profile->getName()}]: " . $deliveryEx->getMessage());
-            $this->feedLogHandler->log($job, 'warning', "Delivery failed: " . $deliveryEx->getMessage());
+        } catch (\Throwable $deliveryEx) {
+            $message = 'Delivery failed for profile "' . (string)$profile->getName() . '": ' . $deliveryEx->getMessage();
+            if ($job) {
+                $job->setDeliveryResult('failed');
+                $job->setData('failure_message', $message);
+                $this->jobResource->save($job);
+            }
+            $this->logger->error("GoogleShoppingFeed: {$message}");
+            $this->feedLogHandler->log($job, 'error', $message);
+            throw new LocalizedException(__($message), $deliveryEx instanceof \Exception ? $deliveryEx : null);
         }
 
         $this->feedLogHandler->log($job, 'info', "Export complete: exported={$exported}, skipped={$skipped}, ineligible={$ineligible}, warnings={$warnings}, size={$fileSize}B, duration={$duration}s, sha256={$checksum}");
@@ -220,5 +242,44 @@ class FeedExporter
         $job->setErrorCount($invalid);
         $job->setWarningCount($warnings);
         $this->jobResource->save($job);
+    }
+
+    private function runQaGate(FeedProfileInterface $profile, ?FeedJob $job, int &$warnings, int $exported): array
+    {
+        $qa = $this->completenessScorer->score($profile, max(1, min(500, $exported ?: 500)));
+        $criticalCounts = (array)($qa['critical_missing_counts'] ?? []);
+        $criticalTotal = array_sum(array_map('intval', $criticalCounts));
+        if ($criticalTotal <= 0) {
+            return $qa;
+        }
+
+        $warnings += $criticalTotal;
+        $message = sprintf(
+            'Feed QA found %d critical missing value(s): image=%d, link=%d, price=%d.',
+            $criticalTotal,
+            (int)($criticalCounts['image'] ?? 0),
+            (int)($criticalCounts['link'] ?? 0),
+            (int)($criticalCounts['price'] ?? 0)
+        );
+        $this->feedLogHandler->log($job, 'warning', $message);
+        $this->logger->warning('GoogleShoppingFeed: ' . $message);
+        if ($job) {
+            $job->setWarningCount($warnings);
+        }
+
+        $blockDelivery = $this->scopeConfig->isSetFlag(
+            'haerriz_googleshoppingfeed/general/qa_block_on_critical',
+            ScopeInterface::SCOPE_STORE,
+            $profile->getStoreId()
+        );
+        if ($blockDelivery) {
+            if ($job) {
+                $job->setData('failure_message', $message);
+                $this->jobResource->save($job);
+            }
+            throw new LocalizedException(__($message));
+        }
+
+        return $qa;
     }
 }

@@ -30,7 +30,18 @@ bin/magento setup:di:compile
 bin/magento cache:flush
 ```
 
-Manual install: copy this module to `app/code/Haerriz/GoogleShoppingFeed`, then run the Magento commands above.
+Manual install:
+
+```bash
+mkdir -p app/code/Haerriz/GoogleShoppingFeed
+# Copy the module contents into app/code/Haerriz/GoogleShoppingFeed
+bin/magento module:enable Haerriz_GoogleShoppingFeed
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento cache:flush
+```
+
+After upgrading from an older release, run `bin/magento setup:upgrade` so declarative schema adds new profile fields such as `identifier_exists_mode` and `export_configurable_mode`.
 
 ---
 
@@ -54,6 +65,14 @@ Manual install: copy this module to `app/code/Haerriz/GoogleShoppingFeed`, then 
 5. Optional attributes (brand, GTIN, MPN, condition, UTM)
 6. Schedule (cron expression)
 7. Destination: Local / FTP / SFTP / Merchant API
+
+### Feed QA and identifiers
+
+- Live Preview shows completeness guidance for missing image, link, price, brand, GTIN, MPN, and description fields.
+- The QA report button downloads a CSV with `sku`, `missing_field`, `severity`, and remediation guidance.
+- By default, critical QA misses log warnings only. To block remote delivery when image/link/price are missing, enable **Stores → Configuration → Haerriz Extensions → Product Feed → General Settings & Cron → Block Delivery on Critical QA Issues**.
+- `identifier_exists_mode=auto` writes `identifier_exists=no` when both GTIN and MPN are absent. Use `always_yes` or `always_no` only when your catalog policy requires it.
+- Configurable products default to child variants only. The profile `export_configurable_mode` can switch to parent-only or parent-and-children.
 
 ---
 
@@ -100,6 +119,15 @@ php bin/magento haerriz:feed:cleanup-artifacts
 | Bundle | Exported as the sellable parent offer |
 
 Currency for price fields is taken from the profile currency, then store currency (no hardcoded INR).
+
+---
+
+## Marketplace Readiness
+
+- Do not commit Merchant API service-account JSON, FTP/SFTP passwords, private keys, or webhook secrets. Configure them in Magento admin only.
+- Run `bin/magento setup:di:compile`, `bin/magento setup:upgrade --dry-run=1` where available, and module unit tests before packaging.
+- Verify ACL access for feed profile management, generation, downloads, jobs, and configuration.
+- Confirm generated feeds are written under `pub/media`, remote delivery credentials are encrypted, and QA warnings are reviewed before enabling delivery blocking.
 
 ---
 

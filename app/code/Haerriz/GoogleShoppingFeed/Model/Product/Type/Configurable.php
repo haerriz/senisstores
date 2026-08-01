@@ -3,10 +3,24 @@ namespace Haerriz\GoogleShoppingFeed\Model\Product\Type;
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
+use Haerriz\GoogleShoppingFeed\Model\ProfileConfigReader;
 
 class Configurable implements TypeStrategyInterface
 {
+    private ProfileConfigReader $configReader;
+
+    public function __construct(ProfileConfigReader $configReader)
+    {
+        $this->configReader = $configReader;
+    }
+
     public function resolveProducts(Product $product): array
+    {
+        return $this->resolveProductsForProfile($product, null);
+    }
+
+    public function resolveProductsForProfile(Product $product, ?FeedProfileInterface $profile = null): array
     {
         $typeInstance = $product->getTypeInstance();
         if (!method_exists($typeInstance, 'getUsedProducts')) {
@@ -48,6 +62,15 @@ class Configurable implements TypeStrategyInterface
         }
 
         // Fall back to parent if no enabled children are available.
+        $mode = $profile
+            ? (string)$this->configReader->get($profile, 'export_configurable_mode', 'children_only')
+            : 'children_only';
+        if ($mode === 'parent_only') {
+            return [$product];
+        }
+        if ($mode === 'parent_and_children') {
+            return array_merge([$product], $children);
+        }
         return $children ?: [$product];
     }
 

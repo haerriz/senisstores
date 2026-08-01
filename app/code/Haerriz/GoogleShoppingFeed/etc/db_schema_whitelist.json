@@ -38,6 +38,8 @@
             "utm_campaign": true,
             "utm_term": true,
             "utm_content": true,
+            "identifier_exists_mode": true,
+            "export_configurable_mode": true,
             "created_at": true,
             "updated_at": true
         },

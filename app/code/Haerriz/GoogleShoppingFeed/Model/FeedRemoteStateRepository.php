@@ -119,7 +119,8 @@ class FeedRemoteStateRepository implements FeedRemoteStateRepositoryInterface
 
         $select = $connection->select()
             ->from($table, ['offer_id', 'profile_id', 'sync_status', 'issues', 'synced_at', 'updated_at'])
-            ->where('sync_status LIKE ? OR sync_status LIKE ?', ['%disapprov%', '%reject%'])
+            ->where('sync_status LIKE ?', '%disapprov%')
+            ->orWhere('sync_status LIKE ?', '%reject%')
             ->order('updated_at DESC')
             ->limit(max(1, $limit));
 

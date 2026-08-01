@@ -5,6 +5,7 @@
             <general>
                 <enable>0</enable>
                 <cli_php_path></cli_php_path>
+                <qa_block_on_critical>0</qa_block_on_critical>
             </general>
             <google_merchant_api>
                 <merchant_id></merchant_id>

@@ -34,7 +34,8 @@ class Preview extends Action implements HttpGetActionInterface
 
         try {
             $profile = $this->repository->getById($id);
-            $sampleRows = $this->previewService->buildSample($profile, 10);
+            $sample = $this->previewService->buildSample($profile, 10);
+            $sampleRows = is_array($sample['rows'] ?? null) ? $sample['rows'] : [];
             $ext = strtolower((string)pathinfo((string)$profile->getFilename(), PATHINFO_EXTENSION));
 
             if (in_array($ext, ['csv', 'tsv', 'txt'], true)) {
@@ -45,9 +46,13 @@ class Preview extends Action implements HttpGetActionInterface
                     $response->setContents('No product sample rows available.');
                     return $response;
                 }
-                $output = implode($delimiter, array_keys($sampleRows[0])) . "\n";
+                $output = implode($delimiter, array_map([$this, 'stringifyValue'], array_keys($sampleRows[0]))) . "\n";
                 foreach ($sampleRows as $row) {
                     $output .= implode($delimiter, array_map(static function ($v) {
+                        if (is_array($v) || is_object($v)) {
+                            $encoded = json_encode($v, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                            $v = $encoded === false ? '' : $encoded;
+                        }
                         return '"' . str_replace('"', '""', (string)$v) . '"';
                     }, $row)) . "\n";
                 }
@@ -60,8 +65,10 @@ class Preview extends Action implements HttpGetActionInterface
                 $response->setData([
                     'status' => 'success',
                     'profile' => $profile->getName(),
-                    'count' => count($sampleRows),
+                    'count' => (int)($sample['row_count'] ?? count($sampleRows)),
                     'rows' => $sampleRows,
+                    'field_errors' => $sample['field_errors'] ?? [],
+                    'completeness' => $sample['completeness'] ?? [],
                 ]);
                 return $response;
             }
@@ -75,7 +82,7 @@ class Preview extends Action implements HttpGetActionInterface
                 $xml .= "  <item>\n";
                 foreach ($row as $k => $v) {
                     $tag = preg_replace('/[^A-Za-z0-9_:\-.]/', '', (string)$k) ?: 'field';
-                    $val = htmlspecialchars((string)$v, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                    $val = htmlspecialchars($this->stringifyValue($v), ENT_XML1 | ENT_QUOTES, 'UTF-8');
                     $xml .= "    <{$tag}>{$val}</{$tag}>\n";
                 }
                 $xml .= "  </item>\n";
@@ -95,5 +102,14 @@ class Preview extends Action implements HttpGetActionInterface
         $response->setHttpResponseCode(400);
         $response->setContents($message);
         return $response;
+    }
+
+    private function stringifyValue($value): string
+    {
+        if (is_array($value) || is_object($value)) {
+            $encoded = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            return $encoded === false ? '' : $encoded;
+        }
+        return (string)$value;
     }
 }
