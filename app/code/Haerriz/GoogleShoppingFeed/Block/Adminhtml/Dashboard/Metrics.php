@@ -6,28 +6,24 @@ use Haerriz\GoogleShoppingFeed\Model\FeedRemoteStateRepository;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Data\Form\FormKey;
 
 class Metrics extends Template
 {
     private $connection;
     private FeedRemoteStateRepository $remoteStateRepository;
     private LegacyGoogleFeedDetector $legacyDetector;
-    private FormKey $formKey;
 
     public function __construct(
         Context $context,
         ResourceConnection $resourceConnection,
         FeedRemoteStateRepository $remoteStateRepository,
         LegacyGoogleFeedDetector $legacyDetector,
-        FormKey $formKey,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->connection = $resourceConnection->getConnection();
         $this->remoteStateRepository = $remoteStateRepository;
         $this->legacyDetector = $legacyDetector;
-        $this->formKey = $formKey;
     }
 
     public function getMetrics()

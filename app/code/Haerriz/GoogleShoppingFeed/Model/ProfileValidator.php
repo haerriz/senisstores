@@ -8,13 +8,14 @@ use Haerriz\GoogleShoppingFeed\Model\Mapping\RowBuilder;
 class ProfileValidator
 {
     private $rowBuilder;
+    /** @var RowValidatorInterface Kept for DI BC; row checks run on real export/preview rows. */
     private $rowValidator;
 
     public function __construct(
         RowBuilder $rowBuilder,
         RowValidatorInterface $rowValidator
     ) {
-        $this->rowBuilder   = $rowBuilder;
+        $this->rowBuilder = $rowBuilder;
         $this->rowValidator = $rowValidator;
     }
 
@@ -59,30 +60,9 @@ class ProfileValidator
             $errors[] = __('Invalid cron expression: "%1"', $cronExpr)->render();
         }
 
-        // Use RowBuilder validation (mapping errors)
-        $mappingErrors = $this->rowBuilder->validate($profile);
-        $errors        = array_merge($errors, $mappingErrors);
-
-        // Use RowValidatorInterface to validate a sample row structure
-        if (empty($mappingErrors)) {
-            try {
-                $mappings = $this->rowBuilder->getMappings($profile);
-                if (!empty($mappings)) {
-                    $sampleRow = [];
-                    foreach ($mappings as $m) {
-                        $sampleRow[$m['google_attribute'] ?? ''] = 'sample_value';
-                    }
-                    $result = $this->rowValidator->validate($sampleRow);
-                    if (method_exists($result, 'getErrors') && $result->getErrors()) {
-                        foreach ($result->getErrors() as $rowErr) {
-                            $errors[] = (string)$rowErr;
-                        }
-                    }
-                }
-            } catch (\Exception $e) {
-                // Non-fatal — row validator may not be implemented yet
-            }
-        }
+        // Mapping structure only — do not invent dummy product rows here.
+        // Per-row required fields (id/title) are validated on real preview/export rows.
+        $errors = array_merge($errors, $this->rowBuilder->validate($profile));
 
         return $errors;
     }
