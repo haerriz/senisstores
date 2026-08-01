@@ -4,6 +4,7 @@ namespace Haerriz\GoogleShoppingFeed\Model;
 use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
 use Haerriz\GoogleShoppingFeed\Api\OfferIdentityResolverInterface;
 use Haerriz\GoogleShoppingFeed\Api\ProductValueResolverInterface;
+use Haerriz\GoogleShoppingFeed\Model\Taxonomy\Mapping as TaxonomyMapping;
 use Haerriz\GoogleShoppingFeed\Model\Url\UtmBuilder;
 use Magento\Catalog\Helper\Data as CatalogHelper;
 use Magento\Catalog\Helper\Image as ImageHelper;
@@ -17,7 +18,7 @@ class ProductValueResolver implements ProductValueResolverInterface
     private StoreManagerInterface $storeManager;
     private OfferIdentityResolverInterface $offerIdentityResolver;
     private UtmBuilder $utmBuilder;
-    private CategoryIdResolver $categoryIdResolver;
+    private TaxonomyMapping $taxonomyMapping;
     private CatalogHelper $catalogHelper;
     private ProfileConfigReader $configReader;
     private LoggerInterface $logger;
@@ -27,7 +28,7 @@ class ProductValueResolver implements ProductValueResolverInterface
         StoreManagerInterface $storeManager,
         OfferIdentityResolverInterface $offerIdentityResolver,
         UtmBuilder $utmBuilder,
-        CategoryIdResolver $categoryIdResolver,
+        TaxonomyMapping $taxonomyMapping,
         CatalogHelper $catalogHelper,
         ProfileConfigReader $configReader,
         LoggerInterface $logger
@@ -36,7 +37,7 @@ class ProductValueResolver implements ProductValueResolverInterface
         $this->storeManager = $storeManager;
         $this->offerIdentityResolver = $offerIdentityResolver;
         $this->utmBuilder = $utmBuilder;
-        $this->categoryIdResolver = $categoryIdResolver;
+        $this->taxonomyMapping = $taxonomyMapping;
         $this->catalogHelper = $catalogHelper;
         $this->configReader = $configReader;
         $this->logger = $logger;
@@ -86,9 +87,18 @@ class ProductValueResolver implements ProductValueResolverInterface
 
             case 'google_product_category':
                 try {
-                    return $this->categoryIdResolver->resolve($product);
-                } catch (\Exception $e) {
-                    $this->logger->debug("CategoryIdResolver failed for [{$product->getSku()}]: " . $e->getMessage());
+                    $direct = trim((string)$product->getData('google_product_category'));
+                    if ($direct !== '') {
+                        return $direct;
+                    }
+                    $categoryIds = array_map('intval', (array)$product->getCategoryIds());
+                    $categoryId = $categoryIds[0] ?? 0;
+                    if ($categoryId <= 0) {
+                        return '';
+                    }
+                    return $this->taxonomyMapping->resolveCategoryPath($categoryId);
+                } catch (\Throwable $e) {
+                    $this->logger->debug("Taxonomy mapping failed for [{$product->getSku()}]: " . $e->getMessage());
                     return '';
                 }
 
