@@ -133,16 +133,50 @@ class MerchantClientV1
 
     public function listProducts(string $merchantId): array
     {
-        $client = $this->getProductsClient();
         $parent = 'accounts/' . $merchantId;
+        $productsServiceClass = '\\Google\\Shopping\\Merchant\\Products\\V1\\Client\\ProductsServiceClient';
+        $listRequestClass = '\\Google\\Shopping\\Merchant\\Products\\V1\\ListProductsRequest';
+
+        // Prefer ProductsServiceClient::listProducts when the installed library provides it.
+        if (class_exists($productsServiceClass) && class_exists($listRequestClass)) {
+            $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
+            if (!$jsonKey) {
+                throw new \RuntimeException('Google Merchant API Service Account JSON is not configured.');
+            }
+            $credentials = new ServiceAccountCredentials(
+                'https://www.googleapis.com/auth/content',
+                json_decode($jsonKey, true)
+            );
+            $client = new $productsServiceClass(['credentials' => $credentials]);
+            $request = new $listRequestClass();
+            if (method_exists($request, 'setParent')) {
+                $request->setParent($parent);
+            }
+            if (method_exists($client, 'listProducts')) {
+                return $this->normalizeProductList($client->listProducts($request));
+            }
+        }
+
+        $client = $this->getProductsClient();
         if (method_exists($client, 'listProducts')) {
             return $this->normalizeProductList($client->listProducts($parent));
         }
         if (method_exists($client, 'listProductInputs')) {
+            $listInputsRequestClass = '\\Google\\Shopping\\Merchant\\Products\\V1\\ListProductInputsRequest';
+            if (class_exists($listInputsRequestClass)) {
+                $request = new $listInputsRequestClass();
+                if (method_exists($request, 'setParent')) {
+                    $request->setParent($parent);
+                }
+                return $this->normalizeProductList($client->listProductInputs($request));
+            }
             return $this->normalizeProductList($client->listProductInputs($parent));
         }
 
-        throw new \RuntimeException('Installed Google Merchant Products client does not expose a product listing method.');
+        throw new \RuntimeException(
+            'Installed Google Merchant Products client does not expose a product listing method. '
+            . 'Install/update google/shopping-merchant-products and configure service account credentials.'
+        );
     }
 
     public function batchInsertProducts(string $merchantId, array $products): array
