@@ -41,6 +41,6 @@ class AdapterPool
     public function deliver(FeedProfileInterface $profile, string $localFilePath): bool
     {
         $adapter = $this->get((string)$profile->getDeliveryType());
-        return $adapter->deliver($localFilePath, $profile);
+        return (bool)$adapter->upload($profile, $localFilePath);
     }
 }
