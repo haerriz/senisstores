@@ -67,8 +67,8 @@ class ProductValueResolver implements ProductValueResolverInterface
             case 'product_url':
                 try {
                     $url = $product->setStoreId((int)$profile->getStoreId())->getProductUrl();
-                    return $this->utmBuilder->build($url, $profile);
-                } catch (\Exception $e) {
+                    return $this->utmBuilder->buildUrl($url, $profile, $product);
+                } catch (\Throwable $e) {
                     $this->logger->debug("UtmBuilder failed for [{$product->getSku()}]: " . $e->getMessage());
                     return $product->getProductUrl();
                 }

@@ -7,6 +7,17 @@ use Magento\Catalog\Model\Product;
 class UtmBuilder
 {
     /**
+     * Alias used by ProductValueResolver (requires product context for placeholders).
+     */
+    public function build(string $baseUrl, FeedProfileInterface $profile, ?Product $product = null): string
+    {
+        if ($product === null) {
+            return $baseUrl;
+        }
+        return $this->buildUrl($baseUrl, $profile, $product);
+    }
+
+    /**
      * Build URL appending properly formatted UTM query attributes
      *
      * @param string $baseUrl
