@@ -32,7 +32,7 @@ class FeedRemoteState extends AbstractModel implements FeedRemoteStateInterface,
         return $this->setData(self::PROFILE_ID, $profileId === null || $profileId === '' ? null : (int)$profileId);
     }
 
-    public function getProductId()
+    public function getProductId(): int
     {
         return (int)$this->getData(self::PRODUCT_ID);
     }

@@ -38,7 +38,7 @@ interface FeedRemoteStateInterface
     /**
      * @return int
      */
-    public function getProductId();
+    public function getProductId(): int;
 
     /**
      * @param int $productId
