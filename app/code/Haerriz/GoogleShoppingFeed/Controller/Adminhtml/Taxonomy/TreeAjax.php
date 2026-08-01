@@ -74,9 +74,9 @@ class TreeAjax extends Action
             $mappingTable = $this->connection->getTableName('haerriz_google_shopping_feed_category_mapping');
             $mappings = [];
             if ($this->connection->isTableExists($mappingTable)) {
-                $rawMappings = $this->connection->fetchAll("SELECT magento_category_id, taxonomy_path FROM {$mappingTable}");
+                $rawMappings = $this->connection->fetchAll("SELECT magento_category_id, google_category_id FROM {$mappingTable}");
                 foreach ($rawMappings as $row) {
-                    $mappings[$row['magento_category_id']] = $row['taxonomy_path'];
+                    $mappings[$row['magento_category_id']] = $row['google_category_id'];
                 }
             }
 

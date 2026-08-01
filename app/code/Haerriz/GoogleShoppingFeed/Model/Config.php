@@ -7,30 +7,19 @@ use Magento\Store\Model\ScopeInterface;
 
 class Config
 {
-    const XML_PATH_ENABLED = 'haerriz_googleshoppingfeed/general/enabled';
-    const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/api/merchant_id';
-    const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/api/service_account_json';
-    const XML_PATH_DEBUG_LOGGING = 'haerriz_googleshoppingfeed/logging/debug';
+    public const XML_PATH_ENABLED = 'haerriz_googleshoppingfeed/general/enable';
+    public const XML_PATH_CLI_PHP_PATH = 'haerriz_googleshoppingfeed/general/cli_php_path';
+    public const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/google_merchant_api/merchant_id';
+    public const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/google_merchant_api/service_account_json';
+    public const XML_PATH_TARGET_COUNTRY = 'haerriz_googleshoppingfeed/google_merchant_api/target_country';
+    public const XML_PATH_TARGET_CURRENCY = 'haerriz_googleshoppingfeed/google_merchant_api/target_currency';
+    public const XML_PATH_API_MODE = 'haerriz_googleshoppingfeed/google_merchant_api/api_mode';
+    public const XML_PATH_DEBUG_LOGGING = 'haerriz_googleshoppingfeed/logging/debug';
 
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
+    protected ScopeConfigInterface $scopeConfig;
+    protected EncryptorInterface $encryptor;
+    protected array $cache = [];
 
-    /**
-     * @var EncryptorInterface
-     */
-    protected $encryptor;
-
-    /**
-     * @var array
-     */
-    protected $cache = [];
-
-    /**
-     * @param ScopeConfigInterface $scopeConfig
-     * @param EncryptorInterface $encryptor
-     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         EncryptorInterface $encryptor
@@ -39,26 +28,17 @@ class Config
         $this->encryptor = $encryptor;
     }
 
-    /**
-     * Check if module is enabled
-     *
-     * @param string|int|null $scopeCode
-     * @param string $scopeType
-     * @return bool
-     */
-    public function isEnabled($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE)
+    public function isEnabled($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_PATH_ENABLED, $scopeType, $scopeCode);
     }
 
-    /**
-     * Get Google Merchant Center ID
-     *
-     * @param string|int|null $scopeCode
-     * @param string $scopeType
-     * @return string|null
-     */
-    public function getMerchantId($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE)
+    public function getCliPhpPath($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_CLI_PHP_PATH, $scopeType, $scopeCode);
+    }
+
+    public function getMerchantId($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): ?string
     {
         $cacheKey = "merchant_id_{$scopeType}_{$scopeCode}";
         if (!isset($this->cache[$cacheKey])) {
@@ -67,14 +47,7 @@ class Config
         return $this->cache[$cacheKey];
     }
 
-    /**
-     * Get Decrypted Service Account JSON
-     *
-     * @param string|int|null $scopeCode
-     * @param string $scopeType
-     * @return string|null
-     */
-    public function getServiceAccountJson($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE)
+    public function getServiceAccountJson($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): ?string
     {
         $cacheKey = "service_account_{$scopeType}_{$scopeCode}";
         if (!isset($this->cache[$cacheKey])) {
@@ -84,15 +57,28 @@ class Config
         return $this->cache[$cacheKey];
     }
 
-    /**
-     * Check if debug logging is enabled
-     *
-     * @param string|int|null $scopeCode
-     * @param string $scopeType
-     * @return bool
-     */
-    public function isDebugLoggingEnabled($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE)
+    public function getTargetCountry($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_TARGET_COUNTRY, $scopeType, $scopeCode);
+    }
+
+    public function getTargetCurrency($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_TARGET_CURRENCY, $scopeType, $scopeCode);
+    }
+
+    public function getApiMode($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): string
+    {
+        return (string)($this->scopeConfig->getValue(self::XML_PATH_API_MODE, $scopeType, $scopeCode) ?: 'production');
+    }
+
+    public function isDebugLoggingEnabled($scopeCode = null, $scopeType = ScopeInterface::SCOPE_STORE): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_PATH_DEBUG_LOGGING, $scopeType, $scopeCode);
+    }
+
+    public function clearCache(): void
+    {
+        $this->cache = [];
     }
 }

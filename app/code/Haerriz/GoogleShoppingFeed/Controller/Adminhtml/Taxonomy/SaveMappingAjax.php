@@ -28,7 +28,7 @@ class SaveMappingAjax extends Action
         $result = $this->jsonFactory->create();
         
         $magentoId = (int)$this->getRequest()->getParam('magento_category_id');
-        $googleId = $this->getRequest()->getParam('google_category_id'); // Can be string or int
+        $googleId = (int)$this->getRequest()->getParam('google_category_id'); // Can be 0 to delete
 
         if (!$magentoId) {
             return $result->setData(['success' => false, 'message' => 'Invalid Magento Category ID']);
@@ -37,17 +37,26 @@ class SaveMappingAjax extends Action
         try {
             $mappingTable = $this->connection->getTableName('haerriz_google_shopping_feed_category_mapping');
             
-            // Delete mapping if 0 or empty
-            if (empty($googleId) || $googleId === '0') {
-                $this->connection->delete($mappingTable, ['magento_category_id = ?' => $magentoId]);
-                return $result->setData(['success' => true]);
+            // Create table if it doesn't exist to ensure safety during phase deployment
+            if (!$this->connection->isTableExists($mappingTable)) {
+                $this->connection->query("
+                    CREATE TABLE `{$mappingTable}` (
+                        `magento_category_id` int(10) unsigned NOT NULL,
+                        `google_category_id` int(10) unsigned NOT NULL,
+                        PRIMARY KEY (`magento_category_id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                ");
             }
 
-            // Otherwise Insert/Update
-            $this->connection->insertOnDuplicate($mappingTable, [
-                'magento_category_id' => $magentoId,
-                'taxonomy_path' => $googleId
-            ], ['taxonomy_path']);
+            if ($googleId > 0) {
+                $this->connection->insertOnDuplicate($mappingTable, [
+                    'magento_category_id' => $magentoId,
+                    'google_category_id' => $googleId
+                ], ['google_category_id']);
+            } else {
+                // Delete mapping
+                $this->connection->delete($mappingTable, ['magento_category_id = ?' => $magentoId]);
+            }
 
             return $result->setData(['success' => true]);
 

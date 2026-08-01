@@ -5,57 +5,110 @@ $metrics = $block->getMetrics();
 
     <!-- SPIDER WEB CLUSTER NAVIGATION -->
     <div class="feed-cluster-nav" style="background: #fff; padding: 10px 20px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; display: flex; gap: 15px; align-items: center;">
-        <strong style="color: #666; margin-right: 10px;"><?= __("Module Quick Links:") ?></strong>
-        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/dashboard/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #007bdb; color: #fff;"><?= __("Dashboard") ?></a>
-        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/feed/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Manage Profiles") ?></a>
-        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/taxonomy/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Taxonomy Mapper") ?></a>
-        <a href="<?= $block->getUrl("haerriz_googleshoppingfeed/job/index") ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= __("Job History") ?></a>
+        <strong style="color: #666; margin-right: 10px;"><?= $block->escapeHtml(__("Module Quick Links:")) ?></strong>
+        <a href="<?= $block->escapeUrl($block->getUrl("haerriz_googleshoppingfeed/dashboard/index")) ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #007bdb; color: #fff;"><?= $block->escapeHtml(__("Dashboard")) ?></a>
+        <a href="<?= $block->escapeUrl($block->getUrl("haerriz_googleshoppingfeed/feed/index")) ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= $block->escapeHtml(__("Manage Profiles")) ?></a>
+        <a href="<?= $block->escapeUrl($block->getUrl("haerriz_googleshoppingfeed/taxonomy/index")) ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= $block->escapeHtml(__("Taxonomy Mapper")) ?></a>
+        <a href="<?= $block->escapeUrl($block->getUrl("haerriz_googleshoppingfeed/job/index")) ?>" style="text-decoration: none; padding: 5px 10px; border-radius: 3px; background: #f4f4f4; color: #333;"><?= $block->escapeHtml(__("Job History")) ?></a>
     </div>
+
+    <?php if (!empty($metrics['legacy_conflict'])): ?>
+        <div class="message message-warning" style="margin-bottom: 20px;">
+            <?= $block->escapeHtml($metrics['legacy_conflict_message']) ?>
+        </div>
+    <?php endif; ?>
+
     <div class="feed-dashboard">
-    <div class="dashboard-header" style="margin-bottom: 20px;">
-        <h2><?= __('Feed Health Overview (Last 30 Days)') ?></h2>
+    <div class="dashboard-header" style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <h2 style="margin:0;"><?= $block->escapeHtml(__('Feed Health Overview (Last 30 Days)')) ?></h2>
+        <form method="post" action="<?= $block->escapeUrl($block->getReconcileUrl()) ?>">
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getAdminFormKey()) ?>"/>
+            <button type="submit" class="action-secondary"><?= $block->escapeHtml(__('Reconcile Merchant Status')) ?></button>
+        </form>
     </div>
 
     <div class="dashboard-cards" style="display: flex; gap: 20px; margin-bottom: 30px;">
-        <!-- Card 1 -->
         <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #007bdb;">
-            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= __('Total Products Exported') ?></div>
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Total Products Exported')) ?></div>
             <div style="font-size: 32px; font-weight: bold; color: #333;"><?= number_format($metrics['total_exported']) ?></div>
         </div>
-
-        <!-- Card 2 -->
         <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #4caf50;">
-            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= __('Active Profiles') ?></div>
-            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= $metrics['active_profiles'] ?></div>
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Active Profiles')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= (int)$metrics['active_profiles'] ?></div>
         </div>
-
-        <!-- Card 3 -->
         <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid <?= $metrics['success_rate'] > 90 ? '#4caf50' : '#ff9800' ?>;">
-            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= __('Job Success Rate') ?></div>
-            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= $metrics['success_rate'] ?>%</div>
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Job Success Rate')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= $block->escapeHtml((string)$metrics['success_rate']) ?>%</div>
         </div>
-
-        <!-- Card 4 -->
         <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #f44336;">
-            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= __('Failed Jobs') ?></div>
-            <div style="font-size: 32px; font-weight: bold; color: #f44336;"><?= $metrics['failed_jobs'] ?></div>
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Failed Jobs')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #f44336;"><?= (int)$metrics['failed_jobs'] ?></div>
         </div>
     </div>
 
-    <!-- Recent Errors Section -->
-    <div class="dashboard-errors" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;"><?= __('Recent Errors') ?></h3>
-        
-        <?php if (empty($metrics['recent_errors'])): ?>
+    <div class="dashboard-header" style="margin-bottom: 12px;">
+        <h3 style="margin:0;"><?= $block->escapeHtml(__('Merchant Status')) ?></h3>
+    </div>
+    <div class="dashboard-cards" style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #4caf50;">
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Approved')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= (int)$metrics['merchant_approved'] ?></div>
+        </div>
+        <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #f44336;">
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Disapproved')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #f44336;"><?= (int)$metrics['merchant_disapproved'] ?></div>
+        </div>
+        <div class="card" style="flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid #ff9800;">
+            <div style="color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;"><?= $block->escapeHtml(__('Pending')) ?></div>
+            <div style="font-size: 32px; font-weight: bold; color: #333;"><?= (int)$metrics['merchant_pending'] ?></div>
+        </div>
+    </div>
+
+    <div class="dashboard-errors" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;"><?= $block->escapeHtml(__('Recent Disapproved Offers')) ?></h3>
+        <?php if (empty($metrics['recent_disapproved'])): ?>
             <div style="color: #4caf50; font-weight: bold;">
-                <?= __('No recent errors found. Everything is running smoothly!') ?>
+                <?= $block->escapeHtml(__('No recently disapproved offers.')) ?>
             </div>
         <?php else: ?>
             <table class="data-grid" style="width: 100%;">
                 <thead>
                     <tr>
-                        <th class="data-grid-th"><?= __('Timestamp') ?></th>
-                        <th class="data-grid-th"><?= __('Error Message') ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Offer ID')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Profile')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Status')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Issues')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Synced At')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($metrics['recent_disapproved'] as $row): ?>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"><?= $block->escapeHtml((string)($row['offer_id'] ?? '')) ?></td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"><?= $block->escapeHtml((string)($row['profile_id'] ?? '')) ?></td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee; color:#d32f2f;"><?= $block->escapeHtml((string)($row['sync_status'] ?? '')) ?></td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"><?= $block->escapeHtml(mb_substr((string)($row['issues'] ?? ''), 0, 160)) ?></td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"><?= $block->escapeHtml((string)($row['synced_at'] ?? $row['updated_at'] ?? '')) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="dashboard-errors" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;"><?= $block->escapeHtml(__('Recent Errors')) ?></h3>
+
+        <?php if (empty($metrics['recent_errors'])): ?>
+            <div style="color: #4caf50; font-weight: bold;">
+                <?= $block->escapeHtml(__('No recent errors found. Everything is running smoothly!')) ?>
+            </div>
+        <?php else: ?>
+            <table class="data-grid" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Timestamp')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Error Message')) ?></th>
                     </tr>
                 </thead>
                 <tbody>

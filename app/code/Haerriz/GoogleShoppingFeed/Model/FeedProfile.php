@@ -182,12 +182,26 @@ class FeedProfile extends AbstractModel implements FeedProfileInterface
 
     public function getCronExpression()
     {
-        return $this->getData(self::CRON_EXPRESSION);
+        return $this->getData(self::CRON_EXPRESSION) ?: $this->getData('cron_expr');
     }
 
     public function setCronExpression($cronExpression)
     {
+        $this->setData('cron_expr', $cronExpression);
         return $this->setData(self::CRON_EXPRESSION, $cronExpression);
+    }
+
+    /**
+     * Legacy alias used by scheduler/validator code paths.
+     */
+    public function getCronExpr()
+    {
+        return $this->getCronExpression();
+    }
+
+    public function setCronExpr($cronExpression)
+    {
+        return $this->setCronExpression($cronExpression);
     }
 
     public function getFrequency()

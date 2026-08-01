@@ -2,59 +2,65 @@
 namespace Haerriz\GoogleShoppingFeed\Test\Unit\Model;
 
 use Haerriz\GoogleShoppingFeed\Model\FeedProfile;
+use Haerriz\GoogleShoppingFeed\Model\Product\Type\Pool;
+use Haerriz\GoogleShoppingFeed\Model\Product\Type\Simple;
+use Haerriz\GoogleShoppingFeed\Model\Product\Type\VirtualProduct;
 use Haerriz\GoogleShoppingFeed\Model\ProductTypeResolver;
-use Haerriz\GoogleShoppingFeed\Model\ProfileConfigReader;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
-use Magento\Framework\App\ResourceConnection;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use PHPUnit\Framework\TestCase;
 
 class ProductTypeResolverTest extends TestCase
 {
-    private function product()
+    private function product(string $typeId = 'simple'): Product
     {
-        return $this->getMockBuilder(Product::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $product = $this->getMockBuilder(Product::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getTypeId', 'getStatus'])
+            ->getMock();
+        $product->method('getTypeId')->willReturn($typeId);
+        $product->method('getStatus')->willReturn(Status::STATUS_ENABLED);
+        return $product;
     }
 
-    private function profile()
+    private function profile(): FeedProfile
     {
-        return $this->getMockBuilder(FeedProfile::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
+        return $this->getMockBuilder(FeedProfile::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
     }
 
-    private function createResolver()
+    private function createResolver(): ProductTypeResolver
     {
-        return new ProductTypeResolver(
-            $this->createMock(ResourceConnection::class),
-            $this->createMock(CollectionFactory::class),
-            $this->createMock(Status::class),
-            new ProfileConfigReader()
-        );
+        $pool = new Pool([
+            'simple' => new Simple(),
+            'virtual' => new VirtualProduct(),
+        ]);
+        return new ProductTypeResolver($pool);
     }
 
     public function testSimpleProductProducesOneRow()
     {
-        $product = $this->product();
-        $product->setTypeId('simple');
-
+        $product = $this->product('simple');
         $this->assertSame([$product], $this->createResolver()->resolve($product, $this->profile()));
     }
 
-    public function testVirtualAndDownloadableRequireExplicitOptIn()
+    public function testVirtualProductIsExportableWhenEnabled()
     {
-        $profile = $this->profile();
-        $virtual = $this->product();
-        $virtual->setTypeId('virtual');
-        $downloadable = $this->product();
-        $downloadable->setTypeId('downloadable');
+        $product = $this->product('virtual');
+        $this->assertSame([$product], $this->createResolver()->resolve($product, $this->profile()));
+    }
 
-        $resolver = $this->createResolver();
-        $this->assertSame([], $resolver->resolve($virtual, $profile));
-        $this->assertSame([], $resolver->resolve($downloadable, $profile));
+    public function testDisabledProductIsFilteredOut()
+    {
+        $product = $this->getMockBuilder(Product::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getTypeId', 'getStatus'])
+            ->getMock();
+        $product->method('getTypeId')->willReturn('simple');
+        $product->method('getStatus')->willReturn(Status::STATUS_DISABLED);
 
-        $profile->setData('include_virtual', 1);
-        $profile->setData('include_downloadable', 1);
-        $this->assertSame([$virtual], $resolver->resolve($virtual, $profile));
-        $this->assertSame([$downloadable], $resolver->resolve($downloadable, $profile));
+        $this->assertSame([], $this->createResolver()->resolve($product, $this->profile()));
     }
 }

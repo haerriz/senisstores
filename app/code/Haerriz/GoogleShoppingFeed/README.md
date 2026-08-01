@@ -1,62 +1,116 @@
-# Enterprise Multi-Channel Product Feed & Google Shopping Generator for Magento 2
+# Enterprise Multi-Channel Product Feed Generator for Magento 2
 
-[![Magento 2.4.7](https://img.shields.io/badge/Magento-2.4.7-orange.svg)](https://magento.com)
-[![PHP 8.2](https://img.shields.io/badge/PHP-8.2-blue.svg)](https://php.net)
-[![Build Status](https://img.shields.io/badge/DI%20Compile-100%25%20Passed-green.svg)](https://github.com/haerriz/magento2-google-shopping-feed)
-[![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE)
+[![Magento 2.4+](https://img.shields.io/badge/Magento-2.4%2B-orange.svg)](https://magento.com)
+[![PHP 8.1+](https://img.shields.io/badge/PHP-8.1%2B-blue.svg)](https://php.net)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE)
 
-An enterprise-grade, multi-channel product feed generator for Magento 2. Fully supports **Google Shopping, Meta/Facebook, Instagram, Snapchat, TikTok, Pinterest, Microsoft/Bing, Amazon, eBay, Rakuten, and OpenAI/ChatGPT Agentic Commerce**.
+Multi-channel product feed generator for Magento 2 with Google Merchant API sync, FTP/SFTP delivery, taxonomy mapping, cron scheduling, and admin wizard tooling.
 
----
-
-## 🌟 Key Features
-
-- 🧙‍♂️ **Exact 7-Step Admin Wizard**:
-  - **Step 1: General Settings** – Name, Status, Feed Channel & Output Filename.
-  - **Step 2: Exclude Categories** – Exclude entire category branches cleanly.
-  - **Step 3: Rename Categories** – Map store categories to Google/Channel Taxonomy.
-  - **Step 4: Basic Product Info** – SKU, Title, Price, Description, Availability mapping.
-  - **Step 5: Optional Product Info** – Brand, GTIN, MPN, Condition, UTM tracking.
-  - **Step 6: Schedule Settings** – Automated cron schedule expression.
-  - **Step 7: Destination** – Local, FTP, SFTP, or Direct Merchant API delivery.
-
-- 🛍️ **11 Multi-Channel Templates**:
-  1. **Google Shopping** (`XML`)
-  2. **Meta / Facebook Catalog** (`CSV`)
-  3. **Instagram Shopping** (`CSV`)
-  4. **Snapchat Product Catalog** (`CSV`)
-  5. **TikTok Commerce Catalog** (`CSV`)
-  6. **Pinterest Product Catalog** (`CSV`)
-  7. **Microsoft / Bing Shopping** (`XML`)
-  8. **Amazon Seller Catalog** (`CSV`)
-  9. **eBay Inventory Feed** (`CSV`)
-  10. **Rakuten Advertising** (`CSV`)
-  11. **OpenAI / ChatGPT Agentic Commerce** (`JSONL`)
-
-- ⚡ **Multi-Format Writer Engine**:
-  - Automatically resolves `xml`, `csv`, `tsv`, `txt`, and `jsonl` formats with smart fallbacks.
-
-- 🔍 **Interactive Admin Grid & Quick View**:
-  - Actions Menu: Edit, Quick View, Generate Now, Duplicate, Job History, Download, Delete.
-  - Live Quick View Preview window rendering real-time formatted output.
-
-- 💻 **System Information & Diagnostics Panel**:
-  - Located at `Stores -> Configuration -> Haerriz Extensions -> Product Feed`.
-  - Real-time display of Magento Mode, Root Path, Server User, DB Timestamp, Opcache status, and CLI PHP path.
+Supported channels: **Google Shopping, Meta/Facebook, Instagram, Snapchat, TikTok, Pinterest, Microsoft/Bing, Amazon, eBay, Rakuten, OpenAI/ChatGPT Commerce**.
 
 ---
 
-## 🛠️ CLI Commands
+## Requirements
+
+- Magento Open Source / Adobe Commerce 2.4.x
+- PHP 8.1 / 8.2 / 8.3
+- Magento cron configured
+- Optional: `phpseclib` (via Magento dependencies) for SFTP
+- Optional: Google Cloud service account for Merchant API sync
+
+---
+
+## Installation
 
 ```bash
-# Generate a feed profile manually
+composer require haerriz/module-google-shopping-feed
+bin/magento module:enable Haerriz_GoogleShoppingFeed
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento cache:flush
+```
+
+Manual install: copy this module to `app/code/Haerriz/GoogleShoppingFeed`, then run the Magento commands above.
+
+---
+
+## Configuration
+
+1. Go to **Stores → Configuration → Haerriz Extensions → Product Feed**
+2. Enable the module
+3. (Optional) Configure Google Merchant API:
+   - Merchant Account ID
+   - Service Account JSON key (stored encrypted)
+   - Target country / currency
+   - API mode (`production` or `sandbox`)
+4. Create feed profiles under **Marketing → Google Shopping Feeds**
+
+### Feed profile wizard
+
+1. General: name, status, channel, filename
+2. Exclude categories
+3. Rename / map categories to channel taxonomy
+4. Basic product attributes (SKU, title, price, description, availability)
+5. Optional attributes (brand, GTIN, MPN, condition, UTM)
+6. Schedule (cron expression)
+7. Destination: Local / FTP / SFTP / Merchant API
+
+---
+
+## CLI Commands
+
+```bash
+# Generate one profile
 php bin/magento haerriz:feed:generate --profile=1
 
-# Validate profile mapping & configuration
+# Validate mapping/config
 php bin/magento haerriz:feed:validate --profile=1
+
+# Import Google taxonomy
+php bin/magento haerriz:feed:import-taxonomy
+
+# Sync / reconcile Merchant API
+php bin/magento haerriz:feed:merchant-sync
+php bin/magento haerriz:feed:merchant-reconcile
+
+# Consume queued jobs / cleanup artifacts
+php bin/magento haerriz:feed:consume-jobs
+php bin/magento haerriz:feed:cleanup-artifacts
 ```
 
 ---
 
-## 📄 License
+## Security notes
+
+- Delivery passwords and Google service-account JSON are encrypted with Magento's encryptor.
+- Remote FTP/SFTP host validation blocks private, loopback, link-local, and reserved IPs (SSRF hardening).
+- Profile duplication scrubs credentials and resets lock/retry runtime state.
+- Admin ACL resources separate profile management, generation, downloads, jobs, and credentials.
+
+---
+
+## Supported product types
+
+| Type | Feed behavior |
+|------|----------------|
+| Simple | Exported as one offer |
+| Virtual / Downloadable | Exported as one offer (no shipping weight metadata) |
+| Configurable | Expands to enabled child variants (`item_group_id` = parent SKU) |
+| Grouped | Expands to enabled associated products |
+| Bundle | Exported as the sellable parent offer |
+
+Currency for price fields is taken from the profile currency, then store currency (no hardcoded INR).
+
+---
+
+## Testing
+
+```bash
+vendor/bin/phpunit -c phpunit.xml
+```
+
+---
+
+## License
+
 MIT License. Created by Haerriz.

@@ -11,10 +11,83 @@ class FeedArtifact extends AbstractModel implements FeedArtifactInterface
         $this->_init(\Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedArtifact::class);
     }
 
-    public function setProfileId(int $id) { return $this->setData('profile_id', $id); }
-    public function setFilePath(string $path) { return $this->setData('file_path', $path); }
-    public function setFileSize(int $size) { return $this->setData('file_size', $size); }
-    public function setChecksum(string $checksum) { return $this->setData('checksum', $checksum); }
-    public function setExportedCount(int $count) { return $this->setData('exported_count', $count); }
-    public function setCreatedAt(string $time) { return $this->setData('created_at', $time); }
+    public function getId()
+    {
+        return $this->getData(self::ARTIFACT_ID);
+    }
+
+    public function setId($id)
+    {
+        return $this->setData(self::ARTIFACT_ID, $id);
+    }
+
+    public function getProfileId()
+    {
+        return $this->getData(self::PROFILE_ID);
+    }
+
+    public function setProfileId($profileId)
+    {
+        return $this->setData(self::PROFILE_ID, $profileId);
+    }
+
+    public function getJobId()
+    {
+        return $this->getData(self::JOB_ID);
+    }
+
+    public function setJobId($jobId)
+    {
+        return $this->setData(self::JOB_ID, $jobId);
+    }
+
+    public function getFilePath()
+    {
+        return $this->getData(self::FILE_PATH);
+    }
+
+    public function setFilePath($filePath)
+    {
+        return $this->setData(self::FILE_PATH, $filePath);
+    }
+
+    public function getChecksum()
+    {
+        return $this->getData(self::CHECKSUM);
+    }
+
+    public function setChecksum($checksum)
+    {
+        return $this->setData(self::CHECKSUM, $checksum);
+    }
+
+    public function getFileSize()
+    {
+        return $this->getData(self::FILE_SIZE);
+    }
+
+    public function setFileSize($fileSize)
+    {
+        return $this->setData(self::FILE_SIZE, $fileSize);
+    }
+
+    public function getExportedCount()
+    {
+        return $this->getData(self::EXPORTED_COUNT);
+    }
+
+    public function setExportedCount($exportedCount)
+    {
+        return $this->setData(self::EXPORTED_COUNT, $exportedCount);
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->getData(self::CREATED_AT);
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        return $this->setData(self::CREATED_AT, $createdAt);
+    }
 }

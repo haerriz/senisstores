@@ -19,6 +19,19 @@ class ProfileValidator
     }
 
     /**
+     * Throw when profile configuration is invalid.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function assertValid(FeedProfileInterface $profile): void
+    {
+        $errors = $this->validate($profile);
+        if ($errors) {
+            throw new \InvalidArgumentException(implode(' ', $errors));
+        }
+    }
+
+    /**
      * Validate a profile's configuration. Returns array of error strings.
      * FIX 17: Uses RowValidatorInterface::validate() for per-row schema validation.
      */
@@ -41,7 +54,7 @@ class ProfileValidator
             $errors[] = __('Filename must end in .xml, .csv, .jsonl, .txt, or .tsv.')->render();
         }
 
-        $cronExpr = trim((string)$profile->getCronExpr());
+        $cronExpr = trim((string)($profile->getCronExpression() ?: $profile->getData('cron_expr')));
         if ($cronExpr && !$this->isValidCronExpr($cronExpr)) {
             $errors[] = __('Invalid cron expression: "%1"', $cronExpr)->render();
         }

@@ -1,2 +1,4 @@
 /error_log
 /.phpunit.result.cache
+/.deploy-tools/
+/node_modules/

@@ -1,83 +1,109 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Controller\Adminhtml\Feed;
 
+use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterfaceFactory;
+use Haerriz\GoogleShoppingFeed\Model\PreviewService;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Haerriz\GoogleShoppingFeed\Model\FeedExporter;
-use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterfaceFactory;
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem;
 
-class PreviewAjax extends Action
+class PreviewAjax extends Action implements HttpPostActionInterface
 {
     const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::generate';
 
-    private $jsonFactory;
-    private $exporter;
-    private $profileFactory;
-    private $filesystem;
+    private JsonFactory $jsonFactory;
+    private PreviewService $previewService;
+    private FeedProfileInterfaceFactory $profileFactory;
 
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
-        FeedExporter $exporter,
-        FeedProfileInterfaceFactory $profileFactory,
-        Filesystem $filesystem
+        PreviewService $previewService,
+        FeedProfileInterfaceFactory $profileFactory
     ) {
         parent::__construct($context);
-        $this->jsonFactory    = $jsonFactory;
-        $this->exporter       = $exporter;
+        $this->jsonFactory = $jsonFactory;
+        $this->previewService = $previewService;
         $this->profileFactory = $profileFactory;
-        $this->filesystem     = $filesystem;
     }
 
     public function execute()
     {
         $result = $this->jsonFactory->create();
         $data = $this->getRequest()->getPostValue();
-        
+
         if (empty($data)) {
             return $result->setData(['success' => false, 'message' => 'No form data received.']);
         }
 
+        // UI form components often nest values under "data".
+        if (isset($data['data']) && is_array($data['data'])) {
+            $data = array_merge($data, $data['data']);
+        }
+
         try {
-            // Create a mock profile in memory using the unsaved form data
             $profile = $this->profileFactory->create();
-            foreach (['name','feed_type','store_id','filename','attributes_mapping_serialized','conditions_serialized'] as $field) {
-                if (isset($data[$field])) {
+            $fields = [
+                'profile_id',
+                'name',
+                'feed_type',
+                'store_id',
+                'currency',
+                'filename',
+                'status',
+                'attributes_mapping_serialized',
+                'conditions_serialized',
+                'delivery_type',
+                'price_includes_tax',
+                'include_tax',
+                'webhook_url',
+            ];
+            foreach ($fields as $field) {
+                if (array_key_exists($field, $data)) {
                     $profile->setData($field, $data[$field]);
                 }
             }
-            // Ensure basic defaults if empty
-            if (!$profile->getFeedType()) $profile->setFeedType('google_shopping_v1');
-            if (!$profile->getFilename()) $profile->setFilename('preview_' . time() . '.tmp');
 
-            // Generate a random temp filename in pub/media
-            $tempFile = 'haerriz_feed_preview_' . uniqid() . '.tmp';
-            
-            // Limit to 5 products for speed
-            $this->exporter->export($profile, $tempFile, null, 5);
-
-            // Read the generated file contents
-            $directory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
-            $content = '';
-            if ($directory->isFile($tempFile)) {
-                $content = $directory->readFile($tempFile);
-                // Clean up the temp file
-                $directoryWrite = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
-                $directoryWrite->delete($tempFile);
+            if (!empty($data['entity_id']) && !$profile->getId()) {
+                $profile->setId((int)$data['entity_id']);
             }
+            if (!empty($data['profile_id']) && !$profile->getId()) {
+                $profile->setId((int)$data['profile_id']);
+            }
+
+            if (!$profile->getFeedType()) {
+                $profile->setFeedType('google_shopping_v1');
+            }
+            if (!$profile->getFilename()) {
+                $profile->setFilename('preview_' . time() . '.xml');
+            }
+            if (!$profile->getDeliveryType()) {
+                $profile->setDeliveryType('local');
+            }
+
+            $dryRunChanged = (string)$this->getRequest()->getParam('dry_run_changed', $data['dry_run_changed'] ?? '0') === '1';
+            $preview = $this->previewService->preview($profile, 5, [
+                'dry_run_changed' => $dryRunChanged,
+            ]);
 
             return $result->setData([
                 'success' => true,
-                'content' => $content
+                'content' => $preview['content'] !== ''
+                    ? $preview['content']
+                    : 'No products found for the current mapping/filters.',
+                'counts' => $preview['counts'] ?? [],
+                'row_count' => $preview['row_count'] ?? 0,
+                'format' => $preview['format'] ?? 'xml',
+                'channel' => $preview['channel'] ?? $profile->getFeedType(),
+                'field_errors' => $preview['field_errors'] ?? [],
+                'completeness' => $preview['completeness'] ?? [],
+                'dry_run_changed' => $dryRunChanged,
             ]);
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return $result->setHttpResponseCode(500)->setData([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }

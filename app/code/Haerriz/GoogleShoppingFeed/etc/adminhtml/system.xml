@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="haerriz" translate="label" sortOrder="200">
-            <label>HAERRIZ</label>
+        <tab id="haerriz_extensions" translate="label" sortOrder="200">
+            <label>Haerriz Extensions</label>
         </tab>
         <section id="haerriz_googleshoppingfeed" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
             <label>Product Feed</label>
-            <tab>haerriz</tab>
+            <tab>haerriz_extensions</tab>
             <resource>Haerriz_GoogleShoppingFeed::config</resource>
             
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -19,6 +19,42 @@
                 <field id="cli_php_path" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>CLI PHP Executable Path</label>
                     <comment>Path to CLI PHP binary (e.g. /usr/bin/php)</comment>
+                </field>
+            </group>
+
+            <group id="logging" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Logging</label>
+                <field id="debug" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Debug Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Writes verbose feed generation diagnostics to Magento logs. Disable in production unless troubleshooting.</comment>
+                </field>
+            </group>
+
+            <group id="alerts" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Health Alerts</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Failure Alerts</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Send alerts when a profile reaches the consecutive failure threshold.</comment>
+                </field>
+                <field id="threshold" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Consecutive Failure Threshold</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Alert after this many consecutive failed runs (default 3).</comment>
+                </field>
+                <field id="email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Alert Email</label>
+                    <validate>validate-email</validate>
+                    <comment>Recipient for failure alert emails.</comment>
+                </field>
+                <field id="slack_webhook_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Slack / Webhook URL</label>
+                    <comment>Optional HTTPS webhook endpoint for failure alerts (Slack incoming webhook supported).</comment>
+                </field>
+                <field id="delivery_webhook_url" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Webhook URL</label>
+                    <comment>Optional global HTTPS webhook called after successful feed delivery. Profiles may override via webhook_url.</comment>
                 </field>
             </group>
 

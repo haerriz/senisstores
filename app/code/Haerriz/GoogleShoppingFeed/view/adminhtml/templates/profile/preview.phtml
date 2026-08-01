@@ -4,18 +4,61 @@ $previewUrl = $block->getUrl('*/*/previewAjax');
 ?>
 <!-- Inject the "Preview Feed" button dynamically next to the Save buttons using JS -->
 <div id="feed-preview-container" data-bind="scope: 'feedPreview'">
-    <div id="feed-preview-modal" style="display:none;" title="<?= __('Live Feed Preview (5 Items)') ?>">
+    <div id="feed-preview-modal" style="display:none;" title="<?= $block->escapeHtmlAttr(__('Live Feed Preview (5 Items)')) ?>">
         <div data-bind="visible: isLoading" style="text-align:center; padding: 40px;">
             <div class="spinner"></div>
-            <p><?= __('Generating preview in memory based on your current mapping...') ?></p>
+            <p><?= $block->escapeHtml(__('Generating preview in memory based on your current mapping...')) ?></p>
         </div>
-        
-        <div data-bind="visible: !isLoading() && !hasError()">
+
+        <div data-bind="visible: !isLoading() && !hasError()" style="padding: 0 10px 10px;">
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                <input type="checkbox" data-bind="checked: dryRunChanged"/>
+                <span><?= $block->escapeHtml(__('Only changed since last job')) ?></span>
+            </label>
+
+            <div class="preview-stats" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+                <span class="preview-chip" style="background:#e8f4fd; color:#005c99; padding:4px 10px; border-radius:12px; font-size:12px;">
+                    <?= $block->escapeHtml(__('Rows')) ?>: <strong data-bind="text: rowCount"></strong>
+                </span>
+                <span class="preview-chip" style="background:#f3f3f3; color:#333; padding:4px 10px; border-radius:12px; font-size:12px;">
+                    <?= $block->escapeHtml(__('Format')) ?>: <strong data-bind="text: format"></strong>
+                </span>
+                <span class="preview-chip" style="background:#f3f3f3; color:#333; padding:4px 10px; border-radius:12px; font-size:12px;">
+                    <?= $block->escapeHtml(__('Channel')) ?>: <strong data-bind="text: channel"></strong>
+                </span>
+                <span class="preview-chip" style="background:#fff4e5; color:#8a5a00; padding:4px 10px; border-radius:12px; font-size:12px;">
+                    <?= $block->escapeHtml(__('Errors')) ?>: <strong data-bind="text: fieldErrors().length"></strong>
+                </span>
+                <span class="preview-chip" style="background:#e8f5e9; color:#1b5e20; padding:4px 10px; border-radius:12px; font-size:12px;">
+                    <?= $block->escapeHtml(__('Completeness')) ?>: <strong data-bind="text: completenessScore"></strong>%
+                </span>
+            </div>
+
+            <div data-bind="visible: fieldErrors().length > 0" style="margin-bottom:14px;">
+                <h4 style="margin:0 0 8px;"><?= $block->escapeHtml(__('Field Errors')) ?></h4>
+                <table class="data-grid" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('SKU')) ?></th>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('Field')) ?></th>
+                            <th class="data-grid-th"><?= $block->escapeHtml(__('Message')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: fieldErrors">
+                        <tr>
+                            <td style="padding:8px; border-bottom:1px solid #eee;" data-bind="text: sku"></td>
+                            <td style="padding:8px; border-bottom:1px solid #eee;" data-bind="text: field"></td>
+                            <td style="padding:8px; border-bottom:1px solid #eee; color:#d32f2f;" data-bind="text: message"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto; max-height: 500px;"><code data-bind="text: previewContent"></code></pre>
         </div>
-        
+
         <div data-bind="visible: hasError" style="color: #e02b27; padding: 20px; background: #fae5e5; border: 1px solid #e02b27; border-radius: 4px;">
-            <strong><?= __('Preview Failed:') ?></strong>
+            <strong><?= $block->escapeHtml(__('Preview Failed:')) ?></strong>
             <span data-bind="text: errorMessage"></span>
         </div>
     </div>
@@ -28,7 +71,7 @@ $previewUrl = $block->getUrl('*/*/previewAjax');
             "components": {
                 "feedPreview": {
                     "component": "Haerriz_GoogleShoppingFeed/js/components/preview-modal",
-                    "previewUrl": "<?= $previewUrl ?>"
+                    "previewUrl": "<?= $block->escapeJs($previewUrl) ?>"
                 }
             }
         }

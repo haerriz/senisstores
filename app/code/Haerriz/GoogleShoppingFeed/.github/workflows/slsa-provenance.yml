@@ -1,0 +1,45 @@
+name: SLSA generic generator
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      digests: ${{ steps.hash.outputs.digests }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ========================================================
+      # Build your artifacts
+      # ========================================================
+      - name: Build artifacts
+        run: |
+          # Build a release package for Magento 2 module
+          tar -czf release-artifact.tar.gz -C . .
+
+      # ========================================================
+      # Generate hashes for SLSA provenance
+      # ========================================================
+      - name: Generate subject for provenance
+        id: hash
+        run: |
+          set -euo pipefail
+          # List the artifacts you built
+          sha256sum release-artifact.tar.gz > checksums.txt
+          base64 -w0 checksums.txt > checksums.txt.b64
+          echo "digests=$(cat checksums.txt.b64)" >> "$GITHUB_OUTPUT"
+
+  provenance:
+    needs: [build]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.digests }}"
+      upload-assets: true

@@ -10,10 +10,10 @@ use Magento\Framework\Controller\ResultFactory;
 
 class Preview extends Action implements HttpGetActionInterface
 {
-    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::preview';
+    const ADMIN_RESOURCE = 'Haerriz_GoogleShoppingFeed::generate';
 
-    private $repository;
-    private $previewService;
+    private FeedProfileRepositoryInterface $repository;
+    private PreviewService $previewService;
 
     public function __construct(
         Context $context,
@@ -28,52 +28,72 @@ class Preview extends Action implements HttpGetActionInterface
     public function execute()
     {
         $id = (int)$this->getRequest()->getParam('id');
+        if ($id <= 0) {
+            return $this->errorResponse('Missing or invalid profile id.');
+        }
+
         try {
             $profile = $this->repository->getById($id);
             $sampleRows = $this->previewService->buildSample($profile, 10);
-            
-            $ext = strtolower(pathinfo($profile->getFilename(), PATHINFO_EXTENSION));
-            if ($ext === 'csv' || $ext === 'tsv') {
+            $ext = strtolower((string)pathinfo((string)$profile->getFilename(), PATHINFO_EXTENSION));
+
+            if (in_array($ext, ['csv', 'tsv', 'txt'], true)) {
                 $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
+                $delimiter = $ext === 'tsv' ? "\t" : ',';
                 $response->setHeader('Content-Type', 'text/plain; charset=UTF-8');
-                if (!empty($sampleRows)) {
-                    $output = implode(',', array_keys($sampleRows[0])) . "\n";
-                    foreach ($sampleRows as $row) {
-                        $output .= implode(',', array_map(function($v) { return '"' . str_replace('"', '""', (string)$v) . '"'; }, $row)) . "\n";
-                    }
-                    $response->setContents($output);
-                } else {
-                    $response->setContents("No product sample rows available.");
+                if (!$sampleRows) {
+                    $response->setContents('No product sample rows available.');
+                    return $response;
                 }
-                return $response;
-            } elseif ($ext === 'jsonl' || $ext === 'json') {
-                $response = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-                $response->setData(['status' => 'success', 'profile' => $profile->getName(), 'rows' => $sampleRows]);
-                return $response;
-            } else {
-                // XML format default
-                $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
-                $response->setHeader('Content-Type', 'text/xml; charset=UTF-8');
-                $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\" xmlns:g=\"http://base.google.com/ns/1.0\">\n<channel>\n";
-                $xml .= "<title>" . htmlspecialchars($profile->getName()) . "</title>\n";
+                $output = implode($delimiter, array_keys($sampleRows[0])) . "\n";
                 foreach ($sampleRows as $row) {
-                    $xml .= "  <item>\n";
-                    foreach ($row as $k => $v) {
-                        $tag = htmlspecialchars($k);
-                        $val = htmlspecialchars((string)$v);
-                        $xml .= "    <{$tag}>{$val}</{$tag}>\n";
-                    }
-                    $xml .= "  </item>\n";
+                    $output .= implode($delimiter, array_map(static function ($v) {
+                        return '"' . str_replace('"', '""', (string)$v) . '"';
+                    }, $row)) . "\n";
                 }
-                $xml .= "</channel>\n</rss>";
-                $response->setContents($xml);
+                $response->setContents($output);
                 return $response;
             }
-        } catch (\Exception $e) {
+
+            if (in_array($ext, ['jsonl', 'json'], true)) {
+                $response = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+                $response->setData([
+                    'status' => 'success',
+                    'profile' => $profile->getName(),
+                    'count' => count($sampleRows),
+                    'rows' => $sampleRows,
+                ]);
+                return $response;
+            }
+
             $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
-            $response->setHeader('Content-Type', 'text/plain; charset=UTF-8');
-            $response->setContents("Error generating quick view preview: " . $e->getMessage());
+            $response->setHeader('Content-Type', 'text/xml; charset=UTF-8');
+            $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            $xml .= "<rss version=\"2.0\" xmlns:g=\"http://base.google.com/ns/1.0\">\n<channel>\n";
+            $xml .= '<title>' . htmlspecialchars((string)$profile->getName(), ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</title>\n";
+            foreach ($sampleRows as $row) {
+                $xml .= "  <item>\n";
+                foreach ($row as $k => $v) {
+                    $tag = preg_replace('/[^A-Za-z0-9_:\-.]/', '', (string)$k) ?: 'field';
+                    $val = htmlspecialchars((string)$v, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                    $xml .= "    <{$tag}>{$val}</{$tag}>\n";
+                }
+                $xml .= "  </item>\n";
+            }
+            $xml .= "</channel>\n</rss>";
+            $response->setContents($xml);
             return $response;
+        } catch (\Throwable $e) {
+            return $this->errorResponse('Error generating quick view preview: ' . $e->getMessage());
         }
+    }
+
+    private function errorResponse(string $message)
+    {
+        $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
+        $response->setHeader('Content-Type', 'text/plain; charset=UTF-8');
+        $response->setHttpResponseCode(400);
+        $response->setContents($message);
+        return $response;
     }
 }

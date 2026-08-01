@@ -18,8 +18,12 @@ class Scheduler
             return false;
         }
 
-        $cronExpr = (string)$profile->getCronExpr();
-        if (empty($cronExpr)) {
+        $cronExpr = (string)(
+            (method_exists($profile, 'getCronExpression') ? $profile->getCronExpression() : null)
+            ?: $profile->getData('cron_expression')
+            ?: $profile->getData('cron_expr')
+        );
+        if ($cronExpr === '') {
             return false;
         }
 

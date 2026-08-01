@@ -133,4 +133,12 @@ class FeedProfileRepository implements FeedProfileRepositoryInterface
     {
         return $this->delete($this->getById($id));
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function create()
+    {
+        return $this->profileFactory->create();
+    }
 }

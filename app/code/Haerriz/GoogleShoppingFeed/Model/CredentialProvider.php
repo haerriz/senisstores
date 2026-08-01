@@ -3,13 +3,13 @@ namespace Haerriz\GoogleShoppingFeed\Model;
 
 use Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface;
 use Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface;
-use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 
 class CredentialProvider implements CredentialProviderInterface
 {
-    private $encryptor;
-    private $scopeConfig;
+    private EncryptorInterface $encryptor;
+    private ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         EncryptorInterface $encryptor,
@@ -19,41 +19,33 @@ class CredentialProvider implements CredentialProviderInterface
         $this->scopeConfig = $scopeConfig;
     }
 
-    public function getDecryptedPassword(FeedProfileInterface $profile): string
-    {
-        $encrypted = $profile->getDeliveryPassword();
-        if (!$encrypted) {
-            return '';
-        }
-        return $this->encryptor->decrypt($encrypted);
-    }
-
     public function encrypt($secret)
     {
-        if (empty($secret)) {
+        if ($secret === null || $secret === '') {
             return '';
         }
-        return $this->encryptor->encrypt($secret);
+        return $this->encryptor->encrypt((string)$secret);
     }
 
     public function decrypt($encryptedSecret)
     {
-        if (empty($encryptedSecret)) {
+        if ($encryptedSecret === null || $encryptedSecret === '') {
             return '';
         }
-        return $this->encryptor->decrypt($encryptedSecret);
+        return $this->encryptor->decrypt((string)$encryptedSecret);
     }
 
-    public function getConfigSecret($path, $scopeType = \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    public function getConfigSecret($path, $scopeType = 'default', $scopeCode = null)
     {
-        $value = $this->scopeConfig->getValue($path, $scopeType, $scopeCode);
-        if (empty($value)) {
+        $encrypted = $this->scopeConfig->getValue($path, $scopeType, $scopeCode);
+        if ($encrypted === null || $encrypted === '') {
             return '';
         }
-        // Config secrets might not be encrypted in standard getValue if there's no backend model,
-        // but if they are encrypted by the backend model, getValue might return the encrypted string
-        // or the decrypted string based on Magento version/config. 
-        // We will try decrypting it.
-        return $this->encryptor->decrypt($value);
+        return $this->encryptor->decrypt((string)$encrypted);
+    }
+
+    public function getDecryptedPassword(FeedProfileInterface $profile): string
+    {
+        return $this->decrypt($profile->getDeliveryPassword());
     }
 }

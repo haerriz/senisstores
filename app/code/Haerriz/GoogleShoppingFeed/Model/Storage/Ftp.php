@@ -62,7 +62,7 @@ class Ftp implements AdapterInterface
                 'user' => $profile->getDeliveryUsername(),
                 'password' => $decryptedPassword,
                 'passive' => (bool)$profile->getData('ftp_passive'),
-                'timeout' => max(1, (int)$profile->getData('delivery_timeout'))
+                'timeout' => max(10, (int)($profile->getData('delivery_timeout') ?: 10))
             ];
 
             if (!$this->ftpIo->open($config)) {
@@ -104,7 +104,7 @@ class Ftp implements AdapterInterface
                 'user' => $profile->getDeliveryUsername(),
                 'password' => $password,
                 'passive' => (bool)$profile->getData('ftp_passive'),
-                'timeout' => max(1, (int)$profile->getData('delivery_timeout')),
+                'timeout' => max(10, (int)($profile->getData('delivery_timeout') ?: 10)),
             ]);
             $opened = true;
             $path = (string)$profile->getDeliveryPath();

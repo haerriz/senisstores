@@ -2,9 +2,10 @@
 namespace Haerriz\GoogleShoppingFeed\Model\Cron;
 
 use Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface;
+use Haerriz\GoogleShoppingFeed\Model\Alert\FailureAlerter;
 use Haerriz\GoogleShoppingFeed\Model\FeedExporter;
-use Haerriz\GoogleShoppingFeed\Model\FeedJobRepository;
 use Haerriz\GoogleShoppingFeed\Model\FeedJobFactory;
+use Haerriz\GoogleShoppingFeed\Model\FeedJobRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Psr\Log\LoggerInterface;
 
@@ -17,6 +18,7 @@ class Dispatcher
     private $jobRepository;
     private $jobFactory;
     private $logger;
+    private FailureAlerter $failureAlerter;
 
     public function __construct(
         FeedProfileRepositoryInterface $repository,
@@ -25,7 +27,8 @@ class Dispatcher
         Scheduler $scheduler,
         FeedJobRepository $jobRepository,
         FeedJobFactory $jobFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FailureAlerter $failureAlerter
     ) {
         $this->repository = $repository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -34,6 +37,7 @@ class Dispatcher
         $this->jobRepository = $jobRepository;
         $this->jobFactory = $jobFactory;
         $this->logger = $logger;
+        $this->failureAlerter = $failureAlerter;
     }
 
     public function dispatch()
@@ -55,6 +59,7 @@ class Dispatcher
                 continue;
             }
 
+            $job = null;
             try {
                 $outputPath = 'pub/media/' . $profile->getFilename();
                 $job = $this->jobFactory->create();
@@ -70,6 +75,9 @@ class Dispatcher
                 $job->setFinishedAt(date('Y-m-d H:i:s'));
                 $this->jobRepository->save($job);
 
+                $profile->setConsecutiveFailures(0);
+                $this->repository->save($profile);
+
                 $this->logger->info(sprintf(
                     'GoogleShoppingFeed: Profile #%d "%s" exported %d products.',
                     $profile->getId(),
@@ -78,17 +86,27 @@ class Dispatcher
                 ));
                 $dispatched++;
             } catch (\Exception $e) {
+                $failures = (int)$profile->getConsecutiveFailures() + 1;
+                $profile->setConsecutiveFailures($failures);
+                try {
+                    $this->repository->save($profile);
+                } catch (\Throwable $saveEx) {
+                    $this->logger->debug('Could not persist consecutive_failures: ' . $saveEx->getMessage());
+                }
+
                 $this->logger->error(sprintf(
                     'GoogleShoppingFeed: Profile #%d "%s" failed: %s',
                     $profile->getId(),
                     $profile->getName(),
                     $e->getMessage()
                 ));
-                if (isset($job)) {
+                if ($job) {
                     $job->setStatus('error');
                     $job->setFinishedAt(date('Y-m-d H:i:s'));
                     $this->jobRepository->save($job);
                 }
+
+                $this->failureAlerter->maybeAlert($profile, $e->getMessage());
             }
         }
 

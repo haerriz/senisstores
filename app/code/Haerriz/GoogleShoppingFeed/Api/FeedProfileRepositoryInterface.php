@@ -51,4 +51,11 @@ interface FeedProfileRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function deleteById($id);
+
+    /**
+     * Create a new empty feed profile entity.
+     *
+     * @return FeedProfileInterface
+     */
+    public function create();
 }

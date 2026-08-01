@@ -1,15 +1,14 @@
 <?php
 namespace Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedArtifact;
 
+use Haerriz\GoogleShoppingFeed\Model\FeedArtifact as Model;
+use Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedArtifact as ResourceModel;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 class Collection extends AbstractCollection
 {
     protected function _construct()
     {
-        $this->_init(
-            \Haerriz\GoogleShoppingFeed\Model\FeedArtifact::class,
-            \Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedArtifact::class
-        );
+        $this->_init(Model::class, ResourceModel::class);
     }
 }

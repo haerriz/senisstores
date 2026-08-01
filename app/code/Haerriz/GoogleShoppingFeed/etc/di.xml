@@ -11,10 +11,12 @@
     <preference for="Haerriz\GoogleShoppingFeed\Api\ProductTypeResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\ProductTypeResolver" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\ProductValueResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\ProductValueResolver" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface" type="Haerriz\GoogleShoppingFeed\Model\CredentialProvider" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\RowValidatorInterface" type="Haerriz\GoogleShoppingFeed\Model\Validation\GoogleShoppingRowValidator" />
 
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedProfile" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedJob" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedLog" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedRemoteStateInterface" type="Haerriz\GoogleShoppingFeed\Model\FeedRemoteState" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedProfileSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedJobSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="Haerriz\GoogleShoppingFeed\Api\Data\FeedLogSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
@@ -32,7 +34,7 @@
     <preference for="Haerriz\GoogleShoppingFeed\Api\OfferIdentityResolverInterface" type="Haerriz\GoogleShoppingFeed\Model\Product\OfferIdentityResolver" />
 
     <!-- TaxonomyRepository: wired into Taxonomy\Mapping for search() fallback -->
-    <preference for="Haerriz\GoogleShoppingFeed\Api\TaxonomyRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\Taxonomy\Repository" />
+    <preference for="Haerriz\GoogleShoppingFeed\Api\TaxonomyRepositoryInterface" type="Haerriz\GoogleShoppingFeed\Model\Taxonomy\TaxonomyRepository" />
 
     <!-- Preset value object for FeedTemplateInterface -->
     <preference for="Haerriz\GoogleShoppingFeed\Api\FeedTemplateInterface" type="Haerriz\GoogleShoppingFeed\Model\Template\Preset" />
@@ -140,5 +142,4 @@
         </arguments>
     </type>
 
-    <preference for="Haerriz\GoogleShoppingFeed\Api\RowValidatorInterface" type="Haerriz\GoogleShoppingFeed\Model\Validation\GoogleShoppingRowValidator" />
 </config>

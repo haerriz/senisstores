@@ -7,6 +7,7 @@ use Haerriz\GoogleShoppingFeed\Api\ProductProviderInterface;
 use Haerriz\GoogleShoppingFeed\Api\ProductTypeResolverInterface;
 use Haerriz\GoogleShoppingFeed\Model\Artifact\ArtifactManager;
 use Haerriz\GoogleShoppingFeed\Model\Artifact\CurrentArtifactPublisher;
+use Haerriz\GoogleShoppingFeed\Model\Delivery\WebhookNotifier;
 use Haerriz\GoogleShoppingFeed\Model\Mapping\RowBuilder;
 use Haerriz\GoogleShoppingFeed\Model\ResourceModel\FeedJob as JobResource;
 use Haerriz\GoogleShoppingFeed\Model\Storage\AdapterPool;
@@ -32,6 +33,7 @@ class FeedExporter
     private $feedLogHandler;
     private $eligibilityPolicy;
     private $logger;
+    private WebhookNotifier $webhookNotifier;
 
     public function __construct(
         Filesystem $filesystem,
@@ -46,7 +48,8 @@ class FeedExporter
         CurrentArtifactPublisher $artifactPublisher,
         FeedLogHandler $feedLogHandler,
         ProductEligibilityPolicyInterface $eligibilityPolicy,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        WebhookNotifier $webhookNotifier
     ) {
         $this->filesystem          = $filesystem;
         $this->productProvider     = $productProvider;
@@ -61,6 +64,7 @@ class FeedExporter
         $this->feedLogHandler      = $feedLogHandler;
         $this->eligibilityPolicy   = $eligibilityPolicy;
         $this->logger              = $logger;
+        $this->webhookNotifier     = $webhookNotifier;
     }
 
     public function export(FeedProfileInterface $profile, $outputPath, FeedJob $job = null, $limit = null)
@@ -176,10 +180,13 @@ class FeedExporter
         // Publish artifact pointer — uses CurrentArtifactPublisher::publish()
         $this->artifactPublisher->publish($profile, $absolutePath);
 
+        $exportResult = compact('selected', 'processed', 'exported', 'skipped', 'ineligible', 'invalid', 'warnings', 'fileSize', 'checksum', 'duration');
+
         // Deliver via adapter — uses AdapterPool::deliver()
         try {
             $this->adapterPool->deliver($profile, $absolutePath);
             $this->feedLogHandler->log($job, 'info', "Delivery completed via adapter [{$profile->getDeliveryType()}]");
+            $this->webhookNotifier->notify($profile, $exportResult);
         } catch (\Exception $deliveryEx) {
             $this->logger->warning("GoogleShoppingFeed: Delivery failed [{$profile->getName()}]: " . $deliveryEx->getMessage());
             $this->feedLogHandler->log($job, 'warning', "Delivery failed: " . $deliveryEx->getMessage());
@@ -188,7 +195,7 @@ class FeedExporter
         $this->feedLogHandler->log($job, 'info', "Export complete: exported={$exported}, skipped={$skipped}, ineligible={$ineligible}, warnings={$warnings}, size={$fileSize}B, duration={$duration}s, sha256={$checksum}");
         $this->logger->info("GoogleShoppingFeed [{$profile->getName()}]: exported={$exported} products, size={$fileSize}B, duration={$duration}s");
 
-        return compact('selected', 'processed', 'exported', 'skipped', 'ineligible', 'invalid', 'warnings', 'fileSize', 'checksum', 'duration');
+        return $exportResult;
     }
 
     private function createRule(FeedProfileInterface $profile)

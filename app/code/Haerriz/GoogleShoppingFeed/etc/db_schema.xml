@@ -95,15 +95,21 @@
 
     <table name="haerriz_google_shopping_feed_artifact" resource="default" engine="innodb" comment="Feed Artifacts Metadata">
         <column xsi:type="int" name="artifact_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Artifact ID"/>
-        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="false" comment="Job ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="true" comment="Profile ID"/>
+        <column xsi:type="int" name="job_id" padding="10" unsigned="true" nullable="true" comment="Job ID"/>
         <column xsi:type="varchar" name="file_path" nullable="false" length="512" comment="File Path"/>
         <column xsi:type="varchar" name="checksum" nullable="true" length="64" comment="Checksum"/>
         <column xsi:type="bigint" name="file_size" unsigned="true" nullable="false" default="0" comment="File Size"/>
+        <column xsi:type="int" name="exported_count" padding="10" unsigned="true" nullable="false" default="0" comment="Exported Count"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="artifact_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_ARTIFACT_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_artifact" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_ARTIFACT_PROFILE_ID_PROFILE_PROFILE_ID" table="haerriz_google_shopping_feed_artifact" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_ARTIFACT_JOB_ID_JOB_JOB_ID" table="haerriz_google_shopping_feed_artifact" column="job_id" referenceTable="haerriz_google_shopping_feed_job" referenceColumn="job_id" onDelete="SET NULL"/>
+        <index referenceId="HAERRIZ_GSF_ARTIFACT_PROFILE_ID" indexType="btree">
+            <column name="profile_id"/>
+        </index>
     </table>
 
     <table name="haerriz_google_shopping_feed_job_item" resource="default" engine="innodb" comment="Feed Job Item Diagnostics">
@@ -122,16 +128,21 @@
 
     <table name="haerriz_google_shopping_feed_remote_state" resource="default" engine="innodb" comment="Merchant API Remote Synchronization State">
         <column xsi:type="int" name="state_id" padding="10" unsigned="true" nullable="false" identity="true" comment="State ID"/>
-        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" comment="Profile ID"/>
-        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="true" comment="Profile ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" default="0" comment="Product ID"/>
         <column xsi:type="varchar" name="offer_id" nullable="false" length="128" comment="Merchant Offer ID"/>
         <column xsi:type="varchar" name="sync_status" nullable="false" length="32" default="synced" comment="Sync Status"/>
         <column xsi:type="varchar" name="payload_hash" nullable="true" length="64" comment="Payload Hash"/>
+        <column xsi:type="text" name="issues" nullable="true" comment="Merchant Item Issues JSON"/>
+        <column xsi:type="timestamp" name="synced_at" on_update="false" nullable="true" comment="Last Merchant Sync Time"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="state_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_REMOTE_PROFILE_ID" table="haerriz_google_shopping_feed_remote_state" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_GSF_REMOTE_PROFILE_ID" table="haerriz_google_shopping_feed_remote_state" column="profile_id" referenceTable="haerriz_google_shopping_feed_profile" referenceColumn="profile_id" onDelete="SET NULL"/>
+        <index referenceId="HAERRIZ_GSF_REMOTE_OFFER_ID" indexType="btree">
+            <column name="offer_id"/>
+        </index>
     </table>
 
     <table name="haerriz_google_shopping_feed_taxonomy" resource="default" engine="innodb" comment="Imported Google Taxonomy Categories">

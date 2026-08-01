@@ -98,15 +98,21 @@
     "haerriz_google_shopping_feed_artifact": {
         "column": {
             "artifact_id": true,
+            "profile_id": true,
             "job_id": true,
             "file_path": true,
             "checksum": true,
             "file_size": true,
+            "exported_count": true,
             "created_at": true
+        },
+        "index": {
+            "HAERRIZ_GSF_ARTIFACT_PROFILE_ID": true
         },
         "constraint": {
             "PRIMARY": true,
-            "FK_5C2B1A165C1DCD7131836713A74B64B1": true
+            "HAERRIZ_GSF_ARTIFACT_PROFILE_ID_PROFILE_PROFILE_ID": true,
+            "HAERRIZ_GSF_ARTIFACT_JOB_ID_JOB_JOB_ID": true
         }
     },
     "haerriz_google_shopping_feed_job_item": {
@@ -132,6 +138,8 @@
             "offer_id": true,
             "sync_status": true,
             "payload_hash": true,
+            "issues": true,
+            "synced_at": true,
             "updated_at": true
         },
         "constraint": {
