@@ -12,34 +12,14 @@ use Psr\Log\LoggerInterface;
 
 class MerchantClientV1
 {
-    const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/google_merchant_api/merchant_id';
-    const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/google_merchant_api/service_account_json';
+    public const XML_PATH_MERCHANT_ID = 'haerriz_googleshoppingfeed/google_merchant_api/merchant_id';
+    public const XML_PATH_SERVICE_ACCOUNT_JSON = 'haerriz_googleshoppingfeed/google_merchant_api/service_account_json';
 
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
+    protected ScopeConfigInterface $scopeConfig;
+    protected CredentialProviderInterface $encryptor;
+    private Sanitizer $sanitizer;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var CredentialProviderInterface
-     */
-    protected $encryptor;
-
-    /**
-     * @var Sanitizer
-     */
-    private $sanitizer;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @param ScopeConfigInterface $scopeConfig
-     * @param EncryptorInterface $encryptor
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CredentialProviderInterface $credentialProvider,
@@ -52,73 +32,30 @@ class MerchantClientV1
         $this->sanitizer = $sanitizer;
     }
 
-    /**
-     * Get configured Merchant ID
-     *
-     * @return string
-     */
     public function getMerchantId()
     {
         return $this->scopeConfig->getValue(self::XML_PATH_MERCHANT_ID);
     }
 
-    /**
-     * Initialize Products Service Client
-     *
-     * @return ProductInputsServiceClient
-     * @throws \Exception
-     */
     public function getProductsClient()
     {
-        $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
-        if (!$jsonKey) {
-            throw new \Exception("Google Merchant API Service Account JSON is not configured.");
-        }
-
-        $credentials = new ServiceAccountCredentials(
-            'https://www.googleapis.com/auth/content',
-            json_decode($jsonKey, true)
-        );
-
         return new ProductInputsServiceClient([
-            'credentials' => $credentials
+            'credentials' => $this->createCredentials()
         ]);
     }
 
-    /**
-     * Initialize Data Sources Service Client
-     *
-     * @return DataSourcesServiceClient
-     * @throws \Exception
-     */
     public function getDataSourcesClient()
     {
-        $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
-        if (!$jsonKey) {
-            throw new \Exception("Google Merchant API Service Account JSON is not configured.");
-        }
-
-        $credentials = new ServiceAccountCredentials(
-            'https://www.googleapis.com/auth/content',
-            json_decode($jsonKey, true)
-        );
-
         return new DataSourcesServiceClient([
-            'credentials' => $credentials
+            'credentials' => $this->createCredentials()
         ]);
     }
 
-    /**
-     * Test connection/permission settings
-     *
-     * @return bool
-     */
     public function testConnection()
     {
         try {
             $client = $this->getDataSourcesClient();
             $parent = 'accounts/' . $this->getMerchantId();
-            // Call simple API list data sources to verify permissions
             $request = new ListDataSourcesRequest();
             $request->setParent($parent);
             $client->listDataSources($request);
@@ -133,21 +70,16 @@ class MerchantClientV1
 
     public function listProducts(string $merchantId): array
     {
-        $parent = 'accounts/' . $merchantId;
+        $parent = 'accounts/' . ltrim($merchantId, '/');
+        if (!str_starts_with($parent, 'accounts/')) {
+            $parent = 'accounts/' . $merchantId;
+        }
+
         $productsServiceClass = '\\Google\\Shopping\\Merchant\\Products\\V1\\Client\\ProductsServiceClient';
         $listRequestClass = '\\Google\\Shopping\\Merchant\\Products\\V1\\ListProductsRequest';
 
-        // Prefer ProductsServiceClient::listProducts when the installed library provides it.
         if (class_exists($productsServiceClass) && class_exists($listRequestClass)) {
-            $jsonKey = $this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON);
-            if (!$jsonKey) {
-                throw new \RuntimeException('Google Merchant API Service Account JSON is not configured.');
-            }
-            $credentials = new ServiceAccountCredentials(
-                'https://www.googleapis.com/auth/content',
-                json_decode($jsonKey, true)
-            );
-            $client = new $productsServiceClass(['credentials' => $credentials]);
+            $client = new $productsServiceClass(['credentials' => $this->createCredentials()]);
             $request = new $listRequestClass();
             if (method_exists($request, 'setParent')) {
                 $request->setParent($parent);
@@ -199,20 +131,70 @@ class MerchantClientV1
         return ['inserted' => $inserted];
     }
 
+    private function createCredentials(): ServiceAccountCredentials
+    {
+        return new ServiceAccountCredentials(
+            'https://www.googleapis.com/auth/content',
+            $this->getServiceAccountKeyArray()
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getServiceAccountKeyArray(): array
+    {
+        $candidates = [];
+
+        $decrypted = trim((string)$this->encryptor->getConfigSecret(self::XML_PATH_SERVICE_ACCOUNT_JSON));
+        if ($decrypted !== '') {
+            $candidates[] = $decrypted;
+        }
+
+        // Fallback: value may have been saved as plain JSON (not encrypted).
+        $raw = trim((string)$this->scopeConfig->getValue(self::XML_PATH_SERVICE_ACCOUNT_JSON));
+        if ($raw !== '' && $raw !== $decrypted) {
+            $candidates[] = $raw;
+        }
+
+        foreach ($candidates as $json) {
+            $decoded = json_decode($json, true);
+            if (!is_array($decoded)) {
+                continue;
+            }
+            if (empty($decoded['client_email']) || empty($decoded['private_key'])) {
+                continue;
+            }
+            return $decoded;
+        }
+
+        throw new \RuntimeException(
+            'Service account JSON is missing or invalid. '
+            . 'Paste the full Google Cloud service-account JSON (must include client_email and private_key) '
+            . 'under Stores > Configuration > Haerriz Google Shopping Feed > Google Merchant API, then save config.'
+        );
+    }
+
     private function normalizeProductList($response): array
     {
         $products = [];
         $items = method_exists($response, 'iterateAllElements') ? $response->iterateAllElements() : $response;
+        if (!is_iterable($items)) {
+            return [];
+        }
+
         foreach ($items as $item) {
             if (is_array($item)) {
                 $products[] = $item;
                 continue;
             }
             $products[] = [
-                'offerId' => method_exists($item, 'getOfferId') ? $item->getOfferId() : '',
-                'status' => method_exists($item, 'getStatus') ? $item->getStatus() : '',
-                'approvalStatus' => method_exists($item, 'getApprovalStatus') ? $item->getApprovalStatus() : '',
-                'itemLevelIssues' => method_exists($item, 'getItemLevelIssues') ? (array)$item->getItemLevelIssues() : [],
+                'offerId' => method_exists($item, 'getOfferId') ? (string)$item->getOfferId() : '',
+                'status' => method_exists($item, 'getStatus') ? (string)$item->getStatus() : '',
+                'approvalStatus' => method_exists($item, 'getApprovalStatus') ? (string)$item->getApprovalStatus() : '',
+                'itemLevelIssues' => method_exists($item, 'getItemLevelIssues')
+                    ? (array)$item->getItemLevelIssues()
+                    : [],
             ];
         }
 

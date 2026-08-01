@@ -35,7 +35,11 @@ class Reconcile extends Action implements HttpPostActionInterface
                     (int)($result['count'] ?? 0)
                 ));
             } else {
-                $reason = $result['message'] ?? $result['reason'] ?? $result['error'] ?? 'unknown';
+                $reason = (string)($result['message'] ?? $result['error'] ?? $result['reason'] ?? 'unknown');
+                // Avoid dumping giant JSON blobs into the admin notice.
+                if (strlen($reason) > 500) {
+                    $reason = substr($reason, 0, 500) . '…';
+                }
                 $this->messageManager->addWarningMessage(__(
                     'Merchant status reconciliation did not complete: %1',
                     $reason
