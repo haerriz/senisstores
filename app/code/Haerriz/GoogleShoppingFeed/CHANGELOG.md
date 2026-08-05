@@ -2,6 +2,18 @@
 
 All notable changes to the `Haerriz_GoogleShoppingFeed` Magento 2 module are documented here.
 
+## [2.3.2] - 2026-08-05
+
+### Fixed
+- **Merchant listing markup**: Product JSON-LD now emits a real image, active store-currency offer price, stock availability, seller, shipping-service reference, and merchant-return-policy reference.
+- **Duplicate native entities**: Removes Magento's incomplete Product, Offer, and AggregateRating microdata so Google receives one authoritative Product entity without an orphaned Review snippet.
+- **Catalog data safety**: Invalid whitespace SKUs and unverified brand/GTIN/MPN values are omitted instead of publishing misleading identifiers; products without a real image do not emit invalid Product markup.
+- **DI compilation**: Legacy feed templates now satisfy `FeedTemplateInterface::getFormat()`, and artifacts satisfy `ArtifactInterface::getPath()`.
+
+### Added
+- **Merchant policies**: Shipping and return policy pages expose reusable `ShippingService` and `MerchantReturnPolicy` JSON-LD definitions based on the published store policies.
+- **Regression coverage**: Unit tests cover Product/policy schemas, native microdata removal, feed-template formats, and the artifact path contract.
+
 ## [2.3.1] - 2026-08-01
 
 ### Fixed

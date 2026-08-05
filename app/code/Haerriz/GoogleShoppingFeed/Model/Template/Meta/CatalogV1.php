@@ -7,6 +7,7 @@ class CatalogV1 implements FeedTemplateInterface
 {
     public function getCode(): string { return 'meta_catalog_v1'; }
     public function getName(): string { return 'Meta / Facebook Catalog CSV'; }
+    public function getFormat(): string { return 'csv'; }
     public function getDefaultMapping(): array
     {
         return [

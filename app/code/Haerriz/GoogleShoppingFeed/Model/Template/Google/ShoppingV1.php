@@ -7,6 +7,7 @@ class ShoppingV1 implements FeedTemplateInterface
 {
     public function getCode(): string { return 'google_shopping_v1'; }
     public function getName(): string { return 'Google Shopping v1 XML'; }
+    public function getFormat(): string { return 'xml'; }
     public function getDefaultMapping(): array
     {
         return [

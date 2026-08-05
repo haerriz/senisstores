@@ -7,6 +7,7 @@ class CommerceV1 implements FeedTemplateInterface
 {
     public function getCode(): string { return 'openai_commerce_v1'; }
     public function getName(): string { return 'OpenAI / ChatGPT Agentic Commerce (JSONL)'; }
+    public function getFormat(): string { return 'jsonl.gz'; }
     public function getDefaultMapping(): array {
         return [
             'id' => 'sku',

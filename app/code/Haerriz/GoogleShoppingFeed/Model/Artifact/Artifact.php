@@ -17,6 +17,7 @@ class Artifact implements ArtifactInterface
     }
 
     public function getFilename(): string { return $this->filename; }
+    public function getPath(): string { return $this->filePath; }
     public function getFilePath(): string { return $this->filePath; }
     public function getSize(): int { return $this->size; }
 }

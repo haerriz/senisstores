@@ -1,51 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace Haerriz\GoogleShoppingFeed\Block\Product;
+namespace Haerriz\GoogleShoppingFeed\Block\Policy;
 
-use Haerriz\GoogleShoppingFeed\Model\StructuredData\ProductSchemaBuilder;
-use Magento\Catalog\Model\Product;
-use Magento\Framework\Registry;
+use Haerriz\GoogleShoppingFeed\Model\StructuredData\PolicySchemaBuilder;
 use Magento\Framework\View\Element\Template;
 use Psr\Log\LoggerInterface;
 
 class StructuredData extends Template
 {
-    private Registry $registry;
-
-    private ProductSchemaBuilder $schemaBuilder;
+    private PolicySchemaBuilder $schemaBuilder;
 
     private LoggerInterface $logger;
 
     public function __construct(
         Template\Context $context,
-        Registry $registry,
-        ProductSchemaBuilder $schemaBuilder,
+        PolicySchemaBuilder $schemaBuilder,
         LoggerInterface $logger,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->registry = $registry;
         $this->schemaBuilder = $schemaBuilder;
         $this->logger = $logger;
     }
 
-    public function getProduct(): ?Product
-    {
-        $product = $this->registry->registry('current_product');
-
-        return $product instanceof Product ? $product : null;
-    }
-
     public function getJsonLd(): string
     {
-        $product = $this->getProduct();
-        if ($product === null) {
-            return '';
-        }
-
         try {
-            $schema = $this->schemaBuilder->build($product);
+            $schema = $this->schemaBuilder->build((string) $this->getData('policy_type'));
             if ($schema === []) {
                 return '';
             }
@@ -64,8 +46,8 @@ class StructuredData extends Template
             return is_string($json) ? $json : '';
         } catch (\Throwable $exception) {
             $this->logger->warning(
-                'Unable to render Google product structured data.',
-                ['product_id' => $product->getId(), 'exception' => $exception]
+                'Unable to render Google merchant policy structured data.',
+                ['policy_type' => $this->getData('policy_type'), 'exception' => $exception]
             );
 
             return '';
