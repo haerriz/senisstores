@@ -355,6 +355,7 @@ return [
         'Magento_WishlistAnalytics' => 1,
         'Magento_WishlistGraphQl' => 1,
         'Haerriz_AbandonedCart' => 1,
+        'Haerriz_AgenticCommerce' => 1,
         'Haerriz_CatalogDimensions' => 1,
         'Haerriz_Csp' => 1,
         'Haerriz_CustomerReviews' => 1,
