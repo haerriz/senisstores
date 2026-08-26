@@ -47,23 +47,26 @@ class ProductSearchService implements SearchAdapterInterface
         if (method_exists($collection, 'setCustomerGroupId')) {
             $collection->setCustomerGroupId($customerGroupId);
         }
-        $collection->setVisibility($this->visibility->getVisibleInSearchIds());
+        // Use the EAV visibility attribute directly. Collection::setVisibility()
+        // feeds Magento's category product limitation and, outside a category
+        // page, can bind the root category. Root categories commonly contain no
+        // direct products, making an otherwise valid store-wide search empty.
+        $collection->addAttributeToFilter('visibility', ['in' => $this->visibility->getVisibleInSearchIds()]);
         $selectAttributes = array_values(array_unique(array_merge(
             ['name', 'sku', 'price', 'small_image', 'image'],
             $this->metadataService->getDisplayAttributeCodes($storeId)
         )));
         $collection->addAttributeToSelect($selectAttributes);
-        $collection->addMinimalPrice()->addFinalPrice()->addTaxPercents()->addUrlRewrite();
+        // Force canonical (category-independent) product rewrites.
+        $collection->addMinimalPrice()->addFinalPrice()->addTaxPercents()->addUrlRewrite(0);
 
         if ($phrase !== '') {
-            // Use Magento's configured search engine first (OpenSearch/Elasticsearch/DB depending on installation).
-            $collection->addSearchFilter($phrase);
-            // Then enforce a conservative literal relevance guard. This prevents a malformed/over-broad
-            // search request from silently returning the entire catalog for unrelated text such as
-            // "contact number" or "compare the first two".
-            if ($this->config->isStrictSearchRelevanceEnabled($storeId)) {
-                $this->applyStrictPhraseGuard($collection, $phrase, $storeId);
-            }
+            // The standalone fulltext collection is coupled to Magento's search
+            // layer/request container. Used as a generic service it can resolve to
+            // an empty ID set (`AND (NULL)`). Apply a conservative literal catalog
+            // match here; extensions can still replace this native adapter through
+            // SearchAdapterRegistry when semantic/hosted search is desired.
+            $this->applyStrictPhraseGuard($collection, $phrase, $storeId);
         }
 
         foreach ($filters as $filter) {
@@ -109,7 +112,10 @@ class ProductSearchService implements SearchAdapterInterface
         if ($terms === []) {
             return;
         }
-        $attributes = $this->metadataService->getSearchTextAttributeCodes($storeId);
+        // Name and SKU are present for every valid Magento product. Adding optional
+        // EAV text attributes to one OR filter creates inner joins and can exclude
+        // otherwise valid products that simply have no description value.
+        $attributes = ['name', 'sku'];
         // This is a broad-result safety net, not a replacement search engine. Require at least one
         // strong literal signal in shopper-searchable text so unrelated prompts cannot degrade to the
         // whole catalog, while still allowing Magento/OpenSearch to perform stemming/synonym ranking.

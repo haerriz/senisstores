@@ -100,11 +100,6 @@
             </argument>
         </arguments>
     </type>
-    <type name="Haerriz\AgenticCommerce\Model\ProductSearchService">
-        <arguments>
-            <argument name="collectionFactory" xsi:type="object">Magento\CatalogSearch\Model\ResourceModel\Fulltext\CollectionFactory</argument>
-        </arguments>
-    </type>
     <type name="Haerriz\AgenticCommerce\Model\Tool\ToolRegistry">
         <arguments>
             <argument name="tools" xsi:type="array">
