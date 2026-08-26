@@ -1,0 +1,3 @@
+<?php declare(strict_types=1); namespace Haerriz\AgenticCommerce\Model\Tool;
+use Haerriz\AgenticCommerce\Model\Coupon\CouponService;
+class RemoveCoupon implements ToolInterface { public function __construct(private CouponService $service){} public function getName():string{return 'remove_coupon';} public function getDefinition():array{return ['type'=>'function','function'=>['name'=>$this->getName(),'description'=>'Remove the coupon from the authorized cart.','parameters'=>['type'=>'object','properties'=>[]]]];} public function execute(array $arguments,array $context=[]):array{return $this->service->remove((array)($context['identity']??[]),isset($context['cart_id'])?(string)$context['cart_id']:null);} }

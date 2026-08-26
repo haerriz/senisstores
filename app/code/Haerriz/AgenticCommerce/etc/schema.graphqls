@@ -1,0 +1,181 @@
+type Query {
+    agenticCommerceConfig: AgenticCommerceConfig! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ConfigResolver")
+    agenticCommerceCapabilities: AgenticCommerceCapabilities! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CapabilitiesResolver")
+    agenticCommerceStoreProfile: AgenticCommerceStoreProfile! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\StoreProfileResolver")
+    agenticCommerceAttributes(search: String): [AgenticCommerceAttribute!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\AttributeMetadataResolver")
+    agenticCommerceConversations(client_id: String, limit: Int = 20, page: Int = 1): AgenticCommerceConversationList! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ConversationsResolver")
+    agenticCommerceConversation(id: String!, client_id: String): AgenticCommerceConversation! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ConversationResolver")
+    agenticCommerceCart(cart_id: String, client_id: String): AgenticCommerceCart! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CartResolver")
+    agenticCommerceWishlist(client_id: String): AgenticCommerceWishlist! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\WishlistResolver")
+    agenticCommerceOrders(client_id: String, limit: Int = 5): [AgenticCommerceOrder!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\OrdersResolver")
+    agenticCommerceOrder(number: String!, client_id: String): AgenticCommerceOrder! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\OrderResolver")
+    agenticCommerceKnowledge(query: String!, limit: Int = 3): [AgenticCommerceKnowledgeItem!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\KnowledgeResolver")
+    agenticCommerceRecommendations(sku: String!, type: String = "related", limit: Int = 6): AgenticCommerceRecommendationList! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\RecommendationsResolver")
+    agenticCommerceProductOptions(sku: String!): AgenticCommerceProductOptions! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductOptionsResolver")
+    agenticCommerceCheckout(cart_id: String, client_id: String): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CheckoutStateResolver")
+    agenticCommerceCustomerProfile: AgenticCommerceCustomer! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CustomerProfileResolver")
+    agenticCommerceCustomerAddresses: [AgenticCommerceAddress!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CustomerAddressesResolver")
+    agenticCommerceStoreContext: AgenticCommerceStoreContext! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\StoreContextResolver")
+    agenticCommerceProductReviews(sku: String!, limit: Int = 5): AgenticCommerceReviewList! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductReviewsResolver")
+    agenticCommerceNewsletterStatus: AgenticCommerceNewsletter! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\NewsletterStatusResolver")
+    agenticCommerceInventory(sku: String!, requested_qty: Float = 1): AgenticCommerceInventory! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\InventoryResolver")
+    agenticCommerceInventories(skus: [String!]!, requested_qty: Float = 1): [AgenticCommerceInventory!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\InventoriesResolver")
+    agenticCommerceProductPrice(sku: String!): AgenticCommercePriceInsight! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductPriceResolver")
+    agenticCommerceProductExperience(sku: String!, requested_qty: Float = 1, review_limit: Int = 3): AgenticCommerceProductExperience! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductExperienceResolver")
+    agenticCommerceProductContent(sku: String!): AgenticCommerceProductContent! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductContentResolver")
+    agenticCommerceProductQuestion(sku: String!, question: String!): AgenticCommerceProductAnswer! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductQuestionResolver")
+    agenticCommerceProductComparison(skus: [String!]!, focus: [String!], goal: String): AgenticCommerceProductComparison! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ProductComparisonResolver")
+    agenticCommerceVariantAvailability(sku: String!, requested_qty: Float = 1, query: String, selections: [AgenticCommerceProductOptionSelectionInput!]): AgenticCommerceVariantAvailability! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\VariantAvailabilityResolver")
+    agenticCommerceCountries(limit: Int = 300): [AgenticCommerceCountry!]! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CountriesResolver")
+    agenticCommerceCountry(id: String!): AgenticCommerceCountry! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CountryResolver")
+}
+
+type Mutation {
+    agenticCommerceFeedback(input: AgenticCommerceFeedbackInput!): AgenticCommerceFeedbackResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\FeedbackResolver")
+    agenticCommerceChat(input: AgenticCommerceChatInput!): AgenticCommerceResponse! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\AgentChatResolver")
+    agenticCommerceStartConversation(input: AgenticCommerceStartConversationInput): AgenticCommerceConversation! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\StartConversationResolver")
+    agenticCommerceCloseConversation(input: AgenticCommerceCloseConversationInput!): AgenticCommerceMutationStatus! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\CloseConversationResolver")
+    agenticCommerceAddToCart(input: AgenticCommerceAddToCartInput!): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\AddToCartResolver")
+    agenticCommerceRemoveFromCart(input: AgenticCommerceRemoveFromCartInput!): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\RemoveFromCartResolver")
+    agenticCommerceUpdateCartItem(input: AgenticCommerceUpdateCartItemInput!): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\UpdateCartItemResolver")
+    agenticCommerceClearCart(input: AgenticCommerceClearCartInput): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ClearCartResolver")
+    agenticCommerceApplyCoupon(input: AgenticCommerceApplyCouponInput!): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ApplyCouponResolver")
+    agenticCommerceRemoveCoupon(input: AgenticCommerceRemoveCouponInput): AgenticCommerceCartMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\RemoveCouponResolver")
+    agenticCommerceAddToWishlist(input: AgenticCommerceAddToWishlistInput!): AgenticCommerceWishlistMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\AddToWishlistResolver")
+    agenticCommerceRemoveFromWishlist(input: AgenticCommerceRemoveFromWishlistInput!): AgenticCommerceWishlistMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\RemoveFromWishlistResolver")
+    agenticCommerceSetGuestEmail(input: AgenticCommerceGuestEmailInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SetGuestEmailResolver")
+    agenticCommerceSetCheckoutAddress(input: AgenticCommerceCheckoutAddressInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SetCheckoutAddressResolver")
+    agenticCommerceUseSavedShippingAddress(input: AgenticCommerceUseSavedAddressInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\UseSavedShippingAddressResolver")
+    agenticCommerceUseSavedBillingAddress(input: AgenticCommerceUseSavedAddressInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\UseSavedBillingAddressResolver")
+    agenticCommerceSetShippingMethod(input: AgenticCommerceShippingMethodInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SetShippingMethodResolver")
+    agenticCommerceSetPaymentMethod(input: AgenticCommercePaymentMethodInput!): AgenticCommerceCheckout! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SetPaymentMethodResolver")
+    agenticCommerceSubmitProductReview(input: AgenticCommerceReviewInput!): AgenticCommerceReviewSubmission! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SubmitProductReviewResolver")
+    agenticCommerceSubscribeNewsletter(input: AgenticCommerceIdempotencyInput): AgenticCommerceNewsletter! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SubscribeNewsletterResolver")
+    agenticCommerceUnsubscribeNewsletter(input: AgenticCommerceIdempotencyInput): AgenticCommerceNewsletter! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\UnsubscribeNewsletterResolver")
+    agenticCommerceSubscribeProductAlert(input: AgenticCommerceProductAlertInput!): AgenticCommerceProductAlertResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SubscribeProductAlertResolver")
+    agenticCommerceConfirmAction(input: AgenticCommerceConfirmActionInput!): AgenticCommercePlaceOrderResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ConfirmActionResolver")
+    agenticCommerceConfirmPendingAction(input: AgenticCommerceConfirmActionInput!): AgenticCommerceGenericConfirmationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\ConfirmPendingActionResolver")
+    agenticCommerceUpdateCustomerProfile(input: AgenticCommerceCustomerProfileUpdateInput!): AgenticCommerceCustomerProfileMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\UpdateCustomerProfileResolver")
+    agenticCommerceSaveCustomerAddress(input: AgenticCommerceCustomerAddressMutationInput!): AgenticCommerceAddressMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\SaveCustomerAddressResolver")
+    agenticCommerceDeleteCustomerAddress(address_id: Int!, conversation_id: String, client_id: String): AgenticCommerceAddressMutationResult! @resolver(class: "Haerriz\\AgenticCommerce\\Model\\Resolver\\DeleteCustomerAddressResolver")
+}
+
+input AgenticCommerceIdempotencyInput { idempotency_key: String }
+input AgenticCommerceFeedbackInput { conversation_id: String!, client_id: String, message: String!, tool_name: String!, rating: Int!, comment: String }
+type AgenticCommerceFeedbackResult { accepted: Boolean!, rating: Int!, assistant_message: String! }
+
+input AgenticCommerceChatInput { message: String!, conversation_id: String, client_id: String, cart_id: String, session_id: String @doc(description: "Deprecated alias for client_id. Prefer client_id for new integrations."), page_url: String, query_phrase: String, current_filters: [AgenticCommerceFilterInput!] }
+input AgenticCommerceStartConversationInput { client_id: String }
+input AgenticCommerceCloseConversationInput { conversation_id: String!, client_id: String }
+input AgenticCommerceAddToCartInput { sku: String!, quantity: Float = 1, cart_id: String, client_id: String, selections: [AgenticCommerceProductOptionSelectionInput!], idempotency_key: String }
+input AgenticCommerceProductOptionSelectionInput { code: String!, values: [String!]! }
+input AgenticCommerceCustomerProfileUpdateInput { firstname: String, lastname: String, idempotency_key: String }
+input AgenticCommerceUseSavedAddressInput { address_id: Int!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceCustomerAddressMutationInput { address_id: Int, firstname: String!, lastname: String!, company: String, street: [String!]!, city: String!, region: String, region_code: String, region_id: Int, postcode: String!, country_id: String!, telephone: String!, default_shipping: Boolean = false, default_billing: Boolean = false, idempotency_key: String }
+input AgenticCommerceGuestEmailInput { email: String!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceCheckoutAddressInput { kind: String!, address: AgenticCommerceAddressInput!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceAddressInput { firstname: String!, lastname: String!, company: String, street: [String!]!, city: String!, region: String, region_id: Int, postcode: String!, country_id: String!, telephone: String! }
+input AgenticCommerceShippingMethodInput { carrier_code: String!, method_code: String!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommercePaymentMethodInput { method_code: String!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceReviewInput { sku: String!, title: String!, detail: String!, nickname: String, client_id: String, idempotency_key: String }
+input AgenticCommerceProductAlertInput { sku: String!, type: String!, idempotency_key: String }
+input AgenticCommerceConfirmActionInput { token: String!, cart_id: String, client_id: String }
+input AgenticCommerceRemoveFromCartInput { item_id: Int, sku: String, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceUpdateCartItemInput { item_id: Int!, quantity: Float!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceClearCartInput { cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceApplyCouponInput { code: String!, cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceRemoveCouponInput { cart_id: String, client_id: String, idempotency_key: String }
+input AgenticCommerceAddToWishlistInput { sku: String!, client_id: String, idempotency_key: String }
+input AgenticCommerceRemoveFromWishlistInput { index: Int!, client_id: String, idempotency_key: String }
+input AgenticCommerceFilterInput { attribute: String!, condition: String = "eq", values: [String!]!, label: String }
+
+type AgenticCommerceResponse { trace_id: String, session_id: String!, conversation_id: String!, client_id: String!, message: String!, total_count: Int!, query_phrase: String!, products: [AgenticCommerceProduct!]!, filters: [AgenticCommerceFilter!]!, facets: [AgenticCommerceFacet!]!, actions: [AgenticCommerceAction!]!, page_info: AgenticCommercePageInfo!, cart: AgenticCommerceCart, wishlist: AgenticCommerceWishlist, orders: [AgenticCommerceOrder!]!, knowledge: [AgenticCommerceKnowledgeItem!]!, suggestions: [String!]!, viewer: AgenticCommerceViewer!, checkout: AgenticCommerceCheckout, customer: AgenticCommerceCustomer, addresses: [AgenticCommerceAddress!], product_options: AgenticCommerceProductOptions, reviews: AgenticCommerceReviewList, newsletter: AgenticCommerceNewsletter, store_context: AgenticCommerceStoreContext, confirmation: AgenticCommerceConfirmation, shipping_methods: [AgenticCommerceShippingMethod!], payment_methods: [AgenticCommercePaymentMethod!], inventory: AgenticCommerceInventory, inventories: [AgenticCommerceInventory!], price_insight: AgenticCommercePriceInsight, countries: [AgenticCommerceCountry!], country: AgenticCommerceCountry, form: AgenticCommerceForm, product_experience: AgenticCommerceProductExperience, product_content: AgenticCommerceProductContent, product_answer: AgenticCommerceProductAnswer, comparison: AgenticCommerceProductComparison, variant_availability: AgenticCommerceVariantAvailability, extensions: [AgenticCommerceExtensionPayload!]! }
+type AgenticCommerceExtensionPayload { namespace: String!, json: String! }
+type AgenticCommerceViewer { is_customer: Boolean!, customer_id: Int }
+type AgenticCommerceConversationList { client_id: String!, viewer: AgenticCommerceViewer!, items: [AgenticCommerceConversationSummary!]! }
+type AgenticCommerceConversationSummary { id: String!, title: String!, status: String!, created_at: String!, updated_at: String!, last_message_at: String! }
+type AgenticCommerceConversation { id: String!, title: String!, status: String!, created_at: String!, updated_at: String!, last_message_at: String!, client_id: String!, viewer: AgenticCommerceViewer!, messages: [AgenticCommerceMessage!]! }
+type AgenticCommerceMessage { id: String!, role: String!, content: String!, created_at: String!, products: [AgenticCommerceProduct!]!, filters: [AgenticCommerceFilter!]!, facets: [AgenticCommerceFacet!]!, actions: [AgenticCommerceAction!]!, cart: AgenticCommerceCart, wishlist: AgenticCommerceWishlist, orders: [AgenticCommerceOrder!]!, knowledge: [AgenticCommerceKnowledgeItem!]!, suggestions: [String!]!, total_count: Int!, query_phrase: String!, page_info: AgenticCommercePageInfo, checkout: AgenticCommerceCheckout, customer: AgenticCommerceCustomer, addresses: [AgenticCommerceAddress!], product_options: AgenticCommerceProductOptions, reviews: AgenticCommerceReviewList, newsletter: AgenticCommerceNewsletter, store_context: AgenticCommerceStoreContext, confirmation: AgenticCommerceConfirmation, inventory: AgenticCommerceInventory, inventories: [AgenticCommerceInventory!], price_insight: AgenticCommercePriceInsight, countries: [AgenticCommerceCountry!], country: AgenticCommerceCountry, form: AgenticCommerceForm, product_experience: AgenticCommerceProductExperience, product_content: AgenticCommerceProductContent, product_answer: AgenticCommerceProductAnswer, comparison: AgenticCommerceProductComparison, variant_availability: AgenticCommerceVariantAvailability, extensions: [AgenticCommerceExtensionPayload!]! }
+
+type AgenticCommerceCartMutationResult { added: Boolean, removed: Boolean, updated: Boolean, cleared: Boolean, coupon_applied: Boolean, coupon_removed: Boolean, requires_options: Boolean, assistant_message: String!, actions: [AgenticCommerceAction!], cart: AgenticCommerceCart! }
+type AgenticCommerceMutationStatus { success: Boolean!, client_id: String!, viewer: AgenticCommerceViewer! }
+type AgenticCommerceCart { cart_id: String!, items_count: Int!, subtotal: Float!, formatted_subtotal: String!, shipping_amount: Float!, formatted_shipping_amount: String!, tax_amount: Float!, formatted_tax_amount: String!, grand_total: Float!, formatted_grand_total: String!, coupon_code: String!, discount_amount: Float!, formatted_discount_amount: String!, items: [AgenticCommerceCartItem!]! }
+type AgenticCommerceCartItem { item_id: Int!, sku: String!, name: String!, qty: Float!, row_total: Float!, formatted_row_total: String!, options: [AgenticCommerceKeyValue!]! }
+
+type AgenticCommerceProduct { id: Int!, sku: String!, name: String!, url: String!, image: String, price: Float!, regular_price: Float!, formatted_price: String!, formatted_regular_price: String!, type: String!, is_salable: Boolean!, inventory: AgenticCommerceInventory, match_reasons: [String!]!, custom_attributes: [AgenticCommerceCustomAttribute!]! }
+type AgenticCommerceCustomAttribute { code: String!, label: String!, value: String! }
+type AgenticCommerceFilter { attribute: String!, condition: String!, values: [String!]!, label: String! }
+type AgenticCommerceFacet { attribute: String!, label: String!, options: [AgenticCommerceFacetOption!]! }
+type AgenticCommerceFacetOption { value: String!, label: String!, count: Int! }
+type AgenticCommerceAction { type: String!, label: String!, url: String!, auto_navigate: Boolean }
+type AgenticCommercePageInfo { current_page: Int!, page_size: Int!, total_pages: Int! }
+
+type AgenticCommerceWishlistMutationResult { added: Boolean, removed: Boolean, assistant_message: String!, wishlist: AgenticCommerceWishlist! }
+type AgenticCommerceWishlist { items_count: Int!, items: [AgenticCommerceWishlistItem!]! }
+type AgenticCommerceWishlistItem { item_id: Int!, sku: String!, name: String!, url: String!, image: String, price: Float!, formatted_price: String! }
+
+type AgenticCommerceOrder { number: String!, status: String!, status_label: String!, created_at: String!, grand_total: Float!, formatted_grand_total: String!, items: [AgenticCommerceOrderItem!]!, tracking: [AgenticCommerceTracking!]! }
+type AgenticCommerceOrderItem { sku: String!, name: String!, qty: Float! }
+type AgenticCommerceTracking { carrier: String!, number: String! }
+type AgenticCommerceKnowledgeItem { title: String!, identifier: String!, url: String!, snippet: String! }
+type AgenticCommerceRecommendationList { total_count: Int!, items: [AgenticCommerceProduct!]! }
+
+type AgenticCommerceCapabilities { module: String!, module_version: String!, api_version: String!, enabled: Boolean!, search_provider: String!, ai_provider: String!, registered_ai_providers: [String!]!, registered_search_providers: [String!]!, ai_fallback_providers: [String!]!, external_data_scope: String!, reasoning_mode: String!, rizai_model_id: String!, rizai_model_type: String!, rizai_neural_available: Boolean!, rizai_neural_enabled: Boolean!, adaptive_learning: Boolean!, response_synthesis: Boolean!, channels: [String!]!, features: [String!]!, tools: [AgenticCommerceCapabilityTool!]!, extensions: [AgenticCommerceExtensionCapability!]! }
+type AgenticCommerceExtensionCapability { code: String!, capabilities: [String!]! }
+type AgenticCommerceCapabilityTool { name: String!, description: String!, category: String!, risk_level: String!, mutates_state: Boolean!, requires_customer: Boolean!, requires_confirmation: Boolean!, idempotent: Boolean!, planner_visible: Boolean! }
+type AgenticCommerceConfig { enabled: Boolean!, title: String!, welcome_message: String!, page_size: Int!, provider: String!, accent_color: String!, auto_navigation: Boolean! }
+type AgenticCommerceAttribute { code: String!, label: String!, frontend_input: String!, is_filterable: Boolean!, is_filterable_in_search: Boolean!, is_searchable: Boolean!, is_visible_on_front: Boolean!, used_in_product_listing: Boolean!, options: [AgenticCommerceAttributeOption!]! }
+type AgenticCommerceAttributeOption { value: String!, label: String! }
+
+
+type AgenticCommerceKeyValue { code: String!, value: String! }
+type AgenticCommerceProductOptions { sku: String!, name: String!, type: String!, requires_options: Boolean!, chat_supported: Boolean!, groups: [AgenticCommerceProductOptionGroup!]! }
+type AgenticCommerceProductOptionGroup { code: String!, attribute_code: String, label: String!, type: String!, input_mode: String!, required: Boolean!, multiple: Boolean!, chat_supported: Boolean!, values: [AgenticCommerceProductOptionValue!]! }
+type AgenticCommerceProductOptionValue { value: String!, label: String!, sku: String, price: Float!, price_type: String! }
+type AgenticCommerceAddress { id: Int, firstname: String!, lastname: String!, company: String!, street: [String!]!, city: String!, region: String!, region_id: Int!, postcode: String!, country_id: String!, telephone: String!, default_billing: Boolean, default_shipping: Boolean }
+type AgenticCommerceShippingMethod { carrier_code: String!, method_code: String!, carrier_title: String!, method_title: String!, amount: Float!, formatted_amount: String!, available: Boolean!, error_message: String! }
+type AgenticCommercePaymentMethod { code: String!, title: String! }
+type AgenticCommerceCheckout { ready: Boolean!, is_virtual: Boolean, missing: [String!]!, guest_email: String, shipping_address: AgenticCommerceAddress, billing_address: AgenticCommerceAddress, shipping_method: String, payment_method: String, available_shipping_methods: [AgenticCommerceShippingMethod!]!, available_payment_methods: [AgenticCommercePaymentMethod!]!, requirements: [AgenticCommerceCheckoutRequirement!]!, cart: AgenticCommerceCart }
+type AgenticCommerceCheckoutRequirement { code: String!, label: String!, satisfied: Boolean! }
+type AgenticCommerceCustomer { id: Int!, firstname: String!, lastname: String!, email: String!, created_at: String!, default_billing: String!, default_shipping: String! }
+type AgenticCommerceReviewList { sku: String!, total_count: Int!, items: [AgenticCommerceReview!]! }
+type AgenticCommerceReview { id: Int!, title: String!, detail: String!, nickname: String!, created_at: String! }
+type AgenticCommerceReviewSubmission { submitted: Boolean!, status: String!, assistant_message: String! }
+type AgenticCommerceNewsletter { subscribed: Boolean!, status: Int!, assistant_message: String }
+type AgenticCommerceProductAlertResult { subscribed: Boolean!, type: String!, sku: String!, assistant_message: String! }
+type AgenticCommerceStoreContext { store_id: Int!, store_code: String!, store_name: String!, website: String!, group: String!, base_url: String!, currency: String!, base_currency: String!, available_currencies: [AgenticCommerceCurrency!]!, store_views: [AgenticCommerceStoreView!]! }
+type AgenticCommerceStoreProfile { assistant_name: String!, assistant_description: String!, site_name: String!, organization_name: String!, website_name: String!, store_view_name: String!, phone: String!, email: String!, hours: String!, address: String!, base_url: String!, platform: String!, channels: [String!]! }
+type AgenticCommerceCurrency { code: String!, active: Boolean! }
+type AgenticCommerceStoreView { id: Int!, code: String!, name: String!, base_url: String! }
+type AgenticCommerceConfirmation { token: String!, action: String!, title: String!, summary: String!, expires_at: String! }
+type AgenticCommerceGenericConfirmationResult { action: String!, assistant_message: String!, result_json: String! }
+type AgenticCommercePlaceOrderResult { placed: Boolean!, order: AgenticCommercePlacedOrder!, assistant_message: String! }
+type AgenticCommercePlacedOrder { number: String!, status: String!, status_label: String!, grand_total: Float!, formatted_grand_total: String! }
+
+type AgenticCommerceInventory { sku: String!, product_id: Int!, product_type: String!, is_salable: Boolean!, requested_qty: Float!, requested_qty_salable: Boolean!, meets_min_sale_qty: Boolean!, meets_max_sale_qty: Boolean!, meets_qty_increment: Boolean!, salable_qty: Float, quantity_exposed: Boolean!, quantity_source: String!, stock_id: Int, manage_stock: Boolean!, backorders: Int!, backorderable: Boolean!, min_sale_qty: Float!, max_sale_qty: Float!, qty_increments: Float!, low_stock: Boolean!, low_stock_threshold: Float!, status: String!, message: String! }
+type AgenticCommercePriceInsight { sku: String!, name: String!, regular_price: Float!, final_price: Float!, formatted_regular_price: String!, formatted_final_price: String!, discount_amount: Float!, formatted_discount_amount: String!, discount_percent: Float!, special_price: Float, special_from_date: String!, special_to_date: String!, tier_prices: [AgenticCommerceTierPrice!]!, message: String! }
+type AgenticCommerceTierPrice { qty: Float!, value: Float!, formatted_value: String!, customer_group_id: Int! }
+type AgenticCommerceCountry { id: String!, two_letter_abbreviation: String!, three_letter_abbreviation: String!, full_name_locale: String!, full_name_english: String!, regions: [AgenticCommerceRegion!]! }
+type AgenticCommerceRegion { id: Int!, code: String!, name: String! }
+type AgenticCommerceCustomerProfileMutationResult { id: Int!, firstname: String!, lastname: String!, email: String!, created_at: String!, default_billing: String!, default_shipping: String!, assistant_message: String! }
+type AgenticCommerceAddressMutationResult { saved: Boolean, deleted: Boolean, address: AgenticCommerceAddress, addresses: [AgenticCommerceAddress!]!, confirmation: AgenticCommerceConfirmation, assistant_message: String! }
+
+type AgenticCommerceForm { id: String!, title: String!, action: String!, submit_label: String!, hidden: [AgenticCommerceKeyValue!], fields: [AgenticCommerceFormField!]! }
+type AgenticCommerceFormField { name: String!, label: String!, type: String!, required: Boolean!, value: String!, options: [AgenticCommerceFormOption!]! }
+type AgenticCommerceFormOption { value: String!, label: String! }
+
+
+type AgenticCommerceProductExperience { product: AgenticCommerceProduct!, short_description: String!, description: String!, categories: [AgenticCommerceCategoryLink!]!, inventory: AgenticCommerceInventory!, price: AgenticCommercePriceInsight!, options: AgenticCommerceProductOptions!, reviews: AgenticCommerceReviewList!, assistant_message: String! }
+type AgenticCommerceProductContent { product: AgenticCommerceProduct!, short_description: String!, description: String!, highlights: [String!]!, specifications: [AgenticCommerceCustomAttribute!]!, media_gallery: [AgenticCommerceProductMedia!]!, meta_title: String!, meta_description: String!, assistant_message: String! }
+type AgenticCommerceProductMedia { url: String!, label: String!, position: Int! }
+type AgenticCommerceProductAnswer { sku: String!, name: String!, question: String!, status: String!, answer: String!, evidence: [AgenticCommerceProductEvidence!]!, assistant_message: String! }
+type AgenticCommerceProductEvidence { source: String!, text: String! }
+type AgenticCommerceProductComparison { focus: [String!]!, goal: String!, goal_assessment: [AgenticCommerceComparisonGoalMatch!]!, products: [AgenticCommerceProduct!]!, rows: [AgenticCommerceComparisonRow!]!, similarities: [String!]!, differences: [String!]!, assistant_message: String! }
+type AgenticCommerceComparisonGoalMatch { sku: String!, name: String!, score: Int!, evidence: [String!]! }
+type AgenticCommerceComparisonRow { key: String!, label: String!, values: [AgenticCommerceComparisonValue!]! }
+type AgenticCommerceComparisonValue { sku: String!, name: String!, value: String! }
+type AgenticCommerceCategoryLink { id: Int!, name: String!, url: String! }
+
+
+type AgenticCommerceVariantAvailability { parent_sku: String!, complete: Boolean!, matched_sku: String!, requested_qty: Float!, selected: [AgenticCommerceKeyValue!]!, missing_attributes: [String!]!, candidates: [AgenticCommerceVariantCandidate!]!, assistant_message: String! }
+type AgenticCommerceVariantCandidate { sku: String!, name: String!, attributes: [AgenticCommerceKeyValue!]!, inventory: AgenticCommerceInventory!, price: AgenticCommercePriceInsight }

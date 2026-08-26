@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <agentic_commerce>
+            <general>
+                <enabled>1</enabled>
+                <homepage_enabled>1</homepage_enabled>
+                <all_pages_enabled>1</all_pages_enabled>
+                <title>AI Shopping Assistant</title>
+                <assistant_name>AI Shopping Assistant</assistant_name>
+                <assistant_description>I help shoppers discover and compare products, answer store and product questions, and complete supported shopping actions.</assistant_description>
+                <organization_name></organization_name>
+                <welcome_message>Tell me what you are looking for. I can search, filter and take you to the right page.</welcome_message>
+                <placement_selector>.pagebuilder-banner-wrapper</placement_selector>
+                <page_size>8</page_size>
+                <max_message_length>1200</max_message_length>
+                <rate_limit_per_minute>30</rate_limit_per_minute>
+                <accent_color></accent_color>
+                <auto_navigation>1</auto_navigation>
+                <idempotency_ttl>600</idempotency_ttl>
+            </general>
+            <search>
+                <provider>native</provider>
+                <live_search_endpoint>https://catalog-service.adobe.io/graphql</live_search_endpoint>
+                <live_search_environment_id></live_search_environment_id>
+                <live_search_api_key></live_search_api_key>
+                <facet_limit>10</facet_limit>
+                <custom_attribute_limit>20</custom_attribute_limit>
+                <exposed_attributes></exposed_attributes>
+                <display_attributes></display_attributes>
+                <hidden_attributes>status,visibility,tax_class_id,msrp_display_actual_price_type,enable_product,display_actual_price</hidden_attributes>
+                <strict_relevance>1</strict_relevance>
+            </search>
+            <inventory>
+                <expose_quantity>1</expose_quantity>
+                <show_on_product_cards>1</show_on_product_cards>
+                <low_stock_threshold>5</low_stock_threshold>
+            </inventory>
+            <history>
+                <guest_retention_days>30</guest_retention_days>
+                <customer_retention_days>180</customer_retention_days>
+                <audit_retention_days>90</audit_retention_days>
+                <message_limit>100</message_limit>
+            </history>
+            <features>
+                <wishlist_enabled>1</wishlist_enabled><coupons_enabled>1</coupons_enabled><orders_enabled>1</orders_enabled><recommendations_enabled>1</recommendations_enabled><knowledge_enabled>1</knowledge_enabled><audit_enabled>1</audit_enabled>
+                <checkout_enabled>1</checkout_enabled>
+                <customer_account_enabled>1</customer_account_enabled>
+                <newsletter_enabled>1</newsletter_enabled>
+                <reviews_enabled>1</reviews_enabled>
+                <product_alerts_enabled>1</product_alerts_enabled>
+                <inventory_enabled>1</inventory_enabled>
+            </features>
+            <ai>
+                <provider>deterministic</provider>
+                <fallback_providers></fallback_providers>
+                <default_reasoning_mode>balanced</default_reasoning_mode>
+                <reasoning_effort>auto</reasoning_effort>
+                <neural_intent_enabled>1</neural_intent_enabled>
+                <neural_intent_min_confidence>0.90</neural_intent_min_confidence>
+                <neural_intent_min_margin>0.18</neural_intent_min_margin>
+                <merchant_instructions></merchant_instructions>
+                <synthesize_responses>1</synthesize_responses>
+                <external_data_scope>catalog_only</external_data_scope>
+                <allow_insecure_endpoints>0</allow_insecure_endpoints>
+                <allow_private_endpoints>0</allow_private_endpoints>
+                <endpoint_host_allowlist></endpoint_host_allowlist>
+                <circuit_breaker_enabled>1</circuit_breaker_enabled>
+                <circuit_breaker_threshold>3</circuit_breaker_threshold>
+                <circuit_breaker_cooldown>60</circuit_breaker_cooldown>
+                <provider_requests_per_minute>60</provider_requests_per_minute>
+                <openai_endpoint>https://api.openai.com/v1/responses</openai_endpoint>
+                <openai_model></openai_model>
+                <openai_api_key></openai_api_key>
+                <gemini_endpoint>https://generativelanguage.googleapis.com/v1beta/models</gemini_endpoint>
+                <gemini_model></gemini_model>
+                <gemini_api_key></gemini_api_key>
+                <rizai_llm_endpoint></rizai_llm_endpoint>
+                <rizai_llm_model></rizai_llm_model>
+                <rizai_llm_api_key></rizai_llm_api_key>
+                <endpoint></endpoint>
+                <model></model>
+                <api_key></api_key>
+                <timeout>15</timeout>
+                <max_tool_calls>8</max_tool_calls>
+                <max_context_turns>8</max_context_turns>
+                <max_tokens>1200</max_tokens>
+            </ai>
+            <limits>
+                <max_comparison_products>4</max_comparison_products>
+                <max_product_media>24</max_product_media>
+                <max_product_specifications>40</max_product_specifications>
+                <max_qa_evidence>4</max_qa_evidence>
+                <max_suggestions>4</max_suggestions>
+                <max_recent_orders>10</max_recent_orders>
+                <max_recommendations>12</max_recommendations>
+            </limits>
+            <learning>
+                <enabled>1</enabled>
+                <auto_read_only>1</auto_read_only>
+                <min_successes>5</min_successes>
+                <confidence_threshold>0.90</confidence_threshold>
+                <retention_days>180</retention_days>
+                <feedback_enabled>1</feedback_enabled>
+            </learning>
+            <operations>
+                <conversation_cleanup_cron>23 2 * * *</conversation_cleanup_cron>
+                <audit_cleanup_cron>53 2 * * *</audit_cleanup_cron>
+                <confirmation_cleanup_cron>17 * * * *</confirmation_cleanup_cron>
+                <learning_cleanup_cron>37 3 * * *</learning_cleanup_cron>
+                <idempotency_cleanup_cron>7 * * * *</idempotency_cleanup_cron>
+            </operations>
+        </agentic_commerce>
+    </default>
+</config>

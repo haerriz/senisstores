@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="haerriz_agentic_conversation" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Conversations">
+        <column xsi:type="bigint" name="conversation_id" unsigned="true" nullable="false" identity="true" comment="Conversation ID"/>
+        <column xsi:type="varchar" name="public_id" nullable="false" length="64" comment="Public Conversation ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" comment="Customer ID"/>
+        <column xsi:type="varchar" name="client_id" nullable="true" length="80" comment="Anonymous Client ID"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" default="New conversation" comment="Conversation Title"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="active" comment="Conversation Status"/>
+        <column xsi:type="mediumtext" name="context_json" nullable="true" comment="Conversation Context JSON"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <column xsi:type="timestamp" name="last_message_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Last Message At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="conversation_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="HAERRIZ_AGENTIC_CONVERSATION_PUBLIC_ID_UNQ">
+            <column name="public_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_CONVERSATION_STORE_ID_STORE_STORE_ID"
+                    table="haerriz_agentic_conversation" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_CONVERSATION_CUSTOMER_ID_CUSTOMER_ENTITY_ID"
+                    table="haerriz_agentic_conversation" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_CONVERSATION_CUSTOMER_IDX" indexType="btree">
+            <column name="customer_id"/>
+            <column name="store_id"/>
+            <column name="last_message_at"/>
+        </index>
+        <index referenceId="HAERRIZ_AGENTIC_CONVERSATION_CLIENT_IDX" indexType="btree">
+            <column name="client_id"/>
+            <column name="store_id"/>
+            <column name="last_message_at"/>
+        </index>
+        <index referenceId="HAERRIZ_AGENTIC_CONVERSATION_RETENTION_IDX" indexType="btree">
+            <column name="status"/>
+            <column name="last_message_at"/>
+        </index>
+    </table>
+    <table name="haerriz_agentic_message" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Messages">
+        <column xsi:type="bigint" name="message_id" unsigned="true" nullable="false" identity="true" comment="Message ID"/>
+        <column xsi:type="bigint" name="conversation_id" unsigned="true" nullable="false" comment="Conversation ID"/>
+        <column xsi:type="varchar" name="role" nullable="false" length="16" comment="Message Role"/>
+        <column xsi:type="text" name="content" nullable="false" comment="Message Content"/>
+        <column xsi:type="mediumtext" name="payload_json" nullable="true" comment="Structured Response Payload"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="message_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_MESSAGE_CONVERSATION_ID_CONVERSATION_ID"
+                    table="haerriz_agentic_message" column="conversation_id"
+                    referenceTable="haerriz_agentic_conversation" referenceColumn="conversation_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_MESSAGE_CONVERSATION_IDX" indexType="btree">
+            <column name="conversation_id"/>
+            <column name="created_at"/>
+        </index>
+    </table>
+    <table name="haerriz_agentic_tool_audit" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Tool Audit">
+        <column xsi:type="bigint" name="audit_id" unsigned="true" nullable="false" identity="true" comment="Audit ID"/>
+        <column xsi:type="bigint" name="conversation_id" unsigned="true" nullable="true" comment="Conversation ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" comment="Customer ID Snapshot"/>
+        <column xsi:type="varchar" name="client_hash" nullable="true" length="64" comment="Hashed Anonymous Client ID"/>
+        <column xsi:type="varchar" name="tool_name" nullable="false" length="64" comment="Tool Name"/>
+        <column xsi:type="varchar" name="message_hash" nullable="true" length="64" comment="Hashed User Message for Feedback Binding"/>
+        <column xsi:type="varchar" name="risk_level" nullable="false" length="24" comment="Risk Level"/>
+        <column xsi:type="varchar" name="outcome" nullable="false" length="24" comment="Outcome"/>
+        <column xsi:type="int" name="duration_ms" unsigned="true" nullable="false" default="0" comment="Duration Milliseconds"/>
+        <column xsi:type="mediumtext" name="arguments_json" nullable="true" comment="Sanitized Tool Arguments"/>
+        <column xsi:type="varchar" name="error_class" nullable="true" length="255" comment="Error Class"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="audit_id"/></constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_AUDIT_CONVERSATION_ID_CONVERSATION_ID"
+                    table="haerriz_agentic_tool_audit" column="conversation_id" referenceTable="haerriz_agentic_conversation" referenceColumn="conversation_id" onDelete="SET NULL"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_AUDIT_STORE_ID_STORE_STORE_ID"
+                    table="haerriz_agentic_tool_audit" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_AUDIT_CREATED_IDX" indexType="btree"><column name="created_at"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_AUDIT_TOOL_IDX" indexType="btree"><column name="tool_name"/><column name="outcome"/><column name="created_at"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_AUDIT_CUSTOMER_IDX" indexType="btree"><column name="customer_id"/><column name="created_at"/></index>
+    </table>
+    <table name="haerriz_agentic_confirmation" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Confirmations">
+        <column xsi:type="bigint" name="confirmation_id" unsigned="true" nullable="false" identity="true" comment="Confirmation ID"/>
+        <column xsi:type="varchar" name="token_hash" nullable="false" length="64" comment="Token Hash"/>
+        <column xsi:type="varchar" name="conversation_public_id" nullable="false" length="64" comment="Conversation Public ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" comment="Customer ID"/>
+        <column xsi:type="varchar" name="client_hash" nullable="false" length="64" comment="Client Hash"/>
+        <column xsi:type="varchar" name="action" nullable="false" length="64" comment="Action"/>
+        <column xsi:type="mediumtext" name="payload_json" nullable="true" comment="Payload"/>
+        <column xsi:type="text" name="summary" nullable="true" comment="Summary"/>
+        <column xsi:type="timestamp" name="expires_at" nullable="false" comment="Expires At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="used_at" nullable="true" comment="Used At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="confirmation_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="HAERRIZ_AGENTIC_CONFIRMATION_TOKEN_UNQ"><column name="token_hash"/></constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_CONFIRMATION_STORE_ID_STORE_STORE_ID" table="haerriz_agentic_confirmation" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_CONFIRMATION_CUSTOMER_ID_CUSTOMER_ENTITY_ID" table="haerriz_agentic_confirmation" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_CONFIRMATION_CONVERSATION_IDX" indexType="btree"><column name="conversation_public_id"/><column name="expires_at"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_CONFIRMATION_EXPIRY_IDX" indexType="btree"><column name="expires_at"/><column name="used_at"/></index>
+    </table>
+    <table name="haerriz_agentic_learning_pattern" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Adaptive Routing Patterns">
+        <column xsi:type="bigint" name="pattern_id" unsigned="true" nullable="false" identity="true" comment="Pattern ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="pattern_hash" nullable="false" length="64" comment="Normalized Pattern Hash"/>
+        <column xsi:type="varchar" name="pattern_text" nullable="false" length="512" comment="Privacy-normalized Pattern"/>
+        <column xsi:type="varchar" name="tool_name" nullable="false" length="64" comment="Routed Tool"/>
+        <column xsi:type="int" name="hits" unsigned="true" nullable="false" default="0" comment="Observed Hits"/>
+        <column xsi:type="int" name="successes" unsigned="true" nullable="false" default="0" comment="Successful Outcomes"/>
+        <column xsi:type="int" name="failures" unsigned="true" nullable="false" default="0" comment="Failed Outcomes"/>
+        <column xsi:type="decimal" name="confidence" precision="5" scale="4" nullable="false" default="0.0000" comment="Observed Confidence"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="observed" comment="Pattern Status"/>
+        <column xsi:type="smallint" name="auto_approved" unsigned="true" nullable="false" default="0" comment="Automatically Activated Read-only Pattern"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="pattern_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="HAERRIZ_AGENTIC_LEARNING_PATTERN_UNQ"><column name="store_id"/><column name="pattern_hash"/><column name="tool_name"/></constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_LEARNING_STORE_ID_STORE_STORE_ID" table="haerriz_agentic_learning_pattern" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_LEARNING_STATUS_IDX" indexType="btree"><column name="store_id"/><column name="status"/><column name="confidence"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_LEARNING_RETENTION_IDX" indexType="btree"><column name="updated_at"/><column name="status"/></index>
+    </table>
+    <table name="haerriz_agentic_feedback" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Shopper Feedback">
+        <column xsi:type="bigint" name="feedback_id" unsigned="true" nullable="false" identity="true" comment="Feedback ID"/>
+        <column xsi:type="bigint" name="conversation_id" unsigned="true" nullable="false" comment="Conversation ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="tool_name" nullable="false" length="64" comment="Tool Name"/>
+        <column xsi:type="smallint" name="rating" nullable="false" default="0" comment="Thumb Rating"/>
+        <column xsi:type="varchar" name="message_hash" nullable="false" length="64" comment="Message Hash"/>
+        <column xsi:type="text" name="comment" nullable="true" comment="Optional Feedback Comment"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="feedback_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="HAERRIZ_AGENTIC_FEEDBACK_TURN_UNQ"><column name="conversation_id"/><column name="tool_name"/><column name="message_hash"/></constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_FEEDBACK_CONVERSATION_ID_CONVERSATION_ID" table="haerriz_agentic_feedback" column="conversation_id" referenceTable="haerriz_agentic_conversation" referenceColumn="conversation_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_FEEDBACK_STORE_ID_STORE_STORE_ID" table="haerriz_agentic_feedback" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_FEEDBACK_CONVERSATION_IDX" indexType="btree"><column name="conversation_id"/><column name="created_at"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_FEEDBACK_TOOL_IDX" indexType="btree"><column name="tool_name"/><column name="rating"/><column name="created_at"/></index>
+    </table>
+
+    <table name="haerriz_agentic_idempotency" resource="default" engine="innodb" comment="Haerriz Agentic Commerce Durable Idempotency">
+        <column xsi:type="bigint" name="idempotency_id" unsigned="true" nullable="false" identity="true" comment="Idempotency ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="scope_hash" nullable="false" length="64" comment="Identity and Tool Scope Hash"/>
+        <column xsi:type="varchar" name="idempotency_key_hash" nullable="false" length="64" comment="Idempotency Key Hash"/>
+        <column xsi:type="varchar" name="tool_name" nullable="false" length="64" comment="Tool Name"/>
+        <column xsi:type="varchar" name="request_hash" nullable="false" length="64" comment="Canonical Request Hash"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="processing" comment="Processing Status"/>
+        <column xsi:type="mediumtext" name="response_json" nullable="true" comment="Completed Response JSON"/>
+        <column xsi:type="timestamp" name="expires_at" nullable="false" comment="Expires At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="idempotency_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="HAERRIZ_AGENTIC_IDEMPOTENCY_SCOPE_KEY_UNQ"><column name="store_id"/><column name="scope_hash"/><column name="idempotency_key_hash"/></constraint>
+        <constraint xsi:type="foreign" referenceId="HAERRIZ_AGENTIC_IDEMPOTENCY_STORE_ID_STORE_STORE_ID" table="haerriz_agentic_idempotency" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="HAERRIZ_AGENTIC_IDEMPOTENCY_EXPIRY_IDX" indexType="btree"><column name="expires_at"/><column name="status"/></index>
+        <index referenceId="HAERRIZ_AGENTIC_IDEMPOTENCY_TOOL_IDX" indexType="btree"><column name="tool_name"/><column name="created_at"/></index>
+    </table>
+
+</schema>

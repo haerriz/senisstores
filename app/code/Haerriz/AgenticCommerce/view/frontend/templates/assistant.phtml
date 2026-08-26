@@ -1,0 +1,62 @@
+<?php
+/** @var \Haerriz\AgenticCommerce\Block\Assistant $block */
+/** @var \Magento\Framework\Escaper $escaper */
+if (!$block->isEnabled()) {
+    return;
+}
+$rootId = 'haerriz-agentic-commerce-' . substr(hash('sha256', $block->getNameInLayout()), 0, 10);
+?>
+<link rel="stylesheet" href="<?= $escaper->escapeUrl($block->getViewFileUrl('Haerriz_AgenticCommerce::css/assistant.css')) ?>"/>
+<section id="<?= $escaper->escapeHtmlAttr($rootId) ?>"
+         class="agentic-commerce"
+         data-agentic-commerce="1"
+         data-endpoint="<?= $escaper->escapeUrl($block->getChatUrl()) ?>"
+         data-action-endpoint="<?= $escaper->escapeUrl($block->getActionUrl()) ?>"
+         data-history-endpoint="<?= $escaper->escapeUrl($block->getHistoryUrl()) ?>"
+         data-start-endpoint="<?= $escaper->escapeUrl($block->getStartUrl()) ?>"
+         data-close-endpoint="<?= $escaper->escapeUrl($block->getCloseUrl()) ?>"
+         data-form-key="<?= $escaper->escapeHtmlAttr($block->getFormKeyValue()) ?>"
+         data-placement-selector="<?= $escaper->escapeHtmlAttr($block->getPlacementSelector()) ?>"
+         data-store-code="<?= $escaper->escapeHtmlAttr($block->getStoreCode()) ?>"
+         data-accent-color="<?= $escaper->escapeHtmlAttr($block->getAccentColor()) ?>"
+         data-auto-navigation="<?= $block->isAutoNavigationEnabled() ? '1' : '0' ?>"
+         data-welcome-message="<?= $escaper->escapeHtmlAttr($block->getWelcomeMessage()) ?>"
+         aria-label="<?= $escaper->escapeHtmlAttr($block->getAssistantTitle()) ?>">
+    <header class="agentic-commerce__header">
+        <div class="agentic-commerce__heading">
+            <p class="agentic-commerce__eyebrow"><?= $escaper->escapeHtml(__('Conversational shopping')) ?></p>
+            <h2 class="agentic-commerce__title"><?= $escaper->escapeHtml($block->getAssistantTitle()) ?></h2>
+        </div>
+        <div class="agentic-commerce__header-actions">
+            <button class="agentic-commerce__secondary" type="button" data-agentic-history-button aria-expanded="false">
+                <?= $escaper->escapeHtml(__('History')) ?>
+            </button>
+            <button class="agentic-commerce__secondary" type="button" data-agentic-reset>
+                <?= $escaper->escapeHtml(__('New chat')) ?>
+            </button>
+        </div>
+    </header>
+
+    <div class="agentic-commerce__history" data-agentic-history hidden>
+        <div class="agentic-commerce__history-head">
+            <strong><?= $escaper->escapeHtml(__('Conversations')) ?></strong>
+            <button type="button" class="agentic-commerce__icon-button" data-agentic-history-close aria-label="<?= $escaper->escapeHtmlAttr(__('Close history')) ?>">×</button>
+        </div>
+        <div data-agentic-history-list></div>
+    </div>
+
+    <div class="agentic-commerce__messages" data-agentic-messages aria-live="polite" aria-relevant="additions"></div>
+    <div class="agentic-commerce__filters" data-agentic-filters hidden></div>
+
+    <form class="agentic-commerce__composer" data-agentic-form>
+        <label class="agentic-commerce__sr-only" for="<?= $escaper->escapeHtmlAttr($rootId) ?>-input">
+            <?= $escaper->escapeHtml(__('Ask the shopping assistant')) ?>
+        </label>
+        <textarea id="<?= $escaper->escapeHtmlAttr($rootId) ?>-input"
+                  data-agentic-input rows="2" maxlength="<?= (int)$block->getMaxMessageLength() ?>"
+                  placeholder="<?= $escaper->escapeHtmlAttr(__('Try: show 3 premium courses, costliest first')) ?>"></textarea>
+        <button type="submit" class="agentic-commerce__send" data-agentic-send><?= $escaper->escapeHtml(__('Send')) ?></button>
+    </form>
+    <p class="agentic-commerce__status" data-agentic-status role="status"></p>
+</section>
+<script src="<?= $escaper->escapeUrl($block->getViewFileUrl('Haerriz_AgenticCommerce::js/assistant.js')) ?>" defer></script>

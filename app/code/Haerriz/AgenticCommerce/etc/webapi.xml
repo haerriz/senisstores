@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/agentic-commerce/chat" method="POST">
+        <service class="Haerriz\AgenticCommerce\Api\AgentInterface" method="chat"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/attributes" method="GET">
+        <service class="Haerriz\AgenticCommerce\Api\AttributeMetadataInterface" method="getList"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/capabilities" method="GET">
+        <service class="Haerriz\AgenticCommerce\Api\CapabilitiesInterface" method="get"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/store-profile" method="GET">
+        <service class="Haerriz\AgenticCommerce\Api\StoreProfileInterface" method="get"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/product/:sku/intelligence" method="GET">
+        <service class="Haerriz\AgenticCommerce\Api\ProductIntelligenceInterface" method="get"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/product/compare" method="POST">
+        <service class="Haerriz\AgenticCommerce\Api\ProductIntelligenceInterface" method="compare"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/product/question" method="POST">
+        <service class="Haerriz\AgenticCommerce\Api\ProductIntelligenceInterface" method="question"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+    <route url="/V1/agentic-commerce/feedback" method="POST">
+        <service class="Haerriz\AgenticCommerce\Api\FeedbackInterface" method="submit"/>
+        <resources><resource ref="anonymous"/></resources>
+    </route>
+
+</routes>

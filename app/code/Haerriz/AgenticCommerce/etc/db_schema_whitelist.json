@@ -1,0 +1,170 @@
+{
+  "haerriz_agentic_conversation": {
+    "column": {
+      "conversation_id": true,
+      "public_id": true,
+      "store_id": true,
+      "customer_id": true,
+      "client_id": true,
+      "title": true,
+      "status": true,
+      "context_json": true,
+      "created_at": true,
+      "updated_at": true,
+      "last_message_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_CONVERSATION_PUBLIC_ID_UNQ": true,
+      "HAERRIZ_AGENTIC_CONVERSATION_STORE_ID_STORE_STORE_ID": true,
+      "HAERRIZ_AGENTIC_CONVERSATION_CUSTOMER_ID_CUSTOMER_ENTITY_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_CONVERSATION_CUSTOMER_IDX": true,
+      "HAERRIZ_AGENTIC_CONVERSATION_CLIENT_IDX": true,
+      "HAERRIZ_AGENTIC_CONVERSATION_RETENTION_IDX": true
+    }
+  },
+  "haerriz_agentic_message": {
+    "column": {
+      "message_id": true,
+      "conversation_id": true,
+      "role": true,
+      "content": true,
+      "payload_json": true,
+      "created_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_MESSAGE_CONVERSATION_ID_CONVERSATION_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_MESSAGE_CONVERSATION_IDX": true
+    }
+  },
+  "haerriz_agentic_tool_audit": {
+    "column": {
+      "audit_id": true,
+      "conversation_id": true,
+      "store_id": true,
+      "customer_id": true,
+      "client_hash": true,
+      "tool_name": true,
+      "risk_level": true,
+      "outcome": true,
+      "duration_ms": true,
+      "arguments_json": true,
+      "error_class": true,
+      "created_at": true,
+      "message_hash": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_AUDIT_CONVERSATION_ID_CONVERSATION_ID": true,
+      "HAERRIZ_AGENTIC_AUDIT_STORE_ID_STORE_STORE_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_AUDIT_CREATED_IDX": true,
+      "HAERRIZ_AGENTIC_AUDIT_TOOL_IDX": true,
+      "HAERRIZ_AGENTIC_AUDIT_CUSTOMER_IDX": true
+    }
+  },
+  "haerriz_agentic_confirmation": {
+    "column": {
+      "confirmation_id": true,
+      "token_hash": true,
+      "conversation_public_id": true,
+      "store_id": true,
+      "customer_id": true,
+      "client_hash": true,
+      "action": true,
+      "payload_json": true,
+      "summary": true,
+      "expires_at": true,
+      "created_at": true,
+      "used_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_CONFIRMATION_TOKEN_UNQ": true,
+      "HAERRIZ_AGENTIC_CONFIRMATION_STORE_ID_STORE_STORE_ID": true,
+      "HAERRIZ_AGENTIC_CONFIRMATION_CUSTOMER_ID_CUSTOMER_ENTITY_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_CONFIRMATION_CONVERSATION_IDX": true,
+      "HAERRIZ_AGENTIC_CONFIRMATION_EXPIRY_IDX": true
+    }
+  },
+  "haerriz_agentic_learning_pattern": {
+    "column": {
+      "pattern_id": true,
+      "store_id": true,
+      "pattern_hash": true,
+      "pattern_text": true,
+      "tool_name": true,
+      "hits": true,
+      "successes": true,
+      "failures": true,
+      "confidence": true,
+      "status": true,
+      "auto_approved": true,
+      "created_at": true,
+      "updated_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_LEARNING_PATTERN_UNQ": true,
+      "HAERRIZ_AGENTIC_LEARNING_STORE_ID_STORE_STORE_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_LEARNING_STATUS_IDX": true,
+      "HAERRIZ_AGENTIC_LEARNING_RETENTION_IDX": true
+    }
+  },
+  "haerriz_agentic_feedback": {
+    "column": {
+      "feedback_id": true,
+      "conversation_id": true,
+      "store_id": true,
+      "tool_name": true,
+      "rating": true,
+      "message_hash": true,
+      "comment": true,
+      "created_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_FEEDBACK_CONVERSATION_ID_CONVERSATION_ID": true,
+      "HAERRIZ_AGENTIC_FEEDBACK_STORE_ID_STORE_STORE_ID": true,
+      "HAERRIZ_AGENTIC_FEEDBACK_TURN_UNQ": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_FEEDBACK_CONVERSATION_IDX": true,
+      "HAERRIZ_AGENTIC_FEEDBACK_TOOL_IDX": true
+    }
+  },
+  "haerriz_agentic_idempotency": {
+    "column": {
+      "idempotency_id": true,
+      "store_id": true,
+      "scope_hash": true,
+      "idempotency_key_hash": true,
+      "tool_name": true,
+      "request_hash": true,
+      "status": true,
+      "response_json": true,
+      "expires_at": true,
+      "created_at": true,
+      "updated_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "HAERRIZ_AGENTIC_IDEMPOTENCY_SCOPE_KEY_UNQ": true,
+      "HAERRIZ_AGENTIC_IDEMPOTENCY_STORE_ID_STORE_STORE_ID": true
+    },
+    "index": {
+      "HAERRIZ_AGENTIC_IDEMPOTENCY_EXPIRY_IDX": true,
+      "HAERRIZ_AGENTIC_IDEMPOTENCY_TOOL_IDX": true
+    }
+  }
+}

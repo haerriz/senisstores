@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="haerriz_agentic_commerce_cleanup" instance="Haerriz\AgenticCommerce\Cron\CleanupConversations" method="execute">
+            <config_path>agentic_commerce/operations/conversation_cleanup_cron</config_path>
+        </job>
+        <job name="haerriz_agentic_commerce_audit_cleanup" instance="Haerriz\AgenticCommerce\Cron\CleanupToolAudit" method="execute">
+            <config_path>agentic_commerce/operations/audit_cleanup_cron</config_path>
+        </job>
+            <job name="haerriz_agentic_commerce_cleanup_confirmations" instance="Haerriz\AgenticCommerce\Cron\CleanupConfirmations" method="execute">
+            <config_path>agentic_commerce/operations/confirmation_cleanup_cron</config_path>
+        </job>
+        <job name="haerriz_agentic_commerce_learning_cleanup" instance="Haerriz\AgenticCommerce\Cron\CleanupLearning" method="execute">
+            <config_path>agentic_commerce/operations/learning_cleanup_cron</config_path>
+        </job>
+        <job name="haerriz_agentic_commerce_idempotency_cleanup" instance="Haerriz\AgenticCommerce\Cron\CleanupIdempotency" method="execute">
+            <config_path>agentic_commerce/operations/idempotency_cleanup_cron</config_path>
+        </job>
+    </group>
+</config>

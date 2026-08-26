@@ -1,0 +1,3 @@
+<?php declare(strict_types=1); namespace Haerriz\AgenticCommerce\Model\Tool;
+use Haerriz\AgenticCommerce\Model\Wishlist\WishlistService;
+class AddProductToWishlist implements ToolInterface { public function __construct(private WishlistService $service){} public function getName():string{return 'add_product_to_wishlist';} public function getDefinition():array{return ['type'=>'function','function'=>['name'=>$this->getName(),'description'=>'Save an explicitly named SKU to the signed-in customer wishlist.','parameters'=>['type'=>'object','properties'=>['sku'=>['type'=>'string']],'required'=>['sku']]]];} public function execute(array $arguments,array $context=[]):array{return $this->service->add((array)($context['identity']??[]),(string)($arguments['sku']??''));} }

@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="agentic_commerce" translate="label" sortOrder="950" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Agentic Commerce</label>
+            <tab>general</tab>
+            <resource>Haerriz_AgenticCommerce::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Storefront</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Agentic Commerce</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="homepage_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto-inject on Homepage</label>
+                    <comment>The assistant can also be placed manually through layout XML on any page.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="all_pages_enabled" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Continue Assistant on Other Pages</label>
+                    <comment>Keeps the same session available after category, product, account or CMS navigation.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assistant Title</label>
+                </field>
+                <field id="assistant_name" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assistant Identity Name</label>
+                    <comment>Public name used when a shopper asks who the assistant is.</comment>
+                </field>
+                <field id="assistant_description" translate="label comment" type="textarea" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assistant Identity Description</label>
+                    <comment>Grounded public capability summary shared by deterministic and external AI providers.</comment>
+                </field>
+                <field id="organization_name" translate="label comment" type="text" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Operating Organization</label>
+                    <comment>Public organization or owner shown in store-profile answers and headless APIs. Do not enter legal or private data that should not be public.</comment>
+                </field>
+                <field id="welcome_message" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Welcome Message</label>
+                </field>
+                <field id="placement_selector" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Hero CSS Selector</label>
+                    <comment>If found, the homepage assistant is moved directly after this element. Leave blank to keep the layout XML position.</comment>
+                </field>
+                <field id="page_size" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Products per Reply</label>
+                    <comment>Clamped between 1 and 24.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="max_message_length" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum Message Length</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="rate_limit_per_minute" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Requests per Minute / Client</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="accent_color" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Optional Accent Color</label>
+                    <comment>Leave empty to inherit the active storefront theme. Optional six-digit hex value such as #c8102e.</comment>
+                </field>
+                <field id="idempotency_ttl" translate="label comment" type="text" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1"><label>Direct-action Idempotency TTL (seconds)</label><comment>Replay-protection window for retry-safe exact storefront mutations. Clients may send an idempotency key; clamped to 30-3600 seconds.</comment><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="auto_navigation" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatically Follow Explicit Navigation Requests</label>
+                    <comment>When enabled, explicit requests such as “open checkout” or a uniquely matched CMS/category destination navigate after the response is persisted. Ambiguous results still show choices.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="search" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Catalog &amp; Attributes</label>
+                <field id="provider" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Search Provider</label>
+                    <comment>Native works on Magento Open Source and Adobe Commerce. Adobe Live Search uses Catalog Service and automatically falls back to native search on service/configuration errors.</comment>
+                    <source_model>Haerriz\AgenticCommerce\Model\Config\Source\SearchProvider</source_model>
+                </field>
+                <field id="live_search_endpoint" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1"><label>Adobe Catalog Service GraphQL Endpoint</label></field>
+                <field id="live_search_environment_id" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1"><label>Adobe SaaS Environment ID</label></field>
+                <field id="live_search_api_key" translate="label" type="obscure" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1"><label>Adobe Live Search API Key</label><backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model></field>
+                <field id="facet_limit" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facet Attribute Limit</label>
+                    <comment>Maximum number of dynamic filterable attributes returned with a reply.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="custom_attribute_limit" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom Attributes per Product</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="exposed_attributes" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Explicit Exposed Attribute Codes</label>
+                    <comment>Optional comma-separated allow-list, for example color,size,material,brand. Empty means filterable/visible storefront attributes are discovered automatically.</comment>
+                </field>
+                <field id="display_attributes" translate="label comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Card Attribute Codes</label>
+                    <comment>Optional comma-separated allow-list for attributes shown to shoppers on assistant product cards. Leave blank to use shopper-visible/listing attributes only.</comment>
+                </field>
+                <field id="hidden_attributes" translate="label comment" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Hidden Product Card Attribute Codes</label>
+                    <comment>Comma-separated deny-list for technical/internal attributes that must not be rendered on assistant product cards.</comment>
+                </field>
+                <field id="strict_relevance" translate="label comment" type="select" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Strict Native Search Relevance Guard</label>
+                    <comment>Prevents unrelated text from degrading into a broad full-catalog result. Recommended for native Magento/OpenSearch search.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="inventory" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Inventory &amp; Availability</label>
+                <field id="expose_quantity" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Expose Salable Quantity to Agent</label>
+                    <comment>When enabled, the agent may answer questions such as “how many are left?”. MSI salable quantity is used when available; CatalogInventory is the fallback.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_on_product_cards" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Availability on Agent Product Cards</label>
+                    <comment>Adds stock status/low-stock information to conversational product results.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="low_stock_threshold" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Low Stock Threshold</label>
+                    <comment>Quantity at or below which the agent may say “Only X left”.</comment>
+                    <validate>validate-number</validate>
+                </field>
+            </group>
+            <group id="history" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Conversation History &amp; Retention</label>
+                <field id="guest_retention_days" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Guest History Retention (days)</label>
+                    <comment>Anonymous conversations older than this are removed by the daily cron.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="customer_retention_days" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Logged-in Customer History Retention (days)</label>
+                    <comment>Customer conversations older than this are removed by the daily cron.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="audit_retention_days" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1"><label>Tool Audit Retention (days)</label><comment>Sanitized agent tool audit records older than this are removed daily.</comment><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="message_limit" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Messages Loaded per Conversation</label>
+                    <comment>Maximum recent messages returned when resuming a conversation.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+            </group>
+            <group id="features" translate="label" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Agentic Tools</label>
+                <field id="wishlist_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"><label>Wishlist Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="coupons_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1"><label>Coupon Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="orders_enabled" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1"><label>Order Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="recommendations_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1"><label>Recommendation Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="knowledge_enabled" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1"><label>CMS Knowledge Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="audit_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1"><label>Tool Audit Trail</label><comment>Stores sanitized tool name/status/duration metadata. Customer/cart identifiers and credentials are not stored in argument JSON.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="checkout_enabled" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1"><label>Checkout Orchestration Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="customer_account_enabled" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1"><label>Customer Account Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="newsletter_enabled" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1"><label>Newsletter Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="reviews_enabled" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1"><label>Product Review Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="product_alerts_enabled" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1"><label>Price / Stock Alert Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="inventory_enabled" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1"><label>Inventory / Stock Tools</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+            </group>
+            <group id="ai" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>AI &amp; Commerce Brain</label>
+                <field id="provider" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Planning Provider</label><comment>RizAI, the built-in Commerce Brain, needs no API key. OpenAI Responses, Gemini, and OpenAI-compatible providers use governed Magento tool calling and fall back to RizAI when unavailable.</comment><source_model>Haerriz\AgenticCommerce\Model\Config\Source\Provider</source_model>
+                </field>
+                <field id="fallback_providers" translate="label comment" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1"><label>External Provider Fallbacks</label><comment>Optional ordered fallback providers. If the primary external provider is unavailable or returns no valid tool plan, the next configured provider is attempted before RizAI. Only providers with their own model/API credentials configured can be used.</comment><source_model>Haerriz\AgenticCommerce\Model\Config\Source\FallbackProvider</source_model></field>
+                <field id="default_reasoning_mode" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Reasoning Mode</label><comment>Balanced/deep modes can create bounded multi-step plans for explicitly connected requests.</comment><source_model>Haerriz\AgenticCommerce\Model\Config\Source\DefaultReasoningMode</source_model></field>
+                <field id="reasoning_effort" translate="label comment" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1"><label>External Model Reasoning Effort</label><comment>Mapped to supported OpenAI reasoning effort / Gemini thinking level. Automatic is safest across model versions.</comment><source_model>Haerriz\AgenticCommerce\Model\Config\Source\ReasoningEffort</source_model></field>
+                <field id="neural_intent_enabled" translate="label comment" type="select" sortOrder="16.1" showInDefault="1" showInWebsite="1" showInStore="1"><label>Enable RizAI Neural Intent Model</label><comment>Runs the bundled learned-weight neural classifier locally in PHP as a governed fallback for language the deterministic grammar does not confidently route. No API key or Python runtime is required.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="neural_intent_min_confidence" translate="label comment" type="text" sortOrder="16.2" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Neural Minimum Confidence</label><comment>0.50-0.999. Higher values reduce accidental routing. Recommended default: 0.90.</comment><validate>validate-number</validate></field>
+                <field id="neural_intent_min_margin" translate="label comment" type="text" sortOrder="16.3" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Neural Minimum Top-2 Margin</label><comment>Requires the winning intent to exceed the runner-up by this probability margin. Recommended default: 0.18.</comment><validate>validate-number</validate></field>
+                <field id="merchant_instructions" translate="label comment" type="textarea" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1"><label>Merchant Agent Instructions</label><comment>Optional store-specific tone, merchandising and support guidance. These instructions cannot bypass ToolPolicy or Magento authorization.</comment></field>
+                <field id="synthesize_responses" translate="label comment" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1"><label>Natural Response Synthesis</label><comment>When an external provider is configured, allow it to turn privacy-filtered Magento facts into a natural response. Mutations remain server-authoritative.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="external_data_scope" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1"><label>External AI Data Scope</label><comment>Catalog-only is recommended. Customer PII, credentials, payment secrets and raw identifiers are never sent by the core provider layer.</comment><source_model>Haerriz\AgenticCommerce\Model\Config\Source\ExternalDataScope</source_model></field>
+                <field id="allow_insecure_endpoints" translate="label comment" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1"><label>Allow Insecure HTTP AI Endpoints</label><comment>Keep disabled in production. Enable only for a trusted local development proxy. HTTPS is required by default and URL-embedded credentials are always rejected.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="allow_private_endpoints" translate="label comment" type="select" sortOrder="21.1" showInDefault="1" showInWebsite="1" showInStore="1"><label>Allow Private-Network AI Endpoints</label><comment>Keep disabled in production. When disabled, localhost, metadata endpoints and private/reserved IP targets are rejected to reduce SSRF risk.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="endpoint_host_allowlist" translate="label comment" type="text" sortOrder="21.2" showInDefault="1" showInWebsite="1" showInStore="1"><label>AI Endpoint Host Allowlist</label><comment>Optional comma-separated hostnames. Supports exact hosts and wildcard suffixes such as *.example.com. When set, all external AI endpoints must match.</comment></field>
+                <field id="circuit_breaker_enabled" translate="label comment" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1"><label>External Provider Circuit Breaker</label><comment>Temporarily skips repeatedly failing AI providers so fallback/default Commerce Brain can respond quickly.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="circuit_breaker_threshold" translate="label" type="text" sortOrder="23" showInDefault="1" showInWebsite="1" showInStore="1"><label>Circuit Breaker Failure Threshold</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="circuit_breaker_cooldown" translate="label" type="text" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1"><label>Circuit Breaker Cooldown (seconds)</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="provider_requests_per_minute" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1"><label>External Provider Request Budget / Minute</label><comment>Soft per-store/per-provider cost/load shedder. Set 0 for unlimited. This is not an authorization control.</comment><validate>validate-number</validate></field>
+                <field id="openai_endpoint" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1"><label>OpenAI Responses Endpoint</label></field>
+                <field id="openai_model" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1"><label>OpenAI Model</label></field>
+                <field id="openai_api_key" translate="label" type="obscure" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1"><label>OpenAI API Key</label><backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model></field>
+                <field id="gemini_endpoint" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1"><label>Gemini API Base Endpoint</label></field>
+                <field id="gemini_model" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1"><label>Gemini Model</label></field>
+                <field id="gemini_api_key" translate="label" type="obscure" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1"><label>Gemini API Key</label><backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model></field>
+                <field id="rizai_llm_endpoint" translate="label comment" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Self-hosted LLM Endpoint</label><comment>Optional OpenAI-compatible Chat Completions endpoint for a separately trained/self-hosted RizAI generative model. No generative weights are bundled with the Magento module.</comment></field>
+                <field id="rizai_llm_model" translate="label comment" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Self-hosted LLM Model ID</label><comment>Model identifier exposed by your inference server, for example a fine-tuned commerce adapter served by vLLM/TGI/Ollama-compatible infrastructure.</comment></field>
+                <field id="rizai_llm_api_key" translate="label comment" type="obscure" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1"><label>RizAI Self-hosted LLM API Key</label><comment>Optional. Leave blank when the trusted inference gateway does not require a bearer token.</comment><backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model></field>
+                <field id="endpoint" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1"><label>Legacy OpenAI-compatible Chat Completions Endpoint</label><comment>Used only when the legacy/custom OpenAI-compatible provider is selected.</comment></field>
+                <field id="model" translate="label" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1"><label>Legacy Compatible Model</label></field>
+                <field id="api_key" translate="label" type="obscure" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="1"><label>Legacy Compatible API Key</label><backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model></field>
+                <field id="timeout" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1"><label>Provider Timeout (seconds)</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_tool_calls" translate="label" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Tool Calls per Turn</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_context_turns" translate="label" type="text" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1"><label>Conversation Turns Sent to Planner</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_tokens" translate="label" type="text" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Completion Tokens</label><validate>validate-number validate-greater-than-zero</validate></field>
+            </group>
+            <group id="limits" translate="label" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enterprise Payload &amp; Experience Limits</label>
+                <field id="max_comparison_products" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Products per Comparison</label><comment>Effective limit is bounded by a core safety ceiling of 8.</comment><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_product_media" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Product Media Items</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_product_specifications" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Product Specifications</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_qa_evidence" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Product Q&amp;A Evidence Snippets</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_suggestions" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Follow-up Suggestions</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_recent_orders" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Recent Orders Returned</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="max_recommendations" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1"><label>Maximum Recommendations Returned</label><validate>validate-number validate-greater-than-zero</validate></field>
+            </group>
+            <group id="learning" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Adaptive Learning &amp; Feedback</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"><label>Enable Adaptive Routing Memory</label><comment>Learns successful intent aliases and routing outcomes. It never changes PHP/model weights or bypasses ToolPolicy.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="auto_read_only" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1"><label>Auto-activate Proven Read-only Patterns</label><comment>Only read-only routes may auto-activate after repeated successful outcomes. Cart/account/order mutations never self-authorize.</comment><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+                <field id="min_successes" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1"><label>Minimum Successful Repetitions</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="confidence_threshold" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1"><label>Activation Confidence Threshold</label><comment>0.50-1.00. Recommended 0.90 or higher.</comment><validate>validate-number</validate></field>
+                <field id="retention_days" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1"><label>Observed Pattern Retention (days)</label><validate>validate-number validate-greater-than-zero</validate></field>
+                <field id="feedback_enabled" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1"><label>Enable Shopper Feedback Signals</label><source_model>Magento\Config\Model\Config\Source\Yesno</source_model></field>
+            </group>
+            <group id="operations" translate="label" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Enterprise Operations</label>
+                <field id="conversation_cleanup_cron" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0"><label>Conversation Cleanup Cron</label><comment>Global cron expression. Default: 23 2 * * *</comment></field>
+                <field id="audit_cleanup_cron" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0"><label>Tool Audit Cleanup Cron</label><comment>Global cron expression. Default: 53 2 * * *</comment></field>
+                <field id="confirmation_cleanup_cron" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0"><label>Confirmation Cleanup Cron</label><comment>Global cron expression. Default: 17 * * * *</comment></field>
+                <field id="learning_cleanup_cron" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0"><label>Adaptive Learning Cleanup Cron</label><comment>Global cron expression. Default: 37 3 * * *</comment></field>
+                <field id="idempotency_cleanup_cron" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0"><label>Idempotency Cleanup Cron</label><comment>Global cron expression. Default: 7 * * * *</comment></field>
+            </group>
+        </section>
+    </system>
+</config>

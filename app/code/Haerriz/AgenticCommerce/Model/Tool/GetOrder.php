@@ -1,0 +1,3 @@
+<?php declare(strict_types=1); namespace Haerriz\AgenticCommerce\Model\Tool;
+use Haerriz\AgenticCommerce\Model\Order\OrderService;
+class GetOrder implements ToolInterface { public function __construct(private OrderService $service){} public function getName():string{return 'get_order';} public function getDefinition():array{return ['type'=>'function','function'=>['name'=>$this->getName(),'description'=>'Get one signed-in customer order by order number.','parameters'=>['type'=>'object','properties'=>['order_number'=>['type'=>'string']],'required'=>['order_number']]]];} public function execute(array $arguments,array $context=[]):array{return $this->service->byNumber((array)($context['identity']??[]),(string)($arguments['order_number']??''));} }

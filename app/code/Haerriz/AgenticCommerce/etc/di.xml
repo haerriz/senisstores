@@ -1,0 +1,870 @@
+<?xml version='1.0' encoding='utf-8'?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Haerriz\AgenticCommerce\Api\AgentInterface" type="Haerriz\AgenticCommerce\Model\AgentService" />
+    <preference for="Haerriz\AgenticCommerce\Api\AttributeMetadataInterface" type="Haerriz\AgenticCommerce\Model\AttributeMetadataApi" />
+    <preference for="Haerriz\AgenticCommerce\Api\CapabilitiesInterface" type="Haerriz\AgenticCommerce\Model\CapabilitiesApi" />
+    <preference for="Haerriz\AgenticCommerce\Api\StoreProfileInterface" type="Haerriz\AgenticCommerce\Model\StoreProfileApi" />
+    <preference for="Haerriz\AgenticCommerce\Api\ProductIntelligenceInterface" type="Haerriz\AgenticCommerce\Model\Product\ProductIntelligenceApi" />
+    <preference for="Haerriz\AgenticCommerce\Api\FeedbackInterface" type="Haerriz\AgenticCommerce\Model\FeedbackApi" />
+    <preference for="Haerriz\AgenticCommerce\Model\Planner\PlannerInterface" type="Haerriz\AgenticCommerce\Model\Planner\CompositePlanner" />
+    <preference for="Haerriz\AgenticCommerce\Model\Ai\ProviderInterface" type="Haerriz\AgenticCommerce\Model\Ai\ProviderManager" />
+    <preference for="Haerriz\AgenticCommerce\Model\Ai\ResponseProviderInterface" type="Haerriz\AgenticCommerce\Model\Ai\ProviderManager" />
+    <preference for="Haerriz\AgenticCommerce\Model\Search\SearchAdapterInterface" type="Haerriz\AgenticCommerce\Model\Search\SearchManager" />
+    <preference for="Haerriz\AgenticCommerce\Model\Recommendation\RecommendationAdapterInterface" type="Haerriz\AgenticCommerce\Model\Recommendation\CoreRecommendationAdapter" />
+    <type name="Haerriz\AgenticCommerce\Model\Ai\ProviderRegistry">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="openai_responses" xsi:type="object">Haerriz\AgenticCommerce\Model\Ai\OpenAiResponsesProvider</item>
+                <item name="gemini" xsi:type="object">Haerriz\AgenticCommerce\Model\Ai\GeminiProvider</item>
+                <item name="openai_compatible" xsi:type="object">Haerriz\AgenticCommerce\Model\Ai\OpenAiCompatibleProvider</item>
+                <item name="rizai_local_llm" xsi:type="object">Haerriz\AgenticCommerce\Model\Ai\RizAiLocalLlmProvider</item>
+            </argument>
+            <argument name="labels" xsi:type="array">
+                <item name="openai_responses" xsi:type="string">OpenAI Responses API</item>
+                <item name="gemini" xsi:type="string">Google Gemini API</item>
+                <item name="openai_compatible" xsi:type="string">OpenAI-compatible / custom gateway</item>
+                <item name="rizai_local_llm" xsi:type="string">RizAI self-hosted generative model</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\Search\SearchAdapterRegistry">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="native" xsi:type="object">Haerriz\AgenticCommerce\Model\ProductSearchService</item>
+                <item name="adobe_live_search" xsi:type="object">Haerriz\AgenticCommerce\Model\Search\AdobeLiveSearchAdapter</item>
+            </argument>
+            <argument name="labels" xsi:type="array">
+                <item name="native" xsi:type="string">Native Magento Search</item>
+                <item name="adobe_live_search" xsi:type="string">Adobe Live Search / Catalog Service</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\SuggestionService">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="core" xsi:type="object">Haerriz\AgenticCommerce\Model\Suggestion\CoreSuggestionProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\DirectActionService">
+        <arguments>
+            <argument name="actionMap" xsi:type="array">
+                <item name="add_to_cart" xsi:type="string">add_product_to_cart</item>
+                <item name="add_to_wishlist" xsi:type="string">add_product_to_wishlist</item>
+                <item name="remove_wishlist_item" xsi:type="string">remove_wishlist_item</item>
+                <item name="remove_cart_item" xsi:type="string">remove_cart_item</item>
+                <item name="update_cart_item" xsi:type="string">update_cart_item</item>
+                <item name="clear_cart" xsi:type="string">clear_cart</item>
+                <item name="apply_coupon" xsi:type="string">apply_coupon</item>
+                <item name="remove_coupon" xsi:type="string">remove_coupon</item>
+                <item name="get_product_options" xsi:type="string">get_product_options</item>
+                <item name="get_product_content" xsi:type="string">get_product_content</item>
+                <item name="compare_products" xsi:type="string">compare_products</item>
+                <item name="get_variant_availability" xsi:type="string">get_variant_availability</item>
+                <item name="get_checkout_state" xsi:type="string">get_checkout_state</item>
+                <item name="get_shipping_methods" xsi:type="string">get_shipping_methods</item>
+                <item name="set_shipping_method" xsi:type="string">set_shipping_method</item>
+                <item name="get_payment_methods" xsi:type="string">get_payment_methods</item>
+                <item name="set_payment_method" xsi:type="string">set_payment_method</item>
+                <item name="subscribe_newsletter" xsi:type="string">subscribe_newsletter</item>
+                <item name="unsubscribe_newsletter" xsi:type="string">unsubscribe_newsletter</item>
+            </argument>
+            <argument name="argumentSanitizers" xsi:type="array">
+                <item name="core" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\CoreArgumentSanitizer</item>
+            </argument>
+            <argument name="actionLabels" xsi:type="array">
+                <item name="add_to_cart" xsi:type="string">Add {sku} to cart</item>
+                <item name="add_to_wishlist" xsi:type="string">Save {sku} to wishlist</item>
+                <item name="get_product_content" xsi:type="string">Show details for {sku}</item>
+                <item name="compare_products" xsi:type="string">Compare selected products</item>
+                <item name="remove_cart_item" xsi:type="string">Remove cart item</item>
+                <item name="update_cart_item" xsi:type="string">Update cart quantity</item>
+                <item name="remove_wishlist_item" xsi:type="string">Remove wishlist item</item>
+                <item name="set_shipping_method" xsi:type="string">Select shipping method</item>
+                <item name="set_payment_method" xsi:type="string">Select payment method</item>
+            </argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="set_guest_email" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\SetGuestEmail</item>
+                <item name="set_checkout_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\SetCheckoutAddress</item>
+                <item name="update_customer_profile" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\UpdateCustomerProfile</item>
+                <item name="save_customer_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\SaveCustomerAddress</item>
+                <item name="prepare_delete_customer_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\PrepareDeleteCustomerAddress</item>
+                <item name="confirm_action" xsi:type="object">Haerriz\AgenticCommerce\Model\Action\Handler\ConfirmAction</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\AgentService">
+        <arguments>
+            <argument name="intentGuards" xsi:type="array">
+                <item name="core" xsi:type="object">Haerriz\AgenticCommerce\Model\Intent\CoreToolIntentGuard</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\ProductSearchService">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">Magento\CatalogSearch\Model\ResourceModel\Fulltext\CollectionFactory</argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\Tool\ToolRegistry">
+        <arguments>
+            <argument name="tools" xsi:type="array">
+                <item name="search_products" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SearchProducts</item>
+                <item name="get_product" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProduct</item>
+                <item name="get_product_experience" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProductExperience</item>
+                <item name="get_product_content" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProductContent</item>
+                <item name="answer_product_question" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AnswerProductQuestion</item>
+                <item name="compare_products" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\CompareProducts</item>
+                <item name="search_categories" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SearchCategories</item>
+                <item name="get_catalog_navigation" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetCatalogNavigation</item>
+                <item name="search_pages" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SearchPages</item>
+                <item name="open_recent_product" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\OpenRecentProduct</item>
+                <item name="compare_recent_products" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\CompareRecentProducts</item>
+                <item name="navigate" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\Navigate</item>
+                <item name="get_cart" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetCart</item>
+                <item name="add_recent_product_to_cart" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AddRecentProductToCart</item>
+                <item name="add_product_to_cart" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AddProductToCart</item>
+                <item name="remove_cart_item" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\RemoveCartItem</item>
+                <item name="update_cart_item" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\UpdateCartItem</item>
+                <item name="clear_cart" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\ClearCart</item>
+                <item name="apply_coupon" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\ApplyCoupon</item>
+                <item name="remove_coupon" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\RemoveCoupon</item>
+                <item name="get_wishlist" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetWishlist</item>
+                <item name="add_recent_product_to_wishlist" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AddRecentProductToWishlist</item>
+                <item name="add_product_to_wishlist" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AddProductToWishlist</item>
+                <item name="remove_wishlist_item" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\RemoveWishlistItem</item>
+                <item name="get_recent_orders" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetRecentOrders</item>
+                <item name="get_order" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetOrder</item>
+                <item name="get_recommendations" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetRecommendations</item>
+                <item name="answer_store_question" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\AnswerStoreQuestion</item>
+                <item name="get_store_information" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetStoreInformation</item>
+                <item name="get_product_options" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProductOptions</item>
+                <item name="get_inventory" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetInventory</item>
+                <item name="get_variant_availability" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetVariantAvailability</item>
+                <item name="compare_inventory" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\CompareInventory</item>
+                <item name="get_product_price" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProductPrice</item>
+                <item name="get_checkout_state" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetCheckoutState</item>
+                <item name="get_customer_profile" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetCustomerProfile</item>
+                <item name="get_customer_addresses" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetCustomerAddresses</item>
+                <item name="request_customer_form" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\RequestCustomerForm</item>
+                <item name="prepare_delete_saved_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\PrepareDeleteSavedAddress</item>
+                <item name="use_saved_shipping_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\UseSavedShippingAddress</item>
+                <item name="use_saved_billing_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\UseSavedBillingAddress</item>
+                <item name="get_shipping_methods" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetShippingMethods</item>
+                <item name="set_shipping_method" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SetShippingMethod</item>
+                <item name="get_payment_methods" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetPaymentMethods</item>
+                <item name="set_payment_method" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SetPaymentMethod</item>
+                <item name="get_newsletter_status" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetNewsletterStatus</item>
+                <item name="subscribe_newsletter" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SubscribeNewsletter</item>
+                <item name="unsubscribe_newsletter" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\UnsubscribeNewsletter</item>
+                <item name="get_product_reviews" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetProductReviews</item>
+                <item name="submit_product_review" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SubmitProductReview</item>
+                <item name="subscribe_product_alert" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\SubscribeProductAlert</item>
+                <item name="get_store_context" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\GetStoreContext</item>
+                <item name="prepare_place_order" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\PreparePlaceOrder</item>
+                <item name="confirm_pending_action" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\ConfirmPendingAction</item>
+                <item name="cancel_pending_action" xsi:type="object">Haerriz\AgenticCommerce\Model\Tool\CancelPendingAction</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\Agent\ToolPolicy">
+        <arguments>
+            <argument name="toolMetadata" xsi:type="array">
+                <item name="search_products" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">false</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_product" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">false</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_product_experience" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_product_content" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="answer_product_question" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="compare_products" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="search_categories" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_catalog_navigation" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="search_pages" xsi:type="array">
+                    <item name="category" xsi:type="string">content</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="open_recent_product" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="compare_recent_products" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="navigate" xsi:type="array">
+                    <item name="category" xsi:type="string">navigation</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_cart" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="add_recent_product_to_cart" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="add_product_to_cart" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                </item>
+                <item name="remove_cart_item" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                </item>
+                <item name="update_cart_item" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                </item>
+                <item name="clear_cart" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                </item>
+                <item name="apply_coupon" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">coupons</item>
+                </item>
+                <item name="remove_coupon" xsi:type="array">
+                    <item name="category" xsi:type="string">cart</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">coupons</item>
+                </item>
+                <item name="get_wishlist" xsi:type="array">
+                    <item name="category" xsi:type="string">wishlist</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">wishlist</item>
+                </item>
+                <item name="add_recent_product_to_wishlist" xsi:type="array">
+                    <item name="category" xsi:type="string">wishlist</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">wishlist</item>
+                </item>
+                <item name="add_product_to_wishlist" xsi:type="array">
+                    <item name="category" xsi:type="string">wishlist</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">wishlist</item>
+                </item>
+                <item name="remove_wishlist_item" xsi:type="array">
+                    <item name="category" xsi:type="string">wishlist</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">wishlist</item>
+                </item>
+                <item name="get_recent_orders" xsi:type="array">
+                    <item name="category" xsi:type="string">orders</item>
+                    <item name="risk_level" xsi:type="string">sensitive_read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">orders</item>
+                </item>
+                <item name="get_order" xsi:type="array">
+                    <item name="category" xsi:type="string">orders</item>
+                    <item name="risk_level" xsi:type="string">sensitive_read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">orders</item>
+                </item>
+                <item name="get_recommendations" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">recommendations</item>
+                </item>
+                <item name="answer_store_question" xsi:type="array">
+                    <item name="category" xsi:type="string">content</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">knowledge</item>
+                </item>
+                <item name="get_store_information" xsi:type="array">
+                    <item name="category" xsi:type="string">content</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_product_options" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_inventory" xsi:type="array">
+                    <item name="category" xsi:type="string">inventory</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">inventory</item>
+                </item>
+                <item name="get_variant_availability" xsi:type="array">
+                    <item name="category" xsi:type="string">inventory</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">inventory</item>
+                </item>
+                <item name="compare_inventory" xsi:type="array">
+                    <item name="category" xsi:type="string">inventory</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">inventory</item>
+                </item>
+                <item name="get_product_price" xsi:type="array">
+                    <item name="category" xsi:type="string">pricing</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="get_checkout_state" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">sensitive_read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="get_customer_profile" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">sensitive_read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+                <item name="get_customer_addresses" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">sensitive_read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+                <item name="request_customer_form" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+                <item name="prepare_delete_saved_address" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+                <item name="use_saved_shipping_address" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="use_saved_billing_address" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="get_shipping_methods" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="set_shipping_method" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="get_payment_methods" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="set_payment_method" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="get_newsletter_status" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">newsletter</item>
+                </item>
+                <item name="subscribe_newsletter" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">newsletter</item>
+                </item>
+                <item name="unsubscribe_newsletter" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">newsletter</item>
+                </item>
+                <item name="get_product_reviews" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">reviews</item>
+                </item>
+                <item name="submit_product_review" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">reviews</item>
+                </item>
+                <item name="subscribe_product_alert" xsi:type="array">
+                    <item name="category" xsi:type="string">catalog</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">product_alerts</item>
+                </item>
+                <item name="get_store_context" xsi:type="array">
+                    <item name="category" xsi:type="string">store</item>
+                    <item name="risk_level" xsi:type="string">read</item>
+                    <item name="mutates_state" xsi:type="boolean">false</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                </item>
+                <item name="prepare_place_order" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="confirm_pending_action" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">transaction</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">true</item>
+                    <item name="confirmation_executor" xsi:type="boolean">true</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="cancel_pending_action" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">true</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">false</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="set_guest_email" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">false</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="set_checkout_address" xsi:type="array">
+                    <item name="category" xsi:type="string">checkout</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">false</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">false</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">checkout</item>
+                </item>
+                <item name="update_customer_profile" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">false</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+                <item name="save_customer_address" xsi:type="array">
+                    <item name="category" xsi:type="string">customer</item>
+                    <item name="risk_level" xsi:type="string">write</item>
+                    <item name="mutates_state" xsi:type="boolean">true</item>
+                    <item name="requires_customer" xsi:type="boolean">true</item>
+                    <item name="requires_confirmation" xsi:type="boolean">false</item>
+                    <item name="planner_visible" xsi:type="boolean">false</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="deterministic_locked" xsi:type="boolean">true</item>
+                    <item name="idempotent" xsi:type="boolean">true</item>
+                    <item name="feature" xsi:type="string">customer_account</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Haerriz\AgenticCommerce\Model\Confirmation\ConfirmationActionRegistry">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="place_order" xsi:type="object">Haerriz\AgenticCommerce\Model\Confirmation\Handler\PlaceOrder</item>
+                <item name="delete_customer_address" xsi:type="object">Haerriz\AgenticCommerce\Model\Confirmation\Handler\DeleteCustomerAddress</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,3 @@
+<?php declare(strict_types=1); namespace Haerriz\AgenticCommerce\Model\Tool;
+use Haerriz\AgenticCommerce\Model\Order\OrderService;
+class GetRecentOrders implements ToolInterface { public function __construct(private OrderService $service){} public function getName():string{return 'get_recent_orders';} public function getDefinition():array{return ['type'=>'function','function'=>['name'=>$this->getName(),'description'=>'Show recent orders belonging to the signed-in customer.','parameters'=>['type'=>'object','properties'=>['limit'=>['type'=>'integer','minimum'=>1,'maximum'=>10]]]]];} public function execute(array $arguments,array $context=[]):array{return $this->service->recent((array)($context['identity']??[]),(int)($arguments['limit']??5));} }

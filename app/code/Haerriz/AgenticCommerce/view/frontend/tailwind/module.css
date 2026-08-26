@@ -1,0 +1,3 @@
+@source "../templates/**/*.phtml";
+@source "../layout/**/*.xml";
+/* The component ships framework-neutral CSS directly; no Tailwind utilities are required. */
