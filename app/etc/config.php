@@ -358,7 +358,7 @@ return [
         'Haerriz_CatalogDimensions' => 1,
         'Haerriz_Csp' => 1,
         'Haerriz_CustomerReviews' => 1,
-        'Haerriz_GoogleFeed' => 1,
+        'Haerriz_GoogleFeed' => 0,
         'Haerriz_GoogleShoppingFeed' => 1,
         'Haerriz_Marketing' => 1,
         'Haerriz_PackagingCharges' => 1,
