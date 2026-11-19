@@ -11,7 +11,9 @@ require([
 ], function (registry, $, quote, customerData) {
     'use strict';
 
-    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode',
+    var fieldsetPath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.',
+        postcodePath = fieldsetPath + 'postcode',
+        countryPath = fieldsetPath + 'country_id',
         lastRatedPostcode = '',
         lastLookupPostcode = '',
         lookupRequest = null;
@@ -28,11 +30,12 @@ require([
         });
     }
 
-    function syncPostcodeAndRequestRates(checkoutProvider, postcode, force) {
+    function syncPostcodeAndRequestRates(checkoutProvider, postcode, countryId, force) {
         var address = quote.shippingAddress(),
             oldCacheKey;
 
         checkoutProvider.set('shippingAddress.postcode', postcode);
+        checkoutProvider.set('shippingAddress.country_id', countryId);
 
         if (!address) {
             return;
@@ -44,7 +47,7 @@ require([
 
         oldCacheKey = typeof address.getCacheKey === 'function' ? address.getCacheKey() : null;
         address.postcode = postcode;
-        address.countryId = 'IN';
+        address.countryId = countryId;
         lastRatedPostcode = postcode;
 
         require(['Magento_Checkout/js/model/shipping-rate-registry'], function (rateRegistry) {
@@ -141,28 +144,31 @@ require([
             return;
         }
 
-        registry.get('checkoutProvider', function (checkoutProvider) {
-            var formAddress = checkoutProvider.get('shippingAddress') || {},
-                countryId = formAddress.country_id ||
-                    (quote.shippingAddress() && quote.shippingAddress().countryId);
+        registry.get(countryPath, function (countryComponent) {
+            var countryId = countryComponent.value();
 
             if (countryId !== 'IN') {
                 return;
             }
 
-            // Shipping calculation must not depend on the optional third-party autofill service.
-            syncPostcodeAndRequestRates(checkoutProvider, postcode, false);
-            lookupPostcode(checkoutProvider, postcode);
+            registry.get('checkoutProvider', function (checkoutProvider) {
+                // Shipping calculation must not depend on the optional third-party autofill service.
+                syncPostcodeAndRequestRates(checkoutProvider, postcode, countryId, false);
+                lookupPostcode(checkoutProvider, postcode);
+            });
         });
     }
 
     customerData.get('cart').subscribe(function () {
-        registry.get('checkoutProvider', function (checkoutProvider) {
-            var formAddress = checkoutProvider.get('shippingAddress') || {};
+        registry.get(countryPath, function (countryComponent) {
+            registry.get('checkoutProvider', function (checkoutProvider) {
+                var formAddress = checkoutProvider.get('shippingAddress') || {},
+                    countryId = countryComponent.value();
 
-            if (formAddress.country_id === 'IN' && /^\d{6}$/.test(formAddress.postcode || '')) {
-                syncPostcodeAndRequestRates(checkoutProvider, formAddress.postcode, true);
-            }
+                if (countryId === 'IN' && /^\d{6}$/.test(formAddress.postcode || '')) {
+                    syncPostcodeAndRequestRates(checkoutProvider, formAddress.postcode, countryId, true);
+                }
+            });
         });
     });
 
