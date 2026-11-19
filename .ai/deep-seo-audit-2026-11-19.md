@@ -29,9 +29,14 @@ Date: 2026-11-19
 - Provisioned an API input data source and successfully submitted 36 API-eligible products.
 - Merchant processing and approval are asynchronous; counts may not change immediately.
 
-## Search Console and performance blockers
+## Search Console evidence (verified 19 November 2026)
 
-- The signed-in Google account `haerriz@gmail.com` does not currently have access to the `sc-domain:senisstores.com` Search Console property. Ownership/access verification requires an explicit user-authorized Google account change.
+- The verified URL-prefix property reports 66 clicks, 4,407 impressions, 1.5% CTR and average position 4.6 for the latest three-month view.
+- The sitemap is registered and healthy: success, last read 18 November 2026, 79 discovered pages.
+- Coverage reports 42 indexed and 60 not indexed: 33 discovered but not crawled, 12 crawled but not indexed, 9 duplicate without a selected canonical and 6 valid alternate-canonical pages.
+- The largest proven opportunities are Birla White Cement 1kg, Focus 521 screwdriver, aluminium measuring cups, M-Seal Regular 90g and 18 gauge GI wire. Their titles, descriptions and on-page copy were strengthened around the real queries while keeping live price and availability dynamic.
+- Product snippets and merchant listings each report 5 valid items and zero invalid items; review snippets report 3 valid and zero invalid items.
+- Search Console has insufficient field data for Core Web Vitals, so lab and field performance still need periodic rechecking as traffic grows.
 - PageSpeed Insights API returned quota-exhausted and the PageSpeed web UI was blocked by the organisation's endpoint policy. Live pages, metadata, canonicals, robots directives and structured-data output were verified directly, but a fresh Lighthouse score was not available in this environment.
 
 ## Measurement plan
