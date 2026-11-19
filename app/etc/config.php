@@ -364,6 +364,7 @@ return [
         'Haerriz_Marketing' => 1,
         'Haerriz_PackagingCharges' => 1,
         'Haerriz_QtyUpdate' => 1,
+        'Haerriz_Seo' => 1,
         'Haerriz_Shiprocket' => 1,
         'Haerriz_SmtpRouting' => 1,
         'Haerriz_SocialLogin' => 1,
@@ -6882,12 +6883,9 @@ Disallow: /*SID=
             'default' => [
                 'design' => [
                     'head' => [
-                        'default_title' => 'Seni\'s Stores',
-                        'title_prefix' => 'Seni\'s Stores',
-                        'default_description' => 'Seni\'s Stores, Theni 625531 Best Hardware shop in Theni',
-                        'default_keywords' => 'Seni\'s Stores, Theni 625531 Best Hardware shop in Theni',
+                        'default_title' => 'Hardware Store in Theni & Online India | Seni\'s Stores',
+                        'default_description' => 'Hardware, tools and construction supplies from Seni\'s Stores in Theni, with delivery across India.',
                         'shortcut_icon' => 'stores/1/senisstores-logo.png',
-                        'title_suffix' => 'Seni\'s Stores',
                         'includes' => '',
                     ],
                 ],
