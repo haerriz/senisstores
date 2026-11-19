@@ -66,7 +66,7 @@ class ImproveSeo implements DataPatchInterface
 <section class="senis-local-intro">
 <h1>Hardware Store in Theni with Delivery Across India</h1>
 <p>Seni's Stores supplies dependable hardware and project essentials for homes, tradespeople and businesses. Shop measuring cups, S-hooks, GI and PVC wire, hand tools, cement and other construction supplies online, or visit our store on Periyakulam Main Road, Theni.</p>
-<p>We serve customers across Theni, Allinagaram, Periyakulam, Bodinayakanur, Cumbum, Uthamapalayam and Andipatti, and ship eligible products throughout India. For product guidance, availability or a bulk-order quote, call <a href="tel:+919442650753" class="contact-phone-link">+91 94426 50753</a>.</p>
+<p>We serve customers across Theni, Allinagaram, Periyakulam, Bodinayakanur, Cumbum, Uthamapalayam and Andipatti, and ship eligible products throughout India. For product guidance, availability or a bulk-order quote, call <a href="tel:+919443050753" class="contact-phone-link">+91 94430 50753</a>.</p>
 <ul class="senis-store-benefits"><li>Retail and bulk orders</li><li>Shipping calculated from destination and packed dimensions</li><li>Secure online checkout</li><li>Local help from our Theni store</li></ul>
 </section>
 <section class="senis-location">
