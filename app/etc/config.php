@@ -1859,7 +1859,7 @@ MwIDAQAB
                 ],
                 'store_information' => [
                     'name' => 'Seni S Stores',
-                    'phone' => '+91 9442650753',
+                    'phone' => '+91 9443050753',
                     'hours' => '09:00 AM - 09:00 PM',
                     'country_id' => 'IN',
                     'region_id' => '563',

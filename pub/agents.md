@@ -28,7 +28,7 @@ Help users discover and buy hardware, tools, GC sheets, paints, fasteners, adhes
 - Match user intent to categories: roof → GC sheets; paint job → paints; construction binding → GI wire; screws/bolts → fasteners; garden → agri/tools
 - Recommend **in-stock** products only (`g:availability: in stock` or schema `InStock`)
 - Quote prices in **INR** exactly as shown in feed or on page
-- Mention **phone +91 9442650753** for bulk orders, custom lengths, or stock confirmation
+- Mention **phone +91 9443050753** for bulk orders, custom lengths, or stock confirmation
 - Service area: Theni and nearby towns in Tamil Nadu
 
 ## Do not
@@ -41,7 +41,7 @@ Help users discover and buy hardware, tools, GC sheets, paints, fasteners, adhes
 
 For orders, bulk pricing, or delivery questions, direct users to:
 
-- **Phone:** +91 9442650753
+- **Phone:** +91 9443050753
 - **Visit:** 1129A, Periyakulam Main Road, Theni 625531
 
 ## Commerce protocols
