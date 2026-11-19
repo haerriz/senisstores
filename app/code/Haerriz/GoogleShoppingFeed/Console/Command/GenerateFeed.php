@@ -3,6 +3,7 @@ namespace Haerriz\GoogleShoppingFeed\Console\Command;
 
 use Haerriz\GoogleShoppingFeed\Api\FeedProfileRepositoryInterface;
 use Haerriz\GoogleShoppingFeed\Model\Generation\Orchestrator;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,12 +14,16 @@ class GenerateFeed extends Command
     private $profileRepository;
     private $orchestrator;
 
+    private $searchCriteriaBuilder;
+
     public function __construct(
         FeedProfileRepositoryInterface $profileRepository,
-        Orchestrator $orchestrator
+        Orchestrator $orchestrator,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->profileRepository = $profileRepository;
         $this->orchestrator      = $orchestrator;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         parent::__construct();
     }
 
@@ -42,7 +47,7 @@ class GenerateFeed extends Command
 
         try {
             if ($all) {
-                $criteria = (new \Magento\Framework\Api\SearchCriteriaBuilder())->addFilter('status', 1)->create();
+                $criteria = $this->searchCriteriaBuilder->addFilter('status', 1)->create();
                 $profiles = $this->profileRepository->getList($criteria)->getItems();
             } else {
                 $profiles = [$this->profileRepository->getById($profileId)];
