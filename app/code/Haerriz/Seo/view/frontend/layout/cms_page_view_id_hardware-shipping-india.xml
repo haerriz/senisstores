@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"><head><link src="https://senisstores.com/hardware-shipping-india" src_type="url" rel="canonical"/></head><body><referenceContainer name="before.body.end"><block class="Magento\Framework\View\Element\Template" name="haerriz.india.faq.schema" template="Haerriz_Seo::schema/india-faq.phtml"/></referenceContainer></body></page>

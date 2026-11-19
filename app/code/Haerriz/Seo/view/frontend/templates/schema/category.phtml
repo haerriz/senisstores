@@ -1,0 +1,2 @@
+<?php $schema=$block->getSchema(); ?>
+<?php if ($schema): ?><script type="application/ld+json"><?= /* @noEscape */ json_encode($schema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP) ?></script><?php endif; ?>
