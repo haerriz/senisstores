@@ -158,7 +158,7 @@ class MerchantClientV1
             }
 
             $input = new ProductInput();
-            $input->setOfferId((string)$product->getSku());
+            $input->setOfferId($this->normalizeOfferId((string)$product->getSku()));
             $input->setContentLanguage('en');
             $input->setFeedLabel('IN');
             $input->setProductAttributes($attributes);
@@ -215,6 +215,19 @@ class MerchantClientV1
         $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $value = preg_replace('/\s+/u', ' ', $value);
         return trim(is_string($value) ? $value : '');
+    }
+
+    private function normalizeOfferId(string $sku): string
+    {
+        $normalized = preg_replace('/[^A-Za-z0-9._-]+/', '-', trim($sku));
+        $normalized = trim(is_string($normalized) ? $normalized : '', '-');
+        if ($normalized === '') {
+            $normalized = 'product-' . substr(sha1($sku), 0, 12);
+        }
+        if (strlen($normalized) > 50) {
+            $normalized = substr($normalized, 0, 41) . '-' . substr(sha1($normalized), 0, 8);
+        }
+        return $normalized;
     }
 
     private function createCredentials(): ServiceAccountCredentials
