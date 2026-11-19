@@ -12,6 +12,9 @@
                 <default_length>10</default_length>
                 <default_width>10</default_width>
                 <default_height>10</default_height>
+                <dimension_buffer>5.08</dimension_buffer>
+                <packaging_weight>0.25</packaging_weight>
+                <default_product_weight>0.5</default_product_weight>
                 <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
             </shiprocket>
         </carriers>

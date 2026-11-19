@@ -130,10 +130,20 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
         $defaultLength = (float)$this->getConfigData('default_length') ?: 10.0;
         $defaultWidth = (float)$this->getConfigData('default_width') ?: 10.0;
         $defaultHeight = (float)$this->getConfigData('default_height') ?: 10.0;
+        $dimensionBuffer = $this->getNonNegativeConfigValue('dimension_buffer', 5.08);
+        $packagingWeight = $this->getNonNegativeConfigValue('packaging_weight', 0.25);
+        $defaultProductWeight = $this->getPositiveConfigValue('default_product_weight', 0.5);
 
         if ($request->getAllItems()) {
             foreach ($request->getAllItems() as $item) {
-                if ($item->getProductType() == 'virtual' || $item->getParentItem()) {
+                $parentItem = $item->getParentItem();
+                if ($item->getProductType() === 'virtual') {
+                    continue;
+                }
+                if (!$parentItem && $item->getProductType() === 'configurable') {
+                    continue;
+                }
+                if ($parentItem && $parentItem->getProductType() !== 'configurable') {
                     continue;
                 }
 
@@ -153,6 +163,11 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
                 $height = (float)($dimensions['shipping_height'] ?? 0);
 
                 // Fallback to defaults if not set
+                if ($length <= 0 || $width <= 0 || $height <= 0) {
+                    $this->logger->warning(
+                        'Shiprocket: Using fallback dimensions for SKU ' . $product->getSku() . '.'
+                    );
+                }
                 if ($length <= 0) $length = $defaultLength;
                 if ($width <= 0) $width = $defaultWidth;
                 if ($height <= 0) $height = $defaultHeight;
@@ -163,18 +178,24 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
                 $totalHeight += ($height * $qty);
 
                 $weight = (float)$item->getWeight();
+                if ($weight <= 0) {
+                    $weight = $defaultProductWeight;
+                    $this->logger->warning(
+                        'Shiprocket: Using fallback weight for SKU ' . $product->getSku() . '.'
+                    );
+                }
                 $totalWeight += ($weight * $qty);
             }
         }
 
         if ($totalWeight <= 0) {
-            $totalWeight = 0.5; // Minimum weight for rate calculation
+            $totalWeight = $defaultProductWeight;
         }
+        $totalWeight = round($totalWeight + $packagingWeight, 3);
 
-        // Add 2cm buffer to shipping box dimensions
-        $boxLength = $maxLength + 2.0;
-        $boxWidth = $maxWidth + 2.0;
-        $boxHeight = $totalHeight + 2.0;
+        $boxLength = $maxLength + $dimensionBuffer;
+        $boxWidth = $maxWidth + $dimensionBuffer;
+        $boxHeight = $totalHeight + $dimensionBuffer;
 
         // 3. Make Serviceability Call
         $result = $this->rateResultFactory->create();
@@ -213,6 +234,18 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
         }
 
         return $result;
+    }
+
+    private function getNonNegativeConfigValue($key, $default)
+    {
+        $value = $this->getConfigData($key);
+        return $value === null || $value === '' ? $default : max(0.0, (float)$value);
+    }
+
+    private function getPositiveConfigValue($key, $default)
+    {
+        $value = (float)$this->getConfigData($key);
+        return $value > 0 ? $value : $default;
     }
 
     private function getApiToken($email, $password)

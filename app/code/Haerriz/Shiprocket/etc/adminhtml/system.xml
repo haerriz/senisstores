@@ -37,7 +37,22 @@
                     <label>Default Package Height (cm)</label>
                     <comment>Fallback height if product height is not specified.</comment>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="dimension_buffer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Package Dimension Buffer (cm)</label>
+                    <comment>Added once to each packed dimension. Two inches equals 5.08 cm.</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="packaging_weight" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Packaging / Box Weight (kg)</label>
+                    <comment>Added once per shipment to the total product weight.</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="default_product_weight" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fallback Product Weight (kg)</label>
+                    <comment>Used per item only when its catalog weight is missing or zero.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort Order</label>
                 </field>
             </group>
