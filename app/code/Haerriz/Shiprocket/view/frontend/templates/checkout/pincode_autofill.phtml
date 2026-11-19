@@ -11,8 +11,7 @@ require([
 ], function (registry, $, quote, customerData) {
     'use strict';
 
-    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode',
-        lastRatedPostcode = '',
+    var lastRatedPostcode = '',
         lastLookupPostcode = '',
         lookupRequest = null;
 
@@ -166,18 +165,8 @@ require([
         });
     });
 
-    registry.get(postcodePath, function (postcodeComponent) {
-        postcodeComponent.value.subscribe(handlePostcodeChange);
-
-        $(document).on('input', 'input[name="postcode"]', function () {
-            var postcode = $(this).val().replace(/\D/g, '');
-
-            if (postcodeComponent.value() !== postcode) {
-                postcodeComponent.value(postcode);
-            }
-        });
-
-        handlePostcodeChange(postcodeComponent.value());
+    $(document).on('input change', 'input[name="postcode"]', function () {
+        handlePostcodeChange($(this).val());
     });
 });
 </script>
