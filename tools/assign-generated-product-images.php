@@ -35,6 +35,18 @@ $assignments = [
     '18 g GI wire' => ['gi-wire-coil-scale.png'],
     '20 g GI wire' => ['gi-wire-coil-scale.png'],
     '24 g GI wire' => ['gi-wire-coil-scale.png'],
+    'PVC Wire-1' => ['pvc-wire-coil-lifestyle.png'],
+    'PVC Wire-2' => ['pvc-wire-coil-lifestyle.png'],
+    'PVC Wire-3' => ['pvc-wire-coil-lifestyle.png'],
+    'PVC Wire-4' => ['pvc-wire-coil-lifestyle.png'],
+    'PVC Wire-5' => ['pvc-wire-coil-lifestyle.png'],
+    'PVC Wire' => ['pvc-wire-coil-lifestyle.png'],
+    'Spade with handle - மண்வெட்டி' => ['spade-with-handle-garden.png'],
+    'Crowbar - கடப்பாரை - kadapaarai - 5.5 feet' => ['crowbar-workshop.png'],
+    'Crowbar - கடப்பாரை - kadapaarai - 4.5 feet' => ['crowbar-workshop.png'],
+    'Electronic weighing Machine - (10Kgs Max)' => ['weighing-machine-10kg-shop.png'],
+    'Garden scissors' => ['garden-scissors-lifestyle.png'],
+    'shook-2-5-inch-small' => ['s-hook-small-lifestyle.png'],
 ];
 
 foreach ($assignments as $sku => $files) {
@@ -50,7 +62,16 @@ foreach ($assignments as $sku => $files) {
         if (!is_file($path)) {
             throw new RuntimeException('Missing generated image: ' . $path);
         }
-        if (in_array($file, $existing, true)) {
+        $stem = pathinfo($file, PATHINFO_FILENAME);
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $alreadyAssigned = array_filter(
+            $existing,
+            static fn(string $existingFile): bool => (bool)preg_match(
+                '/^' . preg_quote($stem, '/') . '(?:_\\d+)*\\.' . preg_quote($extension, '/') . '$/i',
+                $existingFile
+            )
+        );
+        if ($alreadyAssigned) {
             continue;
         }
         $galleryProcessor->addImage($product, $path, null, false, false);
