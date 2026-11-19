@@ -1,2 +1,12 @@
-<?php $s=['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>[['@type'=>'Question','name'=>'Is every product available for nationwide delivery?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Availability depends on stock, parcel dimensions and courier serviceability. Checkout shows the available option for the entered postcode.']],['@type'=>'Question','name'=>'How is shipping cost calculated?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Shipping uses the destination postcode, packed dimensions and chargeable weight, including packaging allowance.']],['@type'=>'Question','name'=>'How do I confirm stock before a large order?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Call +91 94430 50753 with the product name, quantity and delivery postcode.']]]; ?>
-<script type="application/ld+json"><?= /* @noEscape */ json_encode($s, JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP) ?></script>
+<?php
+$schema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => [
+        ['@type'=>'Question','name'=>'Is every product available for nationwide delivery?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Availability depends on stock, parcel dimensions and courier serviceability. Checkout shows the available option for the entered postcode.']],
+        ['@type'=>'Question','name'=>'How is shipping cost calculated?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Shipping uses the destination postcode, packed dimensions and chargeable weight, including packaging allowance.']],
+        ['@type'=>'Question','name'=>'How do I confirm stock before a large order?','acceptedAnswer'=>['@type'=>'Answer','text'=>'Call +91 94430 50753 with the product name, quantity and delivery postcode.']],
+    ],
+];
+?>
+<script type="application/ld+json"><?= /* @noEscape */ json_encode($schema, JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP) ?></script>
