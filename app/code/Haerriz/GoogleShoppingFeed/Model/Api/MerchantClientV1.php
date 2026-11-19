@@ -6,6 +6,12 @@ use Haerriz\GoogleShoppingFeed\Api\CredentialProviderInterface;
 use Haerriz\GoogleShoppingFeed\Model\Logger\Sanitizer;
 use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Shopping\Merchant\Products\V1\Client\ProductInputsServiceClient;
+use Google\Shopping\Merchant\Products\V1\Availability;
+use Google\Shopping\Merchant\Products\V1\Condition;
+use Google\Shopping\Merchant\Products\V1\InsertProductInputRequest;
+use Google\Shopping\Merchant\Products\V1\ProductAttributes;
+use Google\Shopping\Merchant\Products\V1\ProductInput;
+use Google\Shopping\Type\Price;
 use Google\Shopping\Merchant\DataSources\V1\Client\DataSourcesServiceClient;
 use Google\Shopping\Merchant\DataSources\V1\ListDataSourcesRequest;
 use Psr\Log\LoggerInterface;
@@ -123,12 +129,69 @@ class MerchantClientV1
         }
 
         $inserted = 0;
+        $parent = 'accounts/' . ltrim($merchantId, '/');
+        $dataSource = $this->resolveProductDataSource($parent);
         foreach ($products as $product) {
-            $client->insertProductInput('accounts/' . $merchantId, $product);
+            if (!$product instanceof \Magento\Catalog\Model\Product) {
+                continue;
+            }
+
+            $price = new Price();
+            $price->setAmountMicros((string) round((float)$product->getFinalPrice() * 1000000));
+            $price->setCurrencyCode('INR');
+
+            $attributes = new ProductAttributes();
+            $attributes->setTitle(trim((string)$product->getName()));
+            $attributes->setDescription($this->normalizeProductText((string)$product->getDescription()));
+            $attributes->setLink((string)$product->getProductUrl());
+            $attributes->setCanonicalLink((string)$product->getProductUrl());
+            $attributes->setAvailability($product->isAvailable() ? Availability::IN_STOCK : Availability::OUT_OF_STOCK);
+            $attributes->setCondition(Condition::PBNEW);
+            $attributes->setPrice($price);
+            $image = trim((string)$product->getImage());
+            if ($image !== '' && $image !== 'no_selection') {
+                $attributes->setImageLink((string)$product->getMediaConfig()->getMediaUrl($image));
+            }
+
+            $input = new ProductInput();
+            $input->setOfferId((string)$product->getSku());
+            $input->setContentLanguage('en');
+            $input->setFeedLabel('IN');
+            $input->setProductAttributes($attributes);
+
+            $request = new InsertProductInputRequest();
+            $request->setParent($parent);
+            $request->setDataSource($dataSource);
+            $request->setProductInput($input);
+            $client->insertProductInput($request);
             $inserted++;
         }
 
         return ['inserted' => $inserted];
+    }
+
+    private function resolveProductDataSource(string $parent): string
+    {
+        $client = $this->getDataSourcesClient();
+        $request = new ListDataSourcesRequest();
+        $request->setParent($parent);
+        foreach ($client->listDataSources($request)->iterateAllElements() as $source) {
+            if (method_exists($source, 'hasPrimaryProductDataSource') && !$source->hasPrimaryProductDataSource()) {
+                continue;
+            }
+            $name = trim((string)$source->getName());
+            if ($name !== '') {
+                return $name;
+            }
+        }
+        throw new \RuntimeException('No Google Merchant product data source is configured.');
+    }
+
+    private function normalizeProductText(string $value): string
+    {
+        $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $value = preg_replace('/\s+/u', ' ', $value);
+        return trim(is_string($value) ? $value : '');
     }
 
     private function createCredentials(): ServiceAccountCredentials
