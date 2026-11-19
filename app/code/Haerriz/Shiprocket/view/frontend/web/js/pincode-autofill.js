@@ -118,11 +118,11 @@ define([
                 autofillCityAndRegion(checkoutProvider, postcode, response[0].PostOffice[0]);
                 $postcode.css('border-color', '#2ecc71');
             } else {
-                $postcode.css('border-color', '#e74c3c');
+                $postcode.css('border-color', '');
             }
         }).fail(function (xhr, status) {
             if (status !== 'abort') {
-                $postcode.css('border-color', '#e74c3c');
+                $postcode.css('border-color', '');
             }
         }).always(function () {
             lookupRequest = null;
