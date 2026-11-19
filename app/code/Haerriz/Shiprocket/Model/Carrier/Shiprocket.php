@@ -18,6 +18,7 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
     private $configWriter;
     private $trackResultFactory;
     private $trackStatusFactory;
+    private $productResource;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -30,6 +31,7 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
         \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
         \Magento\Shipping\Model\Tracking\ResultFactory $trackResultFactory,
         \Magento\Shipping\Model\Tracking\Result\StatusFactory $trackStatusFactory,
+        \Magento\Catalog\Model\ResourceModel\Product $productResource,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
@@ -40,6 +42,7 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
         $this->logger = $logger;
         $this->trackResultFactory = $trackResultFactory;
         $this->trackStatusFactory = $trackStatusFactory;
+        $this->productResource = $productResource;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -139,10 +142,15 @@ class Shiprocket extends AbstractCarrier implements CarrierInterface
                     continue;
                 }
 
-                // Load product to get attributes if not present
-                $length = (float)$product->getData('shipping_length');
-                $width = (float)$product->getData('shipping_width');
-                $height = (float)$product->getData('shipping_height');
+                // Quote item products are partial models, so read the custom dimensions explicitly.
+                $dimensions = $this->productResource->getAttributeRawValue(
+                    (int)$product->getId(),
+                    ['shipping_length', 'shipping_width', 'shipping_height'],
+                    (int)$product->getStoreId()
+                );
+                $length = (float)($dimensions['shipping_length'] ?? 0);
+                $width = (float)($dimensions['shipping_width'] ?? 0);
+                $height = (float)($dimensions['shipping_height'] ?? 0);
 
                 // Fallback to defaults if not set
                 if ($length <= 0) $length = $defaultLength;
