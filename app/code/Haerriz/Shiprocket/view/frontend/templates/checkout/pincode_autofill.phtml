@@ -2,150 +2,182 @@
 /** @var \Magento\Framework\View\Element\Template $block */
 ?>
 <script type="text/javascript">
-require(['uiRegistry', 'jquery', 'Magento_Checkout/js/model/quote', 'Magento_Customer/js/customer-data', 'Magento_Checkout/js/action/select-shipping-address', 'Magento_Checkout/js/checkout-data', 'domReady!'], function(registry, $, quote, customerData, selectShippingAddress, checkoutData) {
-    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode';
+require([
+    'uiRegistry',
+    'jquery',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Customer/js/customer-data',
+    'domReady!'
+], function (registry, $, quote, customerData) {
+    'use strict';
 
-    // Recalculate shipping rates when cart items change
-    customerData.get('cart').subscribe(function(cartData) {
-        if (quote.shippingAddress() && quote.shippingAddress().postcode) {
-            var addr = (typeof quote.shippingAddress === 'function') ? quote.shippingAddress() : quote.shippingAddress;
-            if (addr) {
-                require(['Magento_Checkout/js/model/shipping-rate-processor/new-address', 'Magento_Checkout/js/model/shipping-rate-registry'], function(rateProcessor, rateRegistry) {
-                    if (typeof addr.getCacheKey === 'function') {
-                        rateRegistry.set(addr.getCacheKey(), null);
-                    }
-                    rateProcessor.getRates(addr);
-                });
+    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode',
+        lastRatedPostcode = '',
+        lastLookupPostcode = '',
+        lookupRequest = null;
+
+    function requestRates(address) {
+        require([
+            'Magento_Checkout/js/model/shipping-rate-processor/new-address',
+            'Magento_Checkout/js/model/shipping-rate-registry'
+        ], function (rateProcessor, rateRegistry) {
+            if (typeof address.getCacheKey === 'function') {
+                rateRegistry.set(address.getCacheKey(), null);
             }
+            rateProcessor.getRates(address);
+        });
+    }
+
+    function syncPostcodeAndRequestRates(checkoutProvider, postcode, force) {
+        var address = quote.shippingAddress(),
+            oldCacheKey;
+
+        checkoutProvider.set('shippingAddress.postcode', postcode);
+
+        if (!address) {
+            return;
         }
-    });
 
-    registry.get(postcodePath, function(postcodeComponent) {
-        var isFetching = false;
-        var lastFetchedPostcode = '';
+        if (!force && postcode === lastRatedPostcode && address.postcode === postcode) {
+            return;
+        }
 
-        function handlePostcodeChange(postcode) {
-            if (!postcode) return;
-            postcode = postcode.toString().replace(/\D/g, '');
-            
-            var countryId = quote.shippingAddress() ? quote.shippingAddress().countryId : 'IN';
+        oldCacheKey = typeof address.getCacheKey === 'function' ? address.getCacheKey() : null;
+        address.postcode = postcode;
+        address.countryId = 'IN';
+        lastRatedPostcode = postcode;
+
+        require(['Magento_Checkout/js/model/shipping-rate-registry'], function (rateRegistry) {
+            if (oldCacheKey) {
+                rateRegistry.set(oldCacheKey, null);
+            }
+            requestRates(address);
+        });
+    }
+
+    function findRegionId(regionComponent, stateName) {
+        var options = typeof regionComponent.options === 'function' ?
+                regionComponent.options() : regionComponent.options,
+            normalizedState = stateName.toLowerCase(),
+            regionId = '';
+
+        $.each(options || [], function (index, option) {
+            var label = option.label ? option.label.trim().toLowerCase() : '';
+
+            if (label === normalizedState || label.substring(0, 4) === normalizedState.substring(0, 4)) {
+                regionId = option.value;
+                return false;
+            }
+        });
+
+        return regionId;
+    }
+
+    function autofillCityAndRegion(checkoutProvider, postcode, postOffice) {
+        registry.get(
+            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id',
+            function (regionComponent) {
+                var stateName = postOffice.State,
+                    regionId = findRegionId(regionComponent, stateName),
+                    address = quote.shippingAddress();
+
+                checkoutProvider.set('shippingAddress.city', postOffice.District);
+                checkoutProvider.set('shippingAddress.region', stateName);
+                if (regionId) {
+                    checkoutProvider.set('shippingAddress.region_id', regionId);
+                }
+
+                if (address && address.postcode === postcode) {
+                    address.city = postOffice.District;
+                    address.region = stateName;
+                    if (regionId) {
+                        address.regionId = regionId;
+                    }
+                }
+            }
+        );
+    }
+
+    function lookupPostcode(checkoutProvider, postcode) {
+        var $postcode = $('input[name="postcode"]');
+
+        if (postcode === lastLookupPostcode) {
+            return;
+        }
+
+        lastLookupPostcode = postcode;
+        if (lookupRequest) {
+            lookupRequest.abort();
+        }
+
+        $postcode.css('border-color', '#3498db');
+        lookupRequest = $.ajax({
+            url: 'https://api.postalpincode.in/pincode/' + encodeURIComponent(postcode),
+            dataType: 'json',
+            timeout: 5000
+        }).done(function (response) {
+            if (response && response[0] && response[0].Status === 'Success' && response[0].PostOffice) {
+                autofillCityAndRegion(checkoutProvider, postcode, response[0].PostOffice[0]);
+                $postcode.css('border-color', '#2ecc71');
+            } else {
+                $postcode.css('border-color', '#e74c3c');
+            }
+        }).fail(function (xhr, status) {
+            if (status !== 'abort') {
+                $postcode.css('border-color', '#e74c3c');
+            }
+        }).always(function () {
+            lookupRequest = null;
+        });
+    }
+
+    function handlePostcodeChange(value) {
+        var postcode = value ? value.toString().replace(/\D/g, '') : '';
+
+        if (postcode.length !== 6) {
+            lastRatedPostcode = '';
+            lastLookupPostcode = '';
+            $('input[name="postcode"]').css('border-color', '');
+            return;
+        }
+
+        registry.get('checkoutProvider', function (checkoutProvider) {
+            var formAddress = checkoutProvider.get('shippingAddress') || {},
+                countryId = formAddress.country_id ||
+                    (quote.shippingAddress() && quote.shippingAddress().countryId);
+
             if (countryId !== 'IN') {
                 return;
             }
 
-            if (postcode.length === 6 && postcode !== lastFetchedPostcode && !isFetching) {
-                isFetching = true;
-                lastFetchedPostcode = postcode;
-                
-                var $postcodeEl = $('input[name="postcode"]');
-                if ($postcodeEl.length) {
-                    $postcodeEl.css('border-color', '#3498db');
-                }
-                
-                $.getJSON('https://api.postalpincode.in/pincode/' + postcode, function(response) {
-                    isFetching = false;
-                    if (response && response[0] && response[0].Status === 'Success' && response[0].PostOffice) {
-                        var postOffice = response[0].PostOffice[0];
-                        var city = postOffice.District;
-                        var stateName = postOffice.State;
-                        
-                        registry.get('checkoutProvider', function(checkoutProvider) {
-                            var shippingAddressData = checkoutProvider.get('shippingAddress') || {};
-                            shippingAddressData.city = city;
-                            shippingAddressData.postcode = postcode;
-                            
-                            // Find matching region ID
-                            registry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id', function(regionIdComponent) {
-                                var matched = false;
-                                var options = typeof regionIdComponent.options === 'function' ? regionIdComponent.options() : regionIdComponent.options;
-                                var regionIdVal = '';
-                                
-                                if (options && options.length) {
-                                    $.each(options, function(index, option) {
-                                        if (option.label && option.label.trim().toLowerCase() === stateName.toLowerCase()) {
-                                            regionIdVal = option.value;
-                                            matched = true;
-                                            return false;
-                                        }
-                                    });
-                                    if (!matched) {
-                                        $.each(options, function(index, option) {
-                                            if (option.label && option.label.trim().toLowerCase().substring(0, 4) === stateName.toLowerCase().substring(0, 4)) {
-                                                regionIdVal = option.value;
-                                                matched = true;
-                                                return false;
-                                            }
-                                        });
-                                    }
-                                }
-                                
-                                if (matched && regionIdVal) {
-                                    shippingAddressData.region_id = regionIdVal;
-                                    shippingAddressData.region = stateName;
-                                } else {
-                                    shippingAddressData.region = stateName;
-                                }
-                                
-                                // Update UI completely
-                                checkoutProvider.set('shippingAddress', shippingAddressData);
-                                
-                                // Sync to quote
-                                var address = quote.shippingAddress();
-                                if (address) {
-                                    address.city = city;
-                                    address.postcode = postcode;
-                                    if (matched && regionIdVal) {
-                                        address.regionId = regionIdVal;
-                                        address.region = stateName;
-                                    } else {
-                                        address.region = stateName;
-                                    }
-                                    
-                                    // Trigger rate estimation
-                                    require(['Magento_Checkout/js/model/shipping-rate-processor/new-address', 'Magento_Checkout/js/model/shipping-rate-registry'], function(rateProcessor, rateRegistry) {
-                                        if (typeof address.getCacheKey === 'function') {
-                                            rateRegistry.set(address.getCacheKey(), null);
-                                        }
-                                        rateProcessor.getRates(address);
-                                    });
-                                }
-                            });
-                        });
-                        
-                        if ($postcodeEl.length) {
-                            $postcodeEl.css('border-color', '#2ecc71');
-                        }
-                    } else {
-                        if ($postcodeEl.length) {
-                            $postcodeEl.css('border-color', '#e74c3c');
-                        }
-                    }
-                }).fail(function() {
-                    isFetching = false;
-                    if ($postcodeEl.length) {
-                        $postcodeEl.css('border-color', '#e74c3c');
-                    }
-                });
-            } else if (postcode.length !== 6) {
-                var $postcodeEl = $('input[name="postcode"]');
-                if ($postcodeEl.length) {
-                    $postcodeEl.css('border-color', '');
-                }
-            }
-        }
+            // Shipping calculation must not depend on the optional third-party autofill service.
+            syncPostcodeAndRequestRates(checkoutProvider, postcode, false);
+            lookupPostcode(checkoutProvider, postcode);
+        });
+    }
 
+    customerData.get('cart').subscribe(function () {
+        registry.get('checkoutProvider', function (checkoutProvider) {
+            var formAddress = checkoutProvider.get('shippingAddress') || {};
+
+            if (formAddress.country_id === 'IN' && /^\d{6}$/.test(formAddress.postcode || '')) {
+                syncPostcodeAndRequestRates(checkoutProvider, formAddress.postcode, true);
+            }
+        });
+    });
+
+    registry.get(postcodePath, function (postcodeComponent) {
         postcodeComponent.value.subscribe(handlePostcodeChange);
 
-        $(document).on('input', 'input[name="postcode"]', function() {
+        $(document).on('input', 'input[name="postcode"]', function () {
             var postcode = $(this).val().replace(/\D/g, '');
-            if (postcode.length === 6 && postcodeComponent.value() !== postcode) {
+
+            if (postcodeComponent.value() !== postcode) {
                 postcodeComponent.value(postcode);
             }
         });
 
-        if (postcodeComponent.value()) {
-            handlePostcodeChange(postcodeComponent.value());
-        }
+        handlePostcodeChange(postcodeComponent.value());
     });
 });
 </script>
