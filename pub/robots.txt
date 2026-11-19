@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /checkout/
+Disallow: /customer/
+Disallow: /catalogsearch/
+Disallow: /review/
+Disallow: /*?SID=
+Disallow: /*?___store=
+
+Sitemap: https://senisstores.com/sitemap.xml
+
+# AI agent guidance
+# llms.txt: https://senisstores.com/llms.txt
+# agents.md: https://senisstores.com/agents.md

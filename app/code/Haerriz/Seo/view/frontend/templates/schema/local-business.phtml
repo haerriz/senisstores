@@ -1,0 +1,11 @@
+<?php
+$schema = [
+    '@context'=>'https://schema.org','@type'=>'HardwareStore','@id'=>'https://senisstores.com/#store',
+    'name'=>"Seni's Stores",'url'=>'https://senisstores.com/','telephone'=>'+919442650753','priceRange'=>'₹₹',
+    'address'=>['@type'=>'PostalAddress','streetAddress'=>'1129A, opposite Edamaal Street, Periyakulam Main Road','addressLocality'=>'Theni','addressRegion'=>'Tamil Nadu','postalCode'=>'625531','addressCountry'=>'IN'],
+    'geo'=>['@type'=>'GeoCoordinates','latitude'=>10.0116184,'longitude'=>77.4766935],
+    'openingHoursSpecification'=>[['@type'=>'OpeningHoursSpecification','dayOfWeek'=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],'opens'=>'09:00','closes'=>'21:00']],
+    'areaServed'=>[['@type'=>'City','name'=>'Theni'],['@type'=>'Country','name'=>'India']]
+];
+?>
+<script type="application/ld+json"><?= /* @noEscape */ json_encode($schema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP) ?></script>

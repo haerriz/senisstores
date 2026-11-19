@@ -1,0 +1,10 @@
+<?php
+$order = $block->getOrder();
+if (!$order) { return; }
+$items = [];
+foreach ($order->getAllVisibleItems() as $item) {
+    $items[] = ['item_id'=>(string)$item->getSku(),'item_name'=>(string)$item->getName(),'price'=>(float)$item->getPrice(),'quantity'=>(float)$item->getQtyOrdered()];
+}
+$payload = ['transaction_id'=>(string)$order->getIncrementId(),'currency'=>(string)$order->getOrderCurrencyCode(),'value'=>(float)$order->getGrandTotal(),'tax'=>(float)$order->getTaxAmount(),'shipping'=>(float)$order->getShippingAmount(),'items'=>$items];
+?>
+<script type="text/x-magento-init">{"*":{"Haerriz_Seo/js/ga4-purchase":<?= /* @noEscape */ json_encode($payload, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>}}</script>
