@@ -49,3 +49,16 @@ Values were not invented from product names. Each should be weighed and measured
 2. Replace the nine missing base images and optimize the oversized S-hook image.
 3. Weigh actual packaging materials; update the 0.25 kg global tare if the normal packed box differs.
 4. If packaging varies materially by product, add a per-product packaging tare in a separate catalog-data project rather than guessing values in shipping code.
+
+## Remediation completed
+
+- All 46 enabled products now have positive weight and shipping dimensions.
+- Restored existing M-Seal, Ezy Seal, chain, karni, and hook photographs that were hidden by incorrect store-view image roles.
+- Corrected the hook image mapping using the original ruler photographs; the 2.5-inch product no longer displays the 6-inch hook.
+- Added optimized base images for all hook and chain variants. No enabled product is missing a base image and no active base image exceeds 1 MB.
+- Created labeled GI/PVC wire derivatives from the store's own photos so gauge/weight variants are distinguishable without unrelated stock photography.
+- Corrected GI/PVC quantity variants from copied 1 kg weights to 1–5 kg and scaled their packed stack heights.
+- Replaced copied 0.1 kg individual cup weights with 0.135, 0.09, 0.06, 0.045, and 0.03 kg; these total the existing 0.36 kg combo weight.
+- Added defensible dimensions for products whose own descriptions provide length/thickness. Hook weights are engineering estimates based on stated steel-rod dimensions; M-Seal/Ezy Seal package dimensions are based on the store's own packaging photos. Physical scale measurements remain preferable when available.
+- Retained the handled spade's 100 cm packaged length: its photograph is proportionally consistent and no contrary measured source exists.
+- Recovery backup: `/home/u434561653/backups/senisstores/catalog-before-shipping-fix-20261119.json`.
