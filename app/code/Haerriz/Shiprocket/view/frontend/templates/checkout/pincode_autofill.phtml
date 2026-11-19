@@ -11,9 +11,7 @@ require([
 ], function (registry, $, quote, customerData) {
     'use strict';
 
-    var fieldsetPath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.',
-        postcodePath = fieldsetPath + 'postcode',
-        countryPath = fieldsetPath + 'country_id',
+    var postcodePath = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode',
         lastRatedPostcode = '',
         lastLookupPostcode = '',
         lookupRequest = null;
@@ -144,31 +142,27 @@ require([
             return;
         }
 
-        registry.get(countryPath, function (countryComponent) {
-            var countryId = countryComponent.value();
+        registry.get('checkoutProvider', function (checkoutProvider) {
+            var countryId = $('select[name="country_id"]').val();
 
             if (countryId !== 'IN') {
                 return;
             }
 
-            registry.get('checkoutProvider', function (checkoutProvider) {
-                // Shipping calculation must not depend on the optional third-party autofill service.
-                syncPostcodeAndRequestRates(checkoutProvider, postcode, countryId, false);
-                lookupPostcode(checkoutProvider, postcode);
-            });
+            // Shipping calculation must not depend on the optional third-party autofill service.
+            syncPostcodeAndRequestRates(checkoutProvider, postcode, countryId, false);
+            lookupPostcode(checkoutProvider, postcode);
         });
     }
 
     customerData.get('cart').subscribe(function () {
-        registry.get(countryPath, function (countryComponent) {
-            registry.get('checkoutProvider', function (checkoutProvider) {
-                var formAddress = checkoutProvider.get('shippingAddress') || {},
-                    countryId = countryComponent.value();
+        registry.get('checkoutProvider', function (checkoutProvider) {
+            var formAddress = checkoutProvider.get('shippingAddress') || {},
+                countryId = $('select[name="country_id"]').val();
 
-                if (countryId === 'IN' && /^\d{6}$/.test(formAddress.postcode || '')) {
-                    syncPostcodeAndRequestRates(checkoutProvider, formAddress.postcode, countryId, true);
-                }
-            });
+            if (countryId === 'IN' && /^\d{6}$/.test(formAddress.postcode || '')) {
+                syncPostcodeAndRequestRates(checkoutProvider, formAddress.postcode, countryId, true);
+            }
         });
     });
 
