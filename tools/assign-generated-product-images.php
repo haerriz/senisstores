@@ -52,6 +52,20 @@ $assignments = [
     'Electronic weighing Machine - (10Kgs Max)' => ['weighing-machine-10kg-shop.png'],
     'Garden scissors' => ['garden-scissors-lifestyle.png'],
     'shook-2-5-inch-small' => ['s-hook-small-lifestyle.png'],
+    'Birla White Portland cement 5kg' => ['birla-white-5kg-clean.png'],
+    'Birla White Portland cement 1kg' => ['birla-white-1kg-clean.png'],
+    'Spade (மண்வெட்டி)' => ['spade-head-lifestyle.png'],
+    'Electronic Weighing machine (Maximum 20Kgs)' => ['weighing-machine-20kg-shop.png'],
+    'Electronic Weighing machine [250mm X 250mm] (Maximum 50Kgs)' => ['weighing-machine-50kg-shop.png'],
+    'mseal-phataphat-25g' => ['mseal-phataphat-clean.png'],
+    'mseal-regular-90g' => ['mseal-regular-clean.png'],
+    'ezy-seal' => ['ezy-seal-clean.png'],
+    'mini-jhola-chain-heavy' => ['jhola-chain-comparison.png'],
+    'mini-jhola-chain-regular' => ['jhola-chain-comparison.png'],
+    'steel-karni-pvc-handle' => ['steel-karni-lifestyle.png'],
+    'shook-4-inch-large' => ['s-hook-large-comparison.png'],
+    'shook-4-inch-large-spl' => ['s-hook-large-comparison.png'],
+    'shook-6-inch-xl' => ['s-hook-large-comparison.png'],
 ];
 
 foreach ($assignments as $sku => $files) {
