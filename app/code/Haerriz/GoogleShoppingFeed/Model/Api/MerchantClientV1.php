@@ -13,7 +13,11 @@ use Google\Shopping\Merchant\Products\V1\ProductAttributes;
 use Google\Shopping\Merchant\Products\V1\ProductInput;
 use Google\Shopping\Type\Price;
 use Google\Shopping\Merchant\DataSources\V1\Client\DataSourcesServiceClient;
+use Google\Shopping\Merchant\DataSources\V1\CreateDataSourceRequest;
+use Google\Shopping\Merchant\DataSources\V1\DataSource;
+use Google\Shopping\Merchant\DataSources\V1\DataSource\Input;
 use Google\Shopping\Merchant\DataSources\V1\ListDataSourcesRequest;
+use Google\Shopping\Merchant\DataSources\V1\PrimaryProductDataSource;
 use Psr\Log\LoggerInterface;
 
 class MerchantClientV1
@@ -179,12 +183,31 @@ class MerchantClientV1
             if (method_exists($source, 'hasPrimaryProductDataSource') && !$source->hasPrimaryProductDataSource()) {
                 continue;
             }
+            if ((int)$source->getInput() !== Input::API) {
+                continue;
+            }
             $name = trim((string)$source->getName());
             if ($name !== '') {
                 return $name;
             }
         }
-        throw new \RuntimeException('No Google Merchant product data source is configured.');
+
+        $primary = new PrimaryProductDataSource();
+        $primary->setContentLanguage('en');
+        $primary->setFeedLabel('IN');
+        $source = new DataSource();
+        $source->setDisplayName('Seni S Stores API Catalog');
+        $source->setInput(Input::API);
+        $source->setPrimaryProductDataSource($primary);
+        $create = new CreateDataSourceRequest();
+        $create->setParent($parent);
+        $create->setDataSource($source);
+        $created = $client->createDataSource($create);
+        $name = trim((string)$created->getName());
+        if ($name === '') {
+            throw new \RuntimeException('Google Merchant API data source creation returned no resource name.');
+        }
+        return $name;
     }
 
     private function normalizeProductText(string $value): string
