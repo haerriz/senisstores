@@ -1,2 +1,19 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"><body><referenceContainer name="before.body.end"><block class="Haerriz\Seo\Block\CategorySchema" name="haerriz.category.schema" template="Haerriz_Seo::schema/category.phtml"/></referenceContainer></body></page>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Haerriz\Seo\Block\CategoryBranches"
+                   name="haerriz.category.branches"
+                   template="Haerriz_Seo::category-branches.phtml"
+                   before="category.products"/>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block class="Haerriz\Seo\Block\CategorySchema"
+                   name="haerriz.category.schema"
+                   template="Haerriz_Seo::schema/category.phtml"/>
+            <block class="Haerriz\Seo\Block\BreadcrumbSchema"
+                   name="haerriz.category.breadcrumb.schema"
+                   template="Haerriz_Seo::schema/breadcrumbs.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

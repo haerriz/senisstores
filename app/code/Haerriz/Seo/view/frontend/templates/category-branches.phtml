@@ -1,0 +1,19 @@
+<?php
+/** @var \Haerriz\Seo\Block\CategoryBranches $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$branches = $block->getBranches();
+?>
+<?php if ($branches): ?>
+    <nav class="senis-category-branches" aria-label="<?= $escaper->escapeHtmlAttr(__('Browse subcategories')) ?>">
+        <strong><?= $escaper->escapeHtml(__('Browse this range')) ?></strong>
+        <ul>
+            <?php foreach ($branches as $branch): ?>
+                <li>
+                    <a href="<?= $escaper->escapeUrl($branch->getUrl()) ?>">
+                        <?= $escaper->escapeHtml($branch->getName()) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </nav>
+<?php endif; ?>

@@ -1,8 +1,18 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <referenceBlock name="breadcrumbs" remove="true"/>
+        <referenceContainer name="page.top">
+            <block class="Haerriz\Seo\Block\ProductBreadcrumbs"
+                   name="haerriz.product.breadcrumbs"
+                   template="Haerriz_Seo::product-breadcrumbs.phtml"
+                   before="-"/>
+        </referenceContainer>
         <referenceContainer name="before.body.end">
             <block class="Magento\Catalog\Block\Product\View" name="haerriz.ga4.product" template="Haerriz_Seo::analytics/product.phtml"/>
+            <block class="Haerriz\Seo\Block\BreadcrumbSchema"
+                   name="haerriz.product.breadcrumb.schema"
+                   template="Haerriz_Seo::schema/breadcrumbs.phtml"/>
         </referenceContainer>
     </body>
 </page>

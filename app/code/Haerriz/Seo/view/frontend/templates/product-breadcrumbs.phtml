@@ -1,0 +1,23 @@
+<?php
+/** @var \Haerriz\Seo\Block\ProductBreadcrumbs $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$trail = $block->getTrail();
+?>
+<?php if (count($trail) >= 2): ?>
+    <nav class="breadcrumbs" aria-label="<?= $escaper->escapeHtmlAttr(__('Breadcrumb')) ?>">
+        <ul class="items">
+            <?php foreach ($trail as $position => $crumb): ?>
+                <li class="item <?= $escaper->escapeHtmlAttr($crumb['is_current'] ? 'product' : 'category') ?>">
+                    <?php if ($crumb['is_current']): ?>
+                        <strong><?= $escaper->escapeHtml($crumb['name']) ?></strong>
+                    <?php else: ?>
+                        <a href="<?= $escaper->escapeUrl($crumb['url']) ?>"
+                           title="<?= $escaper->escapeHtmlAttr($crumb['name']) ?>">
+                            <?= $escaper->escapeHtml($crumb['name']) ?>
+                        </a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </nav>
+<?php endif; ?>
