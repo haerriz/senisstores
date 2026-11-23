@@ -22,7 +22,7 @@
     "require": {
         "google/shopping-merchant-datasources": "^1.3",
         "google/shopping-merchant-products": "^1.7",
-        "magento/product-community-edition": "2.4.7",
+        "magento/product-community-edition": "2.4.7-p10",
         "mageplaza/module-core": "^1.5",
         "mageplaza/module-smtp": "^4.7",
         "razorpay/magento": "^4.2"
