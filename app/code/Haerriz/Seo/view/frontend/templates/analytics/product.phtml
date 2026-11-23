@@ -2,6 +2,9 @@
 $product = $block->getProduct();
 $item = ['item_id'=>(string)$product->getSku(),'item_name'=>(string)$product->getName(),'price'=>(float)$product->getFinalPrice(),'quantity'=>1];
 ?>
+<script>
+window.senisGa4('view_item', <?= /* @noEscape */ json_encode(['currency'=>'INR','value'=>(float)$product->getFinalPrice(),'items'=>[$item]], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>);
+</script>
 <script type="text/x-magento-init">
-{"*":{"Haerriz_Seo/js/ga4-product":<?= /* @noEscape */ json_encode(['currency'=>'INR','value'=>(float)$product->getFinalPrice(),'items'=>[$item]], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>}}
+{"#product_addtocart_form":{"Haerriz_Seo/js/ga4-product":<?= /* @noEscape */ json_encode(['currency'=>'INR','value'=>(float)$product->getFinalPrice(),'items'=>[$item]], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>}}
 </script>
