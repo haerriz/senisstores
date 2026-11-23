@@ -3,9 +3,10 @@
 This file records verified project facts and architecture decisions.
 
 ## Verified platform baseline
-- **Magento Edition/Version**: Magento Open Source 2.4.7 (Community Edition)
-- **PHP Version**: PHP 8.2.35
-- **Database**: MySQL 8.0 on localhost (`u434561653_senisstores`)
+- **Magento Edition/Version**: Magento Open Source 2.4.7-p10 (Community Edition)
+- **PHP Version**: PHP 8.2.36
+- **Database**: MariaDB 11.8.9 on localhost (`u434561653_senisstores`)
+- **Search**: OpenSearch (exact server version not yet recorded)
 
 ## Storefront and checkout architecture
 - **Storefront**: Custom child theme `Haerriz/Senisstores` extending `Magento/luma`
@@ -31,3 +32,5 @@ This file records verified project facts and architecture decisions.
 - **Checkout postcode synchronization (2026-11-19)**: The checkout form's `checkoutProvider` country/postcode is authoritative. Sync a valid Indian postcode to the quote and request rates immediately; the public postcode lookup is a time-bounded enhancement only.
 - **Shiprocket package model (2026-11-19)**: Product shipping dimensions are centimetres and weight is kilograms. Add a configurable 5.08 cm (2 inch) overall dimension allowance and a configurable 0.25 kg packaging tare once per shipment. Configurable products are rated from their selected simple child. Missing catalog values use explicit configurable fallbacks and emit warnings.
 - **Catalog shipping audit (2026-11-19)**: All 46 enabled products have positive weight, dimensions, and a live base image. Wire quantity variants use 1–5 kg weights; hook/chain images are mapped from original ruler photos; active base images are under 1 MB.
+- **Anonymous FPC safety (2026-11-23)**: Cacheable storefront blocks must not inject a server-generated form key. The shopping assistant reads Magento's `form_key` cookie at action time so anonymous HTML can remain publicly cacheable without sharing a session token.
+- **Organic catalogue policy (2026-11-23)**: Add substantial buying guidance only to categories with live products. Empty catalogue branches remain hidden/noindex rather than receiving generated doorway copy. Encourage combined compatible orders without inventing bundle SKUs, discounts, stock, load ratings, or delivery promises.

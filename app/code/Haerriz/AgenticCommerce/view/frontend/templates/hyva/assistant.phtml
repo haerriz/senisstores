@@ -15,7 +15,6 @@ $rootId = 'haerriz-agentic-commerce-' . substr(hash('sha256', $block->getNameInL
          data-history-endpoint="<?= $escaper->escapeUrl($block->getHistoryUrl()) ?>"
          data-start-endpoint="<?= $escaper->escapeUrl($block->getStartUrl()) ?>"
          data-close-endpoint="<?= $escaper->escapeUrl($block->getCloseUrl()) ?>"
-         data-form-key="<?= $escaper->escapeHtmlAttr($block->getFormKeyValue()) ?>"
          data-placement-selector="<?= $escaper->escapeHtmlAttr($block->getPlacementSelector()) ?>"
          data-store-code="<?= $escaper->escapeHtmlAttr($block->getStoreCode()) ?>"
          data-accent-color="<?= $escaper->escapeHtmlAttr($block->getAccentColor()) ?>"

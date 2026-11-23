@@ -5,7 +5,16 @@ $schema = [
     'address'=>['@type'=>'PostalAddress','streetAddress'=>'1129A, opposite Edamaal Street, Periyakulam Main Road','addressLocality'=>'Theni','addressRegion'=>'Tamil Nadu','postalCode'=>'625531','addressCountry'=>'IN'],
     'geo'=>['@type'=>'GeoCoordinates','latitude'=>10.0116184,'longitude'=>77.4766935],
     'openingHoursSpecification'=>[['@type'=>'OpeningHoursSpecification','dayOfWeek'=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],'opens'=>'09:00','closes'=>'21:00']],
-    'areaServed'=>[['@type'=>'City','name'=>'Theni'],['@type'=>'Country','name'=>'India']]
+    'areaServed'=>[
+        ['@type'=>'City','name'=>'Theni'],
+        ['@type'=>'City','name'=>'Periyakulam'],
+        ['@type'=>'City','name'=>'Bodinayakanur'],
+        ['@type'=>'City','name'=>'Cumbum'],
+        ['@type'=>'City','name'=>'Uthamapalayam'],
+        ['@type'=>'City','name'=>'Andipatti'],
+        ['@type'=>'AdministrativeArea','name'=>'Theni district'],
+        ['@type'=>'Country','name'=>'India']
+    ]
 ];
 ?>
 <script type="application/ld+json"><?= /* @noEscape */ json_encode($schema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP) ?></script>

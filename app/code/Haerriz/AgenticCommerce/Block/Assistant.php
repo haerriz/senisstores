@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Haerriz\AgenticCommerce\Block;
 
 use Haerriz\AgenticCommerce\Model\Config;
-use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -14,7 +13,6 @@ class Assistant extends Template
     public function __construct(
         Template\Context $context,
         private Config $config,
-        private FormKey $formKey,
         private StoreManagerInterface $storeManager,
         array $data = []
     ) {
@@ -44,6 +42,5 @@ class Assistant extends Template
     public function getHistoryUrl(): string { return $this->getUrl('agenticcommerce/conversation/history'); }
     public function getStartUrl(): string { return $this->getUrl('agenticcommerce/conversation/start'); }
     public function getCloseUrl(): string { return $this->getUrl('agenticcommerce/conversation/close'); }
-    public function getFormKeyValue(): string { return $this->formKey->getFormKey(); }
     public function getStoreCode(): string { return (string)$this->storeManager->getStore()->getCode(); }
 }

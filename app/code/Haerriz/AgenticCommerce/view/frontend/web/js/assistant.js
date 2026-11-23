@@ -65,7 +65,7 @@
         }
 
         function currentFormKey() {
-            return cookieValue('form_key') || root.dataset.formKey || '';
+            return cookieValue('form_key');
         }
 
         function contrastText(color) {
