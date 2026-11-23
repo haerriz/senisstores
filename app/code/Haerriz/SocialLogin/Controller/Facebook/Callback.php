@@ -30,8 +30,17 @@ class Callback extends Action
     }
 
     public function execute() {
+        if ($this->getRequest()->getParam('error')) {
+            $this->customerSession->unsetData('sociallogin_facebook_state');
+            $this->messageManager->addNoticeMessage(__('Facebook login was cancelled.'));
+            return $this->_redirect('customer/account/login');
+        }
+
         $code = $this->getRequest()->getParam('code');
-        if (!$code) {
+        $state = (string)$this->getRequest()->getParam('state');
+        $expectedState = (string)$this->customerSession->getData('sociallogin_facebook_state');
+        $this->customerSession->unsetData('sociallogin_facebook_state');
+        if (!$code || !$state || !$expectedState || !hash_equals($expectedState, $state)) {
             $this->messageManager->addErrorMessage(__('Facebook Login failed.'));
             return $this->_redirect('customer/account/login');
         }
@@ -39,7 +48,7 @@ class Callback extends Action
         $appId = $this->scopeConfig->getValue('haerriz_sociallogin/facebook/app_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $appSecretEnc = $this->scopeConfig->getValue('haerriz_sociallogin/facebook/app_secret', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $appSecret = $this->encryptor->decrypt($appSecretEnc);
-        $redirectUri = rtrim($this->_url->getUrl('sociallogin/facebook/callback'), '/');
+        $redirectUri = $this->_url->getUrl('sociallogin/facebook/callback');
 
         // Get Access Token
         $tokenUrl = "https://graph.facebook.com/v19.0/oauth/access_token?" . http_build_query([

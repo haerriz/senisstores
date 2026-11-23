@@ -4,16 +4,24 @@ namespace Haerriz\SocialLogin\Controller\Google;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Customer\Model\Session;
+use Magento\Framework\Math\Random;
 
 class Redirect extends Action
 {
     protected $scopeConfig;
+    protected $customerSession;
+    protected $mathRandom;
 
     public function __construct(
         Context $context,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        Session $customerSession,
+        Random $mathRandom
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->customerSession = $customerSession;
+        $this->mathRandom = $mathRandom;
         parent::__construct($context);
     }
 
@@ -27,13 +35,17 @@ class Redirect extends Action
             return $this->_redirect('customer/account/login');
         }
 
+        $state = $this->mathRandom->getRandomString(64);
+        $this->customerSession->setData('sociallogin_google_state', $state);
+
         $authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" . http_build_query([
             'client_id' => $clientId,
             'redirect_uri' => $redirectUri,
             'response_type' => 'code',
             'scope' => 'email profile',
             'access_type' => 'online',
-            'prompt' => 'select_account'
+            'prompt' => 'select_account',
+            'state' => $state
         ]);
 
         $resultRedirect = $this->resultRedirectFactory->create();

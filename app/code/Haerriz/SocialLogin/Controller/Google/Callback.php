@@ -39,13 +39,17 @@ class Callback extends Action
 
     public function execute()
     {
-        $code = $this->getRequest()->getParam('code');
-        if ($code) {
-            @file_put_contents(BP . '/var/log/google_auth_code.txt', $code);
-            $this->messageManager->addSuccessMessage(__('Auth code captured successfully.'));
+        if ($this->getRequest()->getParam('error')) {
+            $this->customerSession->unsetData('sociallogin_google_state');
+            $this->messageManager->addNoticeMessage(__('Google login was cancelled.'));
             return $this->_redirect('customer/account/login');
         }
-        if (!$code) {
+
+        $code = $this->getRequest()->getParam('code');
+        $state = (string)$this->getRequest()->getParam('state');
+        $expectedState = (string)$this->customerSession->getData('sociallogin_google_state');
+        $this->customerSession->unsetData('sociallogin_google_state');
+        if (!$code || !$state || !$expectedState || !hash_equals($expectedState, $state)) {
             $this->messageManager->addErrorMessage(__('Google Login failed.'));
             return $this->_redirect('customer/account/login');
         }
@@ -72,6 +76,7 @@ class Callback extends Action
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         $tokenResponse = curl_exec($ch);
         curl_close($ch);
 
@@ -87,11 +92,12 @@ class Callback extends Action
         curl_setopt($ch, CURLOPT_URL, $userInfoUrl);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $tokenData['access_token']]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         $userInfoResponse = curl_exec($ch);
         curl_close($ch);
 
         $userInfo = json_decode($userInfoResponse, true);
-        if (!isset($userInfo['email'])) {
+        if (!isset($userInfo['email']) || empty($userInfo['verified_email'])) {
             $this->messageManager->addErrorMessage(__('Failed to get user profile from Google.'));
             return $this->_redirect('customer/account/login');
         }

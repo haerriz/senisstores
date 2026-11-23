@@ -4,13 +4,19 @@ namespace Haerriz\SocialLogin\Controller\Github;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Customer\Model\Session;
+use Magento\Framework\Math\Random;
 
 class Redirect extends Action
 {
     protected $scopeConfig;
+    protected $customerSession;
+    protected $mathRandom;
 
-    public function __construct(Context $context, ScopeConfigInterface $scopeConfig) {
+    public function __construct(Context $context, ScopeConfigInterface $scopeConfig, Session $customerSession, Random $mathRandom) {
         $this->scopeConfig = $scopeConfig;
+        $this->customerSession = $customerSession;
+        $this->mathRandom = $mathRandom;
         parent::__construct($context);
     }
 
@@ -23,10 +29,14 @@ class Redirect extends Action
             return $this->_redirect('customer/account/login');
         }
 
+        $state = $this->mathRandom->getRandomString(64);
+        $this->customerSession->setData('sociallogin_github_state', $state);
+
         $authUrl = "https://github.com/login/oauth/authorize?" . http_build_query([
             'client_id' => $clientId,
             'redirect_uri' => $redirectUri,
-            'scope' => 'user:email'
+            'scope' => 'user:email',
+            'state' => $state
         ]);
 
         $resultRedirect = $this->resultRedirectFactory->create();

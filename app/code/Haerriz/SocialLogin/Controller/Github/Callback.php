@@ -38,8 +38,17 @@ class Callback extends Action
     }
 
     public function execute() {
+        if ($this->getRequest()->getParam('error')) {
+            $this->customerSession->unsetData('sociallogin_github_state');
+            $this->messageManager->addNoticeMessage(__('GitHub login was cancelled.'));
+            return $this->_redirect('customer/account/login');
+        }
+
         $code = $this->getRequest()->getParam('code');
-        if (!$code) {
+        $state = (string)$this->getRequest()->getParam('state');
+        $expectedState = (string)$this->customerSession->getData('sociallogin_github_state');
+        $this->customerSession->unsetData('sociallogin_github_state');
+        if (!$code || !$state || !$expectedState || !hash_equals($expectedState, $state)) {
             $this->messageManager->addErrorMessage(__('GitHub Login failed.'));
             return $this->_redirect('customer/account/login');
         }
@@ -47,7 +56,7 @@ class Callback extends Action
         $clientId = $this->scopeConfig->getValue('haerriz_sociallogin/github/client_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $clientSecretEnc = $this->scopeConfig->getValue('haerriz_sociallogin/github/client_secret', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $clientSecret = (strpos($clientSecretEnc, '0:2:') === 0 || strpos($clientSecretEnc, '0:3:') === 0) ? $this->encryptor->decrypt($clientSecretEnc) : $clientSecretEnc;
-        $redirectUri = rtrim($this->_url->getUrl('sociallogin/github/callback'), '/');
+        $redirectUri = $this->_url->getUrl('sociallogin/github/callback');
 
         // Get Access Token
         $tokenUrl = 'https://github.com/login/oauth/access_token';
@@ -59,18 +68,13 @@ class Callback extends Action
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         $tokenResponse = curl_exec($ch);
         curl_close($ch);
 
         $tokenData = json_decode($tokenResponse, true);
         if (!isset($tokenData['access_token'])) {
-            $err_msg = 'Failed to get access token from GitHub.';
-            if (isset($tokenData['error_description'])) {
-                $err_msg .= ' Error: ' . $tokenData['error_description'];
-            } else {
-                $err_msg .= ' Response: ' . $tokenResponse;
-            }
-            $this->messageManager->addErrorMessage(__($err_msg));
+            $this->messageManager->addErrorMessage(__('Failed to get access token from GitHub.'));
             return $this->_redirect('customer/account/login');
         }
 
@@ -79,6 +83,7 @@ class Callback extends Action
         curl_setopt($ch, CURLOPT_URL, 'https://api.github.com/user');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token ' . $tokenData['access_token'], 'User-Agent: Magento2-Haerriz-SocialLogin']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         $userInfoResponse = curl_exec($ch);
         curl_close($ch);
         $userInfo = json_decode($userInfoResponse, true);
@@ -88,6 +93,7 @@ class Callback extends Action
         curl_setopt($ch, CURLOPT_URL, 'https://api.github.com/user/emails');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token ' . $tokenData['access_token'], 'User-Agent: Magento2-Haerriz-SocialLogin', 'Accept: application/vnd.github.v3+json']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         $emailsResponse = curl_exec($ch);
         curl_close($ch);
         $emailsData = json_decode($emailsResponse, true);
