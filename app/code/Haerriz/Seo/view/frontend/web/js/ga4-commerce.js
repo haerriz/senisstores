@@ -33,7 +33,6 @@ define(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDat
         });
 
         window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-        window.gtag('event', eventName, payload);
     };
 
     (function trackCartRemovals() {

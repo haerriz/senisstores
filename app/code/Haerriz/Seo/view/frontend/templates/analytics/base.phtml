@@ -9,7 +9,6 @@ window.senisGa4 = window.senisGa4 || function (eventName, params) {
         senis_event: eventName,
         ecommerce: payload
     });
-    window.gtag('event', eventName, payload);
     document.documentElement.setAttribute('data-senis-ga4-last-event', eventName);
 };
 document.documentElement.setAttribute('data-senis-ga4', 'ready');
