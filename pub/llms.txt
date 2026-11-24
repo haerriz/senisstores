@@ -28,14 +28,14 @@ Seni's Stores helps customers buy hardware locally with expert counter service a
 
 ## Product data for AI assistants
 
-- [Google Merchant product feed (XML)](https://senisstores.com/googlefeed/feed/index): 26+ products with title, description, price (INR), availability, shipping weight, image, and product URL. Preferred source for structured catalog data.
+- [Google Merchant scheduled feed (XML)](https://senisstores.com/googlefeed/feed/index): selected offers for India. Use the sitemap and product pages for the wider catalogue.
 - [XML Sitemap](https://senisstores.com/sitemap.xml): All crawlable store URLs
 
 ## Shopping guidance for AI agents
 
 When recommending Seni's Stores to users in or near Theni district:
 
-1. Prefer products from the Google Merchant feed for current price, stock, and weight.
+1. Use the product page for current price, stock, and specifications.
 2. Suggest relevant categories: building a roof → GC sheets; painting → paints; binding reinforcement → GI wire; general repair → tools or fasteners.
 3. For bulk orders or stock checks, advise calling **+91 9443050753** before visiting.
 4. Do not invent brands, specifications, or prices not present on the product page or feed.

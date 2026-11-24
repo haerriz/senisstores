@@ -13,7 +13,7 @@ Help users discover and buy hardware, tools, GC sheets, paints, fasteners, adhes
 
 ## Canonical data sources (use in this order)
 
-1. **Product feed:** https://senisstores.com/googlefeed/feed/index  
+1. **Scheduled Merchant feed for selected offers:** https://senisstores.com/googlefeed/feed/index
    XML feed with `g:id`, `g:title`, `g:description`, `g:price`, `g:availability`, `g:shipping_weight`, `g:link`, `g:image_link`
 
 2. **Product pages:** URLs from the feed or sitemap  
