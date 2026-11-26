@@ -3,13 +3,17 @@
 declare(strict_types=1);
 
 use Haerriz\GoogleFeed\Model\ProductIdResolver;
+use Haerriz\GoogleShoppingFeed\ViewModel\VariantSelection;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\ConfigurableProduct\Block\Product\View\Type\Configurable as ConfigurableBlock;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\State;
 use Magento\Framework\UrlInterface;
+use Magento\Framework\Module\Manager as ModuleManager;
 use Magento\Store\Model\StoreManagerInterface;
 
 require dirname(__DIR__) . '/app/bootstrap.php';
@@ -57,6 +61,102 @@ function feedImageUrl(Product $product, string $imageRoot, string $mediaUrl): ?s
     }
 
     return $mediaUrl . '/catalog/product/' . implode('/', array_map('rawurlencode', explode('/', $relative)));
+}
+
+function pvcOffers(
+    ConfigurableBlock $block,
+    VariantSelection $variantSelection,
+    ProductIdResolver $offerIdResolver,
+    int $storeId,
+    string $imageRoot,
+    string $mediaUrl
+): array {
+    $parent = $block->getProduct();
+    $parentUrl = (string)$parent->getProductUrl();
+    $groupTitle = feedText((string)$parent->getName(), 150);
+    if ($groupTitle === '' || !str_starts_with($parentUrl, 'https://senisstores.com/')
+        || str_contains($parentUrl, '?') || str_contains($parentUrl, '#')
+    ) {
+        return [];
+    }
+
+    $children = $parent->getTypeInstance()->getUsedProductCollection($parent);
+    $children->setStoreId($storeId)
+        ->addAttributeToFilter('status', Status::STATUS_ENABLED)
+        ->addAttributeToSelect([
+            'sku', 'roll_weight', 'image', 'price', 'special_price', 'special_from_date', 'special_to_date',
+            'short_description', 'description', 'weight', 'manufacturer',
+        ]);
+
+    $candidates = [];
+    $imageCounts = [];
+    foreach ($children as $child) {
+        $imageUrl = feedImageUrl($child, $imageRoot, $mediaUrl);
+        if ($imageUrl === null) {
+            continue;
+        }
+        $relativeImage = '/' . ltrim((string)$child->getImage(), '/');
+        $imageHash = hash_file('sha256', $imageRoot . $relativeImage);
+        if ($imageHash === false) {
+            continue;
+        }
+        $imageCounts[$imageHash] = ($imageCounts[$imageHash] ?? 0) + 1;
+        $candidates[] = [$child, $imageUrl, $relativeImage, $imageHash];
+    }
+
+    if ($candidates === []) {
+        return [];
+    }
+    $widgetJson = $block->getJsonConfig();
+    $offers = [];
+    foreach ($candidates as [$child, $imageUrl, $relativeImage, $imageHash]) {
+        $option = (string)$child->getData('roll_weight');
+        $optionLabel = trim((string)$child->getAttributeText('roll_weight'));
+        if ($imageCounts[$imageHash] !== 1 || !ctype_digit($option)
+            || preg_match('/\A[1-9][0-9]*\z/', $optionLabel) !== 1 || !$child->isSalable()
+        ) {
+            continue;
+        }
+        $query = ['roll_weight' => $option];
+        $selection = $variantSelection->configure($widgetJson, $query)['selection'];
+        $galleryUrl = $selection['images'][0] ?? '';
+        $displayedImage = rawurldecode((string)parse_url($galleryUrl, PHP_URL_PATH));
+        $price = (float)$child->getFinalPrice();
+        $weight = (float)$child->getWeight();
+        $description = feedText((string)$child->getShortDescription(), 5000);
+        if ($description === '') {
+            $description = feedText((string)$child->getDescription(), 5000);
+        }
+        if ($selection === null || (int)$selection['child_id'] !== (int)$child->getId()
+            || $selection['query'] !== $query || abs((float)$selection['price'] - $price) >= 0.005
+            || parse_url($galleryUrl, PHP_URL_HOST) !== parse_url($imageUrl, PHP_URL_HOST)
+            || !str_ends_with($displayedImage, $relativeImage) || $description === '' || $price <= 0 || $weight <= 0
+        ) {
+            continue;
+        }
+
+        $variantValue = $optionLabel . ' kg';
+        $fields = [
+            'id' => $offerIdResolver->resolveId($child),
+            'title' => feedText($groupTitle . ' - ' . $variantValue, 150),
+            'description' => $description,
+            'link' => $parentUrl . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986),
+            'image_link' => $imageUrl,
+            'availability' => 'in_stock',
+            'price' => sprintf('%.2f INR', $price),
+            'condition' => 'new',
+            'shipping_weight' => sprintf('%.3f kg', $weight),
+            'item_group_id' => $offerIdResolver->resolveId($parent),
+            'item_group_title' => $groupTitle,
+        ];
+        $brand = $child->getAttributeText('manufacturer');
+        if (is_string($brand) && trim($brand) !== '') {
+            $fields['brand'] = feedText($brand, 70);
+        }
+        $offers[(int)$option] = [$fields, $variantValue];
+    }
+    ksort($offers);
+    return $offers;
 }
 
 try {
@@ -154,6 +254,46 @@ try {
         }
         $xml->endElement();
     }
+
+    if ($objects->get(ModuleManager::class)->isEnabled('Haerriz_GoogleShoppingFeed')) {
+        $variantOffers = [];
+        try {
+            $parent = $objects->get(ProductRepositoryInterface::class)->get('PVC Wire', false, $storeId);
+            if ($parent->getTypeId() === 'configurable' && (int)$parent->getStatus() === Status::STATUS_ENABLED
+                && in_array((int)$parent->getVisibility(), $objects->get(Visibility::class)->getVisibleInSiteIds(), true)
+                && in_array((int)$store->getWebsiteId(), array_map('intval', $parent->getWebsiteIds()), true)
+            ) {
+                $block = $objects->create(ConfigurableBlock::class, ['data' => ['product' => $parent]]);
+                $variantOffers = pvcOffers(
+                    $block,
+                    $objects->get(VariantSelection::class),
+                    $offerIdResolver,
+                    $storeId,
+                    $imageRoot,
+                    $mediaUrl
+                );
+            }
+        } catch (Throwable $error) {
+            error_log('Seni PVC wire product feed skipped: ' . get_class($error));
+        }
+        foreach ($variantOffers as [$fields, $variantValue]) {
+            $identity = strtolower($fields['id']);
+            if (isset($offerIds[$identity])) {
+                continue;
+            }
+            $offerIds[$identity] = true;
+            $xml->startElement('item');
+            foreach ($fields as $field => $value) {
+                $xml->writeElement('g:' . $field, $value);
+            }
+            $xml->startElement('g:variant_option');
+            $xml->writeElement('g:name', 'Roll weight');
+            $xml->writeElement('g:value', $variantValue);
+            $xml->endElement();
+            $xml->endElement();
+        }
+    }
+
     if (!$offerIds) {
         throw new RuntimeException('No products available for the India feed');
     }
