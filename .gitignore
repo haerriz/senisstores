@@ -26,3 +26,5 @@
 /bin/
 /phpserver/
 
+# Private runtime and Composer credentials
+/auth.json

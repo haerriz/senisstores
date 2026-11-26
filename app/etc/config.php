@@ -1469,12 +1469,9 @@ return [
                     'active' => '1',
                     'rzp_payment_action' => 'authorize_capture',
                     'auto_invoice' => '0',
-                    'key_id' => 'rzp_live_7lJiMeErT9lvyX',
-                    'key_secret' => 'CyZ9wmp3YYaZ40lhp1fKHTH0',
                     'enable_pending_orders_cron' => '0',
                     'pending_orders_timeout' => '30',
                     'enable_webhook' => '1',
-                    'webhook_secret' => 'K^Jnk-OUc-lp9',
                     'webhook_events' => 'order.paid,payment.authorized',
                     'enable_reset_cart_cron' => '0',
                     'reset_cart_orders_timeout' => '30',
@@ -3238,7 +3235,6 @@ MwIDAQAB
                     'protocol' => 'ssl',
                     'authentication' => 'login',
                     'username' => 'admin@senisstores.com',
-                    'password' => '0:3:71+mIFxOcOmsgF7WNGpNMyL+kYcRhHJ/02hD2tJOsqrkA9M6Didoe1A=',
                     'return_path_email' => null,
                     'test_email' => [
                         'from' => 'general',
@@ -3907,7 +3903,6 @@ MwIDAQAB
                     'title' => 'Courier Delivery',
                     'name' => 'Shiprocket Live Rates',
                     'api_email' => 'haerriz01work@gmail.com',
-                    'api_password' => 'TBopaQJ6Aumrf4guA8jD5OMv&bsN&D8d',
                     'api_url' => 'https://apiv2.shiprocket.in/v1/external',
                     'default_length' => '10',
                     'default_width' => '10',
@@ -6786,7 +6781,6 @@ Disallow: /*SID=
             ],
             'connector_dynamic_content' => [
                 'external_dynamic_content_urls' => [
-                    'passcode' => 'lRP47lU3HYe2et5OpeYuQVUgz2wDKLJa',
                 ],
             ],
             'connector_automation' => [
