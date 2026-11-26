@@ -777,7 +777,7 @@ return [
                     'group' => 'paypal',
                 ],
                 'paypal_billing_agreement' => [
-                    'active' => '1',
+                    'active' => '0',
                     'title' => 'PayPal Billing Agreement',
                     'sort_order' => null,
                     'payment_action' => 'Authorization',
@@ -1404,7 +1404,7 @@ return [
                 ],
                 'free' => [
                     'model' => 'Magento\\Payment\\Model\\Method\\Free',
-                    'active' => '1',
+                    'active' => '0',
                     'title' => 'No Payment Information Required',
                     'order_status' => 'pending',
                     'payment_action' => 'authorize_capture',
