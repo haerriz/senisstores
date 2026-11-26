@@ -32,16 +32,53 @@ class ProductSchemaBuilder
      */
     public function build(Product $product): array
     {
-        $images = $this->getImageUrls($product);
-        $price = (float) $product->getFinalPrice();
+        return $this->buildOffer(
+            $product,
+            (string) $product->getProductUrl(),
+            (float) $product->getFinalPrice(),
+            $this->getImageUrls($product)
+        );
+    }
 
+    public function buildSelectedVariant(Product $parent, Product $child, array $selection): array
+    {
+        $parentUrl = (string) $parent->getProductUrl();
+        $groupId = trim((string) $parent->getSku());
+        $childSku = trim((string) $child->getSku());
+        if ($parentUrl === '' || $groupId === '' || $childSku === '') {
+            return [];
+        }
+
+        $query = http_build_query($selection['query'], '', '&', PHP_QUERY_RFC3986);
+        $variantUrl = $parentUrl . (str_contains($parentUrl, '?') ? '&' : '?') . $query;
+        $schema = $this->buildOffer($child, $variantUrl, $selection['price'], $selection['images']);
+        if ($schema === []) {
+            return [];
+        }
+
+        $schema['sku'] = $childSku;
+        $schema['isVariantOf'] = [
+            '@type' => 'ProductGroup',
+            '@id' => $parentUrl . '#product-group',
+            'name' => trim((string) $parent->getName()),
+            'url' => $parentUrl,
+            'productGroupID' => $groupId,
+        ];
+        if ($selection['labels'] !== []) {
+            $schema['name'] = $schema['isVariantOf']['name'] . ' – ' . implode(', ', $selection['labels']);
+        }
+
+        return $schema;
+    }
+
+    private function buildOffer(Product $product, string $productUrl, float $price, array $images): array
+    {
         // Image and a positive active price are required for merchant listings.
-        if ($images === [] || $price <= 0) {
+        if ($images === [] || !is_finite($price) || $price <= 0) {
             return [];
         }
 
         $store = $this->storeManager->getStore();
-        $productUrl = (string) $product->getProductUrl();
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'Product',

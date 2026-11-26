@@ -5,6 +5,7 @@ namespace Haerriz\GoogleShoppingFeed\Block\Product;
 
 use Haerriz\GoogleShoppingFeed\Model\StructuredData\ProductSchemaBuilder;
 use Magento\Catalog\Model\Product;
+use Magento\ConfigurableProduct\Block\Product\View\Type\Configurable;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Psr\Log\LoggerInterface;
@@ -45,7 +46,7 @@ class StructuredData extends Template
         }
 
         try {
-            $schema = $this->schemaBuilder->build($product);
+            $schema = $this->buildForRequest($product);
             if ($schema === []) {
                 return '';
             }
@@ -70,5 +71,28 @@ class StructuredData extends Template
 
             return '';
         }
+    }
+
+    private function buildForRequest(Product $product): array
+    {
+        foreach (['product.info.options.swatches', 'product.info.options.configurable'] as $name) {
+            $optionsBlock = $this->getLayout()->getBlock($name);
+            if (!$optionsBlock instanceof Configurable) {
+                continue;
+            }
+
+            $selection = $optionsBlock->getData('haerriz_selected_variant');
+            if (!is_array($selection)) {
+                continue;
+            }
+
+            foreach ($optionsBlock->getAllowProducts() as $child) {
+                if ((int) $child->getId() === $selection['child_id']) {
+                    return $this->schemaBuilder->buildSelectedVariant($product, $child, $selection);
+                }
+            }
+        }
+
+        return $this->schemaBuilder->build($product);
     }
 }
